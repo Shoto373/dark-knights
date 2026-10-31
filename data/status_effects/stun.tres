@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" load_steps=2 format=3 uid="uid://effect_stun_001"]
+
+[ext_resource type="Script" path="res://components/StatusEffect.gd" id="1_eff"]
+
+[resource]
+script = ExtResource("1_eff")
+id = "stun"
+name = "Оглушение"
+effect_type = 3
+duration = 1.5
+tick_interval = 0.0
+damage_per_tick = 0
+speed_multiplier = 0.0
+max_stacks = 1
+color = Color(1, 0.95, 0.3, 1)

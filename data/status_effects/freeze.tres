@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" load_steps=2 format=3 uid="uid://effect_freeze_001"]
+
+[ext_resource type="Script" path="res://components/StatusEffect.gd" id="1_eff"]
+
+[resource]
+script = ExtResource("1_eff")
+id = "freeze"
+name = "Заморозка"
+effect_type = 0
+duration = 3.0
+tick_interval = 0.5
+damage_per_tick = 0
+speed_multiplier = 0.65
+max_stacks = 3
+color = Color(0.4, 0.8, 1, 1)

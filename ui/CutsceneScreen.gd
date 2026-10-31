@@ -52,3 +52,4 @@ func _on_continue_pressed() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_just_pressed("interact") or event.is_action_just_pressed("ui_accept"):
 		_on_continue_pressed()
+

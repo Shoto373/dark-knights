@@ -20,8 +20,10 @@ var is_dead: bool = false
 func _ready() -> void:
 	current_health = max_health
 
-func take_damage(amount: int) -> int:
-	if is_invulnerable or is_dead or amount <= 0:
+func take_damage(amount: int, ignore_invulnerability: bool = false) -> int:
+	if is_dead or amount <= 0:
+		return 0
+	if is_invulnerable and not ignore_invulnerability:
 		return 0
 	
 	var actual_damage: int = mini(amount, current_health)

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://item_frozen_heart_001"]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_it"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "max_hp"
+operation = "add"
+value = 50.0
+
+[resource]
+script = ExtResource("1_it")
+id = "frozen_heart"
+name = "Замерзшее сердце"
+description = "Сердце древнего ледяного великана. +50 к здоровью, иммунитет к льду и замедлению."
+rarity = "rare"
+item_type = "passive"
+cost_gold = 50
+weight = 50.0
+tags = ["frost", "blood"]
+modifiers = [SubResource("StatMod_1")]

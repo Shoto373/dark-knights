@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://item_frost_shard_001"]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_it"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "damage"
+operation = "add"
+value = 4.0
+
+[resource]
+script = ExtResource("1_it")
+id = "frost_shard"
+name = "Осколок вечного льда"
+description = "Острый кристалл, наделяющий атаки морозной силой. +4 к урону."
+rarity = "rare"
+item_type = "passive"
+cost_gold = 40
+weight = 60.0
+tags = ["frost", "ice"]
+modifiers = [SubResource("StatMod_1")]

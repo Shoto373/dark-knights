@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=2 format=3 uid="uid://boss_lich_king_001"]
+
+[ext_resource type="Script" path="res://data/enemies/BossData.gd" id="1_boss"]
+
+[resource]
+script = ExtResource("1_boss")
+id = "boss_lich_king"
+name = "Король-лич"
+color = Color(0.2, 0.45, 0.85, 1)
+max_hp = 650
+armor = 3
+speed = 105.0
+damage = 26
+souls_reward = 60
+gold_reward = 120

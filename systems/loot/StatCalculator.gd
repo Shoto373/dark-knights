@@ -42,6 +42,12 @@ static func calculate_stat(
 		flat_sum += 20.0 # Синергия ловкости: +20 к скорости
 	if tag_counts.get("blood", 0) >= 2 and stat_name == "max_hp":
 		flat_sum += 25.0 # Синергия крови: +25 к здоровью
+	if tag_counts.get("frost", 0) >= 2 and stat_name == "armor":
+		flat_sum += 2.0  # Синергия холода (ледяной покров): +2 к броне
+	if tag_counts.get("frost", 0) >= 2 and stat_name == "damage":
+		mult_sum += 0.12 # Синергия холода (морозная мощь): +12% к урону
+	if tag_counts.get("frost", 0) >= 4 and stat_name == "crit_chance":
+		flat_sum += 0.10 # Синергия глубокой мерзлоты: +10% к шансу крита
 	
 	var final_val: float = (base_value + flat_sum) * (1.0 + mult_sum)
 	return maxf(0.0, final_val)

@@ -14,6 +14,7 @@ const BRIDGE_AREA_SCENE = preload("res://levels/hazards/BridgeArea.tscn")
 const FIRE_GRATE_SCENE = preload("res://levels/hazards/FireGrateTrap.tscn")
 const CHANDELIER_SCENE = preload("res://levels/hazards/FallingChandelierTrap.tscn")
 const SECRET_LEVER_SCENE = preload("res://levels/hazards/SecretLever.tscn")
+const ICE_PATCH_SCENE = preload("res://levels/hazards/IcePatch.tscn")
 
 @onready var door_up: DungeonDoor = %DoorUp
 @onready var door_down: DungeonDoor = %DoorDown
@@ -77,6 +78,22 @@ func _setup_biome_hazards() -> void:
 			_create_gorge_chasm_and_bridge()
 	elif current_biome.id == "skeleton_castle":
 		_create_castle_traps()
+	elif current_biome.id == "frost_world" or current_biome.id == "frost_caves":
+		_create_frost_ice_patches()
+
+func _create_frost_ice_patches() -> void:
+	var patch1: IcePatch = ICE_PATCH_SCENE.instantiate() as IcePatch
+	objects_container.add_child(patch1)
+	patch1.position = Vector2(480, 360)
+	
+	var patch2: IcePatch = ICE_PATCH_SCENE.instantiate() as IcePatch
+	objects_container.add_child(patch2)
+	patch2.position = Vector2(800, 360)
+	
+	if abs(room_data.grid_pos.x + room_data.grid_pos.y) % 2 == 1:
+		var patch3: IcePatch = ICE_PATCH_SCENE.instantiate() as IcePatch
+		objects_container.add_child(patch3)
+		patch3.position = Vector2(640, 260)
 
 func _create_castle_traps() -> void:
 	var grate1: FireGrateTrap = FIRE_GRATE_SCENE.instantiate() as FireGrateTrap

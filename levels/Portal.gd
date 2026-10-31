@@ -7,6 +7,7 @@ extends Area2D
 @onready var portal_glow: ColorRect = %PortalGlow
 
 @export var target_scene: String = "res://levels/DungeonFloor.tscn"
+@export var next_world_node_id: String = ""
 
 var is_player_inside: bool = false
 
@@ -26,6 +27,12 @@ func _enter_portal() -> void:
 		GameState.start_new_run(GameState.selected_hero_id)
 		SceneRouter.change_scene(target_scene, 0.4)
 	else:
+		if not next_world_node_id.is_empty():
+			var world_graph: WorldGraph = WorldGraph.new()
+			var target_node: WorldNodeData = world_graph.get_node(next_world_node_id)
+			if target_node != null:
+				GameState.advance_to_world_node(target_node)
+				return
 		var current_node: WorldNodeData = GameState.current_world_node
 		if current_node != null:
 			if current_node.next_nodes.size() > 1:

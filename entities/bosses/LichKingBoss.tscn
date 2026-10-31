@@ -1,0 +1,118 @@
+[gd_scene load_steps=9 format=3 uid="uid://boss_lich_king_scene_001"]
+
+[ext_resource type="Script" path="res://entities/bosses/LichKingBoss.gd" id="1_boss"]
+[ext_resource type="Script" path="res://components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" path="res://components/MovementComponent.gd" id="3_movement"]
+[ext_resource type="Script" path="res://components/HurtboxComponent.gd" id="4_hurtbox"]
+[ext_resource type="Script" path="res://components/HitboxComponent.gd" id="5_hitbox"]
+[ext_resource type="Script" path="res://components/StatusEffectManager.gd" id="6_sem"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 20.0
+height = 52.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurt"]
+radius = 24.0
+height = 56.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_attack"]
+radius = 44.0
+
+[node name="LichKingBoss" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_boss")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="HealthComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_health")
+max_health = 650
+
+[node name="MovementComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_movement")
+max_speed = 105.0
+acceleration = 600.0
+friction = 800.0
+
+[node name="StatusEffectManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_sem")
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("4_hurtbox")
+
+[node name="HurtCollision" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape2D_hurt")
+
+[node name="AttackHitbox" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("5_hitbox")
+base_damage = 26
+knockback_force = 280.0
+damage_type = "freeze"
+tags = ["frost", "ice"]
+is_player_hitbox = false
+
+[node name="AttackShape" type="CollisionShape2D" parent="AttackHitbox"]
+unique_name_in_owner = true
+position = Vector2(30, 0)
+shape = SubResource("CircleShape2D_attack")
+disabled = true
+
+[node name="FloorTelegraph" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+offset_left = -80.0
+offset_top = -80.0
+offset_right = 80.0
+offset_bottom = 80.0
+color = Color(0.2, 0.6, 1, 0.4)
+
+[node name="Visuals" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="RobeBack" type="ColorRect" parent="Visuals"]
+offset_left = -20.0
+offset_top = -26.0
+offset_right = 20.0
+offset_bottom = 26.0
+color = Color(0.12, 0.18, 0.32, 1)
+
+[node name="BodyRect" type="ColorRect" parent="Visuals"]
+offset_left = -16.0
+offset_top = -22.0
+offset_right = 16.0
+offset_bottom = 22.0
+color = Color(0.2, 0.35, 0.6, 1)
+
+[node name="CrownRect" type="ColorRect" parent="Visuals"]
+unique_name_in_owner = true
+offset_left = -14.0
+offset_top = -36.0
+offset_right = 14.0
+offset_bottom = -22.0
+color = Color(0.5, 0.85, 1, 1)
+
+[node name="EyesRect" type="ColorRect" parent="Visuals"]
+offset_left = -8.0
+offset_top = -28.0
+offset_right = 8.0
+offset_bottom = -24.0
+color = Color(0.2, 0.95, 1, 1)
+
+[node name="StaffRect" type="ColorRect" parent="Visuals"]
+unique_name_in_owner = true
+offset_left = 22.0
+offset_top = -34.0
+offset_right = 28.0
+offset_bottom = 26.0
+color = Color(0.4, 0.7, 0.9, 1)

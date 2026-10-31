@@ -23,7 +23,9 @@ func setup(
 	is_player: bool = true,
 	max_range: float = 600.0,
 	knockback: float = 200.0,
-	color: Color = Color.WHITE
+	color: Color = Color.WHITE,
+	p_damage_type: String = "physical",
+	p_tags: Array[String] = []
 ) -> void:
 	direction = dir.normalized()
 	speed = proj_speed
@@ -34,6 +36,8 @@ func setup(
 	hitbox.is_player_hitbox = is_player
 	hitbox.knockback_force = knockback
 	hitbox.source_owner = self
+	hitbox.damage_type = p_damage_type
+	hitbox.tags = p_tags.duplicate()
 	
 	modulate = color
 

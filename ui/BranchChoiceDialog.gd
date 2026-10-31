@@ -25,3 +25,4 @@ func _choose_branch(node_id: String) -> void:
 		branch_selected.emit(node)
 		GameState.advance_to_world_node(node)
 	queue_free()
+

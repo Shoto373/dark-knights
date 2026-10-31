@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_lich_apprentice_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "lich_apprentice"
+name = "Ученик лича"
+color = Color(0.3, 0.45, 0.85, 1)
+max_hp = 75
+speed = 115.0
+armor = 1
+damage = 12
+enemy_type = "lich_apprentice"
+attack_range = 260.0
+attack_cooldown = 2.0
+preferred_distance = 200.0
+knockback_resistance = 0.1
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["freeze"]
+gold_reward = 10
+souls_reward = 1
+difficulty_cost = 2

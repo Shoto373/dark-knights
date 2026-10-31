@@ -60,6 +60,20 @@ func _on_area_entered(area: Area2D) -> void:
 		var knock_dir: Vector2 = hitbox.get_knockback_direction(global_position)
 		movement_component.apply_knockback(knock_dir * hitbox.knockback_force)
 	
+	# Наложение статус-эффектов
+	var effect_mgr: StatusEffectManager = parent_node.get_node_or_null("StatusEffectManager") as StatusEffectManager
+	if effect_mgr != null:
+		if hitbox.applied_effect != null:
+			effect_mgr.apply_effect(hitbox.applied_effect, hitbox.effect_stacks)
+		elif hitbox.damage_type == "fire" or hitbox.tags.has("fire"):
+			var burn_res: StatusEffect = load("res://data/status_effects/burn.tres") as StatusEffect
+			if burn_res != null:
+				effect_mgr.apply_effect(burn_res, 1)
+		elif hitbox.damage_type == "freeze" or hitbox.tags.has("freeze") or hitbox.tags.has("ice") or hitbox.tags.has("frost"):
+			var freeze_res: StatusEffect = load("res://data/status_effects/freeze.tres") as StatusEffect
+			if freeze_res != null:
+				effect_mgr.apply_effect(freeze_res, 1)
+	
 	# Эффекты попадания через EventBus
 	EventBus.damage_dealt.emit(parent_node as Node2D, final_damage, is_crit)
 	EventBus.hit_stop_requested.emit(50.0)

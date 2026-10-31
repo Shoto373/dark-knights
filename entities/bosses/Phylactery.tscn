@@ -1,0 +1,135 @@
+[gd_scene load_steps=7 format=3 uid="uid://phylactery_scene_001"]
+
+[ext_resource type="Script" path="res://entities/bosses/Phylactery.gd" id="1_phyl"]
+[ext_resource type="Script" path="res://components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" path="res://components/HurtboxComponent.gd" id="3_hurtbox"]
+[ext_resource type="Script" path="res://components/HitboxComponent.gd" id="4_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_core"]
+radius = 24.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_shard"]
+radius = 12.0
+
+[node name="Phylactery" type="Node2D"]
+script = ExtResource("1_phyl")
+
+[node name="HealthComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_health")
+max_health = 180
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("3_hurtbox")
+
+[node name="HurtCollision" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CircleShape2D_core")
+
+[node name="Visuals" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="CrystalBack" type="ColorRect" parent="Visuals"]
+offset_left = -16.0
+offset_top = -24.0
+offset_right = 16.0
+offset_bottom = 24.0
+color = Color(0.15, 0.45, 0.85, 0.95)
+
+[node name="CrystalFront" type="ColorRect" parent="Visuals"]
+offset_left = -10.0
+offset_top = -18.0
+offset_right = 10.0
+offset_bottom = 18.0
+color = Color(0.65, 0.9, 1, 0.95)
+
+[node name="InnerSoul" type="ColorRect" parent="Visuals"]
+offset_left = -5.0
+offset_top = -10.0
+offset_right = 5.0
+offset_bottom = 10.0
+color = Color(1, 1, 1, 0.9)
+
+[node name="ShardsPivot" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Shard1" type="Node2D" parent="ShardsPivot"]
+position = Vector2(55, 0)
+
+[node name="ShardRect" type="ColorRect" parent="ShardsPivot/Shard1"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.4, 0.85, 1, 0.9)
+
+[node name="HitboxComponent" type="Area2D" parent="ShardsPivot/Shard1"]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("4_hitbox")
+base_damage = 14
+knockback_force = 200.0
+damage_type = "freeze"
+tags = ["frost"]
+is_player_hitbox = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShardsPivot/Shard1/HitboxComponent"]
+shape = SubResource("CircleShape2D_shard")
+
+[node name="Shard2" type="Node2D" parent="ShardsPivot"]
+position = Vector2(-28, 48)
+
+[node name="ShardRect" type="ColorRect" parent="ShardsPivot/Shard2"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.4, 0.85, 1, 0.9)
+
+[node name="HitboxComponent" type="Area2D" parent="ShardsPivot/Shard2"]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("4_hitbox")
+base_damage = 14
+knockback_force = 200.0
+damage_type = "freeze"
+tags = ["frost"]
+is_player_hitbox = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShardsPivot/Shard2/HitboxComponent"]
+shape = SubResource("CircleShape2D_shard")
+
+[node name="Shard3" type="Node2D" parent="ShardsPivot"]
+position = Vector2(-28, -48)
+
+[node name="ShardRect" type="ColorRect" parent="ShardsPivot/Shard3"]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.4, 0.85, 1, 0.9)
+
+[node name="HitboxComponent" type="Area2D" parent="ShardsPivot/Shard3"]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("4_hitbox")
+base_damage = 14
+knockback_force = 200.0
+damage_type = "freeze"
+tags = ["frost"]
+is_player_hitbox = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ShardsPivot/Shard3/HitboxComponent"]
+shape = SubResource("CircleShape2D_shard")
+
+[node name="HpBar" type="ProgressBar" parent="."]
+unique_name_in_owner = true
+offset_left = -40.0
+offset_top = -42.0
+offset_right = 40.0
+offset_bottom = -34.0
+max_value = 180.0
+value = 180.0
+show_percentage = false

@@ -66,3 +66,4 @@ func _set_state(new_state: TrapState) -> void:
 			var tween: Tween = create_tween().set_loops(4)
 			tween.tween_property(flames_visual, "modulate", Color(1.8, 1.2, 0.3, 1.0), 0.1)
 			tween.tween_property(flames_visual, "modulate", Color.WHITE, 0.1)
+

@@ -59,3 +59,4 @@ func _on_body_exited(body: Node2D) -> void:
 		is_player_inside = false
 		if not is_activated:
 			prompt_label.visible = false
+

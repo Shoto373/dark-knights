@@ -71,6 +71,12 @@ func _build_floor() -> void:
 	var pause_menu: PauseMenu = PAUSE_MENU_SCENE.instantiate() as PauseMenu
 	add_child(pause_menu)
 	
+	if current_biome != null and (current_biome.id == "frost_world" or current_biome.id == "frost_caves"):
+		var blizzard_scene: PackedScene = load("res://ui/BlizzardOverlay.tscn")
+		if blizzard_scene != null:
+			var blizzard = blizzard_scene.instantiate()
+			add_child(blizzard)
+	
 	minimap.setup_minimap(rooms, Vector2i.ZERO)
 	
 	if spawned_rooms.has(Vector2i.ZERO):

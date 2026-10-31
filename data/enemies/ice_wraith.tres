@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_ice_wraith_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "ice_wraith"
+name = "Ледяной призрак"
+color = Color(0.5, 0.85, 1, 0.85)
+max_hp = 60
+speed = 150.0
+armor = 0
+damage = 14
+enemy_type = "frost_wraith"
+attack_range = 240.0
+attack_cooldown = 1.6
+preferred_distance = 180.0
+knockback_resistance = 0.2
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["freeze"]
+gold_reward = 8
+souls_reward = 1
+difficulty_cost = 2

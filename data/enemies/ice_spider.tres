@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_ice_spider_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "ice_spider"
+name = "Ледяной паук"
+color = Color(0.65, 0.9, 0.95, 1)
+max_hp = 40
+speed = 175.0
+armor = 0
+damage = 10
+enemy_type = "ice_spider"
+attack_range = 90.0
+attack_cooldown = 1.3
+preferred_distance = 0.0
+knockback_resistance = 0.0
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["freeze"]
+gold_reward = 5
+souls_reward = 1
+difficulty_cost = 1

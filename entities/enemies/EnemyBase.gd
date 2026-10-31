@@ -11,6 +11,7 @@ const PROJECTILE_SCENE = preload("res://entities/player/Projectile.tscn")
 @onready var attack_hitbox: HitboxComponent = %AttackHitbox
 @onready var attack_shape: CollisionShape2D = %AttackShape
 @onready var state_machine: StateMachine = %StateMachine
+@onready var status_effect_manager: StatusEffectManager = %StatusEffectManager
 @onready var visuals: Node2D = %Visuals
 @onready var body_rect: ColorRect = %BodyRect
 @onready var hp_bar: ProgressBar = %HpBar
@@ -66,9 +67,17 @@ func setup_from_data(data: EnemyData) -> void:
 	hp_bar.value = enemy_data.max_hp
 	
 	time_since_damage = enemy_data.regen_delay_seconds
+	if status_effect_manager != null and enemy_data != null:
+		status_effect_manager.immunities = enemy_data.immunities
 
 func _physics_process(delta: float) -> void:
 	if health_component.is_dead:
+		return
+	
+	# Заморозка или оглушение блокируют любые действия
+	if status_effect_manager != null and (status_effect_manager.is_frozen() or status_effect_manager.is_stunned()):
+		velocity = Vector2.ZERO
+		move_and_slide()
 		return
 	
 	# Если скелет рассыпался в груду костей — лежит и ждёт пересборки
@@ -214,6 +223,8 @@ func _permanent_death() -> void:
 func perform_attack() -> void:
 	if not is_instance_valid(player_target) or attack_timer > 0.0 or is_collapsed:
 		return
+	if status_effect_manager != null and (status_effect_manager.is_frozen() or status_effect_manager.is_stunned()):
+		return
 	
 	attack_timer = enemy_data.attack_cooldown if enemy_data else 1.2
 	
@@ -226,6 +237,14 @@ func perform_attack() -> void:
 			_throw_boulder()
 		"necromancer":
 			_cast_necromancy()
+		"frost_wraith":
+			_shoot_frost_bolt()
+		"frost_golem":
+			_frost_golem_smash()
+		"lich_apprentice":
+			_lich_apprentice_cast()
+		"ice_spider":
+			_ice_spider_leap()
 		"support":
 			_try_heal_or_attack()
 		"heavy":
@@ -374,3 +393,94 @@ func _flash_heal_effect(target: EnemyBase) -> void:
 	var tween: Tween = target.create_tween()
 	target.visuals.modulate = Color(0.3, 2.5, 0.8, 1.0)
 	tween.tween_property(target.visuals, "modulate", Color.WHITE, 0.25)
+
+func _shoot_frost_bolt() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+	get_parent().add_child(proj)
+	proj.global_position = global_position + dir * 20.0
+	proj.setup(
+		dir,
+		320.0,
+		enemy_data.damage if enemy_data else 14,
+		false,
+		450.0,
+		180.0,
+		Color(0.4, 0.9, 1.0, 1.0),
+		"freeze",
+		["frost", "ice", "freeze"]
+	)
+
+func _frost_golem_smash() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(1.5, 2.2, 3.0, 1.0)
+	tween.tween_property(self, "position", position - dir * 12.0, 0.25)
+	tween.tween_callback(func():
+		visuals.modulate = Color.WHITE
+		EventBus.screen_shake_requested.emit(6.0, 0.2)
+		for i in range(6):
+			var angle: float = (TAU / 6.0) * i
+			var pdir: Vector2 = Vector2(cos(angle), sin(angle))
+			var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+			get_parent().add_child(proj)
+			proj.global_position = global_position + pdir * 25.0
+			proj.setup(
+				pdir,
+				260.0,
+				enemy_data.damage if enemy_data else 16,
+				false,
+				350.0,
+				220.0,
+				Color(0.5, 0.9, 1.0, 1.0),
+				"freeze",
+				["frost", "freeze"]
+			)
+	)
+	tween.tween_property(self, "position", position, 0.15)
+
+func _lich_apprentice_cast() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	if global_position.distance_to(player_target.global_position) < 100.0:
+		var teleport_offset: Vector2 = -dir * 110.0 + Vector2(randf_range(-20, 20), randf_range(-20, 20))
+		global_position += teleport_offset
+		var flash: Tween = create_tween()
+		visuals.modulate = Color(2.0, 2.5, 3.0, 1.0)
+		flash.tween_property(visuals, "modulate", Color.WHITE, 0.2)
+		dir = (player_target.global_position - global_position).normalized()
+	
+	var base_angle: float = dir.angle()
+	var angles: Array[float] = [base_angle - 0.25, base_angle, base_angle + 0.25]
+	for a in angles:
+		var pdir: Vector2 = Vector2(cos(a), sin(a))
+		var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+		get_parent().add_child(proj)
+		proj.global_position = global_position + pdir * 22.0
+		proj.setup(
+			pdir,
+			360.0,
+			enemy_data.damage if enemy_data else 12,
+			false,
+			450.0,
+			180.0,
+			Color(0.3, 0.8, 1.0, 1.0),
+			"freeze",
+			["frost", "ice"]
+		)
+
+func _ice_spider_leap() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	attack_hitbox.rotation = dir.angle()
+	attack_hitbox.damage_type = "freeze"
+	attack_hitbox.tags = ["frost", "freeze"]
+	attack_hitbox.reset_hits()
+	
+	var leap_target: Vector2 = position + dir * 85.0
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(1.8, 2.5, 3.0, 1.0)
+	tween.tween_callback(func(): attack_shape.disabled = false)
+	tween.tween_property(self, "position", leap_target, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		attack_shape.disabled = true
+		visuals.modulate = Color.WHITE
+	)

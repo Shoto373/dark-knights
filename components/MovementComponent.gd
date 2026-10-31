@@ -7,6 +7,7 @@ extends Node
 @export var acceleration: float = 1400.0
 @export var friction: float = 1600.0
 @export var knockback_friction: float = 800.0
+@export var is_on_ice: bool = false # Скользкий лёд снижает трение в 4 раза
 
 var knockback_velocity: Vector2 = Vector2.ZERO
 
@@ -15,11 +16,13 @@ func move(body: CharacterBody2D, direction: Vector2, delta: float) -> Vector2:
 		return Vector2.ZERO
 	
 	var target_velocity: Vector2 = direction.normalized() * max_speed
+	var current_friction: float = friction * 0.25 if is_on_ice else friction
+	var current_accel: float = acceleration * 0.45 if is_on_ice else acceleration
 	
 	if direction != Vector2.ZERO:
-		body.velocity = body.velocity.move_toward(target_velocity, acceleration * delta)
+		body.velocity = body.velocity.move_toward(target_velocity, current_accel * delta)
 	else:
-		body.velocity = body.velocity.move_toward(Vector2.ZERO, friction * delta)
+		body.velocity = body.velocity.move_toward(Vector2.ZERO, current_friction * delta)
 	
 	# Применяем затухание отталкивания
 	if knockback_velocity.length_squared() > 1.0:

@@ -13,6 +13,7 @@ const AOE_SCENE = preload("res://entities/player/AreaOfEffect.tscn")
 @onready var weapon_hitbox: HitboxComponent = %WeaponHitbox
 @onready var attack_collision: CollisionShape2D = %AttackCollision
 @onready var visuals: Node2D = %Visuals
+@onready var status_effect_manager: StatusEffectManager = %StatusEffectManager
 @onready var body_rect: ColorRect = $Visuals/BodyRect
 @onready var dash_timer: Timer = %DashTimer
 @onready var dash_cooldown_timer: Timer = %DashCooldownTimer
@@ -139,12 +140,25 @@ func recalculate_stats() -> void:
 	weapon_hitbox.crit_chance = new_crit_chance
 	weapon_hitbox.crit_multiplier = new_crit_mult
 	
-	# Проверка синергий и тегов предметов (например огонь)
+	# Проверка синергий и тегов предметов (например огонь и холод)
 	var tag_counts: Dictionary = StatCalculator.get_tag_counts(items)
 	if tag_counts.get("fire", 0) > 0:
 		weapon_hitbox.damage_type = "fire"
 		if not weapon_hitbox.tags.has("fire"):
 			weapon_hitbox.tags.append("fire")
+	elif tag_counts.get("frost", 0) > 0:
+		weapon_hitbox.damage_type = "freeze"
+		if not weapon_hitbox.tags.has("frost"):
+			weapon_hitbox.tags.append("frost")
+		if not weapon_hitbox.tags.has("freeze"):
+			weapon_hitbox.tags.append("freeze")
+	
+	# Проверка особых свойств артефактов (например Замерзшее сердце)
+	for it in items:
+		if it is ItemData and it.id == "frozen_heart":
+			if status_effect_manager != null and not status_effect_manager.immunities.has("freeze"):
+				status_effect_manager.immunities.append("freeze")
+			movement_component.is_on_ice = false
 	
 	GameState.current_hp = health_component.current_health
 	GameState.max_hp = health_component.max_health
@@ -163,12 +177,19 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 	
+	# Заморозка или оглушение
+	if status_effect_manager != null and (status_effect_manager.is_frozen() or status_effect_manager.is_stunned()):
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
+	
 	if is_dashing:
 		velocity = dash_direction * dash_speed
 		move_and_slide()
 	else:
 		var input_vector: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-		movement_component.move(self, input_vector, delta)
+		var spd_mult: float = status_effect_manager.get_speed_multiplier() if status_effect_manager != null else 1.0
+		movement_component.move(self, input_vector * spd_mult, delta)
 
 func _update_aim() -> void:
 	var mouse_pos: Vector2 = get_global_mouse_position()
@@ -184,6 +205,8 @@ func _update_aim() -> void:
 		visuals.scale.x = 1.0
 
 func _handle_input() -> void:
+	if status_effect_manager != null and (status_effect_manager.is_frozen() or status_effect_manager.is_stunned()):
+		return
 	if Input.is_action_just_pressed("dash") and dash_cooldown_timer.is_stopped() and not is_dashing:
 		_start_dash()
 	
@@ -360,8 +383,9 @@ func _on_health_damaged(amount: int, current_hp: int, max_hp: int) -> void:
 	GameState.current_hp = current_hp
 	GameState.max_hp = max_hp
 	EventBus.player_health_changed.emit(current_hp, max_hp)
-	health_component.set_invulnerable(true)
-	iframes_timer.start()
+	if status_effect_manager == null or not status_effect_manager.is_processing_dot:
+		health_component.set_invulnerable(true)
+		iframes_timer.start()
 
 func _on_health_healed(amount: int, current_hp: int, max_hp: int) -> void:
 	GameState.current_hp = current_hp

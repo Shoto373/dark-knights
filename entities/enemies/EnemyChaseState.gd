@@ -34,5 +34,8 @@ func physics_update(delta: float) -> void:
 		# Обычное преследование
 		move_dir = to_player.normalized()
 	
-	enemy.movement_component.move(enemy, move_dir, delta)
+	var spd_mult: float = 1.0
+	if enemy.status_effect_manager != null:
+		spd_mult = enemy.status_effect_manager.get_speed_multiplier()
+	enemy.movement_component.move(enemy, move_dir * spd_mult, delta)
 

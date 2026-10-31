@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffect" load_steps=2 format=3 uid="uid://effect_burn_001"]
+
+[ext_resource type="Script" path="res://components/StatusEffect.gd" id="1_eff"]
+
+[resource]
+script = ExtResource("1_eff")
+id = "burn"
+name = "Горение"
+effect_type = 1
+duration = 4.0
+tick_interval = 0.5
+damage_per_tick = 4
+speed_multiplier = 1.0
+max_stacks = 1
+color = Color(1, 0.45, 0.1, 1)

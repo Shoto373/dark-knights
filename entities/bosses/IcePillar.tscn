@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://ice_pillar_scene_001"]
+
+[ext_resource type="Script" path="res://entities/bosses/IcePillar.gd" id="1_pillar"]
+[ext_resource type="Script" path="res://components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" path="res://components/HurtboxComponent.gd" id="3_hurtbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pillar"]
+size = Vector2(28, 48)
+
+[node name="IcePillar" type="StaticBody2D"]
+collision_layer = 5
+collision_mask = 0
+script = ExtResource("1_pillar")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="HealthComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_health")
+max_health = 50
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("3_hurtbox")
+
+[node name="HurtCollision" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("RectangleShape2D_pillar")
+
+[node name="PulseTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 2.5
+
+[node name="Visuals" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Base" type="ColorRect" parent="Visuals"]
+offset_left = -14.0
+offset_top = -24.0
+offset_right = 14.0
+offset_bottom = 24.0
+color = Color(0.35, 0.65, 0.95, 0.9)
+
+[node name="Highlight" type="ColorRect" parent="Visuals"]
+offset_left = -8.0
+offset_top = -20.0
+offset_right = 8.0
+offset_bottom = 20.0
+color = Color(0.75, 0.92, 1, 0.8)

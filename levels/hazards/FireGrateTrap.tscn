@@ -54,3 +54,4 @@ is_player_hitbox = false
 unique_name_in_owner = true
 shape = SubResource("RectangleShape2D_grate")
 disabled = true
+

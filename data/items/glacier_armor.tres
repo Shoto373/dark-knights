@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=4 format=3 uid="uid://item_glacier_armor_001"]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_it"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "armor"
+operation = "add"
+value = 3.0
+
+[sub_resource type="Resource" id="StatMod_2"]
+script = ExtResource("2_mod")
+stat_name = "max_hp"
+operation = "add"
+value = 20.0
+
+[resource]
+script = ExtResource("1_it")
+id = "glacier_armor"
+name = "Ледниковая броня"
+description = "Панцирь из спрессованного векового льда. +3 к броне, +20 к максимальному здоровью."
+rarity = "epic"
+item_type = "passive"
+cost_gold = 55
+weight = 50.0
+tags = ["frost", "armor"]
+modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2")]
