@@ -27,3 +27,4 @@ immunities = ["poison"]
 gold_reward = 12
 souls_reward = 2
 difficulty_cost = 2
+

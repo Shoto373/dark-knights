@@ -63,6 +63,23 @@ func setup_from_data(data: EnemyData) -> void:
 	attack_hitbox.base_damage = enemy_data.damage
 	
 	body_rect.color = enemy_data.color
+	
+	# Установка стилизованного пиксель-арт спрайта монстра
+	var enemy_tex: Texture2D = SpriteGenerator.get_enemy_texture(enemy_data.enemy_type)
+	if enemy_tex != null and visuals != null:
+		var enemy_sprite: Sprite2D = visuals.get_node_or_null("EnemySprite") as Sprite2D
+		if enemy_sprite == null:
+			enemy_sprite = Sprite2D.new()
+			enemy_sprite.name = "EnemySprite"
+			enemy_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			visuals.add_child(enemy_sprite)
+		enemy_sprite.texture = enemy_tex
+		if body_rect != null:
+			body_rect.visible = false
+		if visuals.has_node("EyeLeft"):
+			visuals.get_node("EyeLeft").visible = false
+		if visuals.has_node("EyeRight"):
+			visuals.get_node("EyeRight").visible = false
 	hp_bar.max_value = enemy_data.max_hp
 	hp_bar.value = enemy_data.max_hp
 	
@@ -123,6 +140,11 @@ func _physics_process(delta: float) -> void:
 			for child in get_tree().root.find_children("*", "Player", true, false):
 				player_target = child as Node2D
 				break
+	
+	if velocity.x < -5.0:
+		visuals.scale.x = -1.0
+	elif velocity.x > 5.0:
+		visuals.scale.x = 1.0
 
 func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
 	# Проверка щита рыцаря-стража: блок спереди, уязвим со спины
@@ -192,6 +214,23 @@ func _reassemble_skeleton() -> void:
 	is_collapsed = false
 	body_rect.scale = Vector2.ONE
 	body_rect.color = enemy_data.color
+	
+	# Установка стилизованного пиксель-арт спрайта монстра
+	var enemy_tex: Texture2D = SpriteGenerator.get_enemy_texture(enemy_data.enemy_type)
+	if enemy_tex != null and visuals != null:
+		var enemy_sprite: Sprite2D = visuals.get_node_or_null("EnemySprite") as Sprite2D
+		if enemy_sprite == null:
+			enemy_sprite = Sprite2D.new()
+			enemy_sprite.name = "EnemySprite"
+			enemy_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			visuals.add_child(enemy_sprite)
+		enemy_sprite.texture = enemy_tex
+		if body_rect != null:
+			body_rect.visible = false
+		if visuals.has_node("EyeLeft"):
+			visuals.get_node("EyeLeft").visible = false
+		if visuals.has_node("EyeRight"):
+			visuals.get_node("EyeRight").visible = false
 	
 	var revive_hp: int = int(round(enemy_data.max_hp * 0.55))
 	health_component.reset(revive_hp)

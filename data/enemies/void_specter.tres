@@ -27,3 +27,4 @@ immunities = ["freeze", "stun"]
 gold_reward = 10
 souls_reward = 2
 difficulty_cost = 2
+

@@ -101,6 +101,22 @@ func apply_hero_data(data: HeroData) -> void:
 	if body_rect != null:
 		body_rect.color = hero_data.color
 	
+	# Установка детализированного пиксель-арт спрайта героя
+	var hero_id: String = hero_data.id if hero_data else "warrior"
+	var hero_tex: Texture2D = SpriteGenerator.get_hero_texture(hero_id)
+	if hero_tex != null and visuals != null:
+		var char_sprite: Sprite2D = visuals.get_node_or_null("CharacterSprite") as Sprite2D
+		if char_sprite == null:
+			char_sprite = Sprite2D.new()
+			char_sprite.name = "CharacterSprite"
+			char_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			visuals.add_child(char_sprite)
+		char_sprite.texture = hero_tex
+		if body_rect != null:
+			body_rect.visible = false
+		if visuals.has_node("EyeRect"):
+			visuals.get_node("EyeRect").visible = false
+	
 	if hero_data.ability_1 != null:
 		ability_1_timer.wait_time = hero_data.ability_1.cooldown
 	if hero_data.ability_2 != null:

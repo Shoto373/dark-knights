@@ -10,6 +10,7 @@ extends CanvasLayer
 @onready var ability_2_bar: ProgressBar = %Ability2Bar
 @onready var ability_1_label: Label = %Ability1Label
 @onready var ability_2_label: Label = %Ability2Label
+@onready var hero_portrait: TextureRect = %HeroPortrait
 @onready var hero_name_label: Label = %HeroNameLabel
 @onready var souls_label: Label = %SoulsLabel
 @onready var gold_label: Label = %GoldLabel
@@ -59,6 +60,8 @@ func _on_player_spawned(player: Node2D) -> void:
 func _update_hero_info() -> void:
 	if is_instance_valid(player_ref) and player_ref.hero_data != null:
 		hero_name_label.text = player_ref.hero_data.name
+		if hero_portrait != null:
+			hero_portrait.texture = SpriteGenerator.get_hero_icon(player_ref.hero_data.id)
 		if player_ref.hero_data.ability_1:
 			ability_1_label.text = "Q: %s" % player_ref.hero_data.ability_1.name
 		if player_ref.hero_data.ability_2:

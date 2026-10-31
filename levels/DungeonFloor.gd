@@ -63,7 +63,7 @@ func _build_floor() -> void:
 	camera = Camera2D.new()
 	camera.set_script(load("res://entities/player/PlayerCamera.gd"))
 	add_child(camera)
-	camera.global_position = Vector2(640, 360)
+	(camera as PlayerCamera).lock_to_room(Vector2(640, 360), false)
 	
 	var hud: HUD = HUD_SCENE.instantiate() as HUD
 	add_child(hud)
@@ -127,9 +127,14 @@ func _on_room_door_entered(direction: Vector2i) -> void:
 	player.velocity = Vector2.ZERO
 	
 	# Плавный сдвиг камеры между комнатами (Pan в стиле Isaac / Gungeon)
-	var tween: Tween = create_tween()
-	tween.tween_property(camera, "global_position", new_room_center, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_callback(func():
+	if camera is PlayerCamera:
+		(camera as PlayerCamera).lock_to_room(new_room_center, true, 0.25)
+	else:
+		var tween: Tween = create_tween()
+		tween.tween_property(camera, "global_position", new_room_center, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	
+	var trans_timer: SceneTreeTimer = get_tree().create_timer(0.25)
+	trans_timer.timeout.connect(func():
 		is_room_transitioning = false
 		target_room.on_player_entered()
 	)

@@ -1,0 +1,224 @@
+[gd_scene load_steps=4 format=3 uid="uid://settings_dialog_001"]
+
+[ext_resource type="Script" path="res://ui/SettingsDialog.gd" id="1_sd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.09, 0.11, 0.16, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.7, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_controls_box"]
+bg_color = Color(0.05, 0.06, 0.09, 0.75)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.25, 0.3, 0.4, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="SettingsDialog" type="CanvasLayer"]
+process_mode = 3
+layer = 120
+script = ExtResource("1_sd")
+
+[node name="Backdrop" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.03, 0.05, 0.88)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(580, 520)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Margin" type="MarginContainer" parent="CenterContainer/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 22
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="CenterContainer/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 24
+text = "НАСТРОЙКИ"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="GridSettings" type="GridContainer" parent="CenterContainer/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="ModeLabel" type="Label" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Режим экрана:"
+
+[node name="ModeOption" type="OptionButton" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResLabel" type="Label" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Разрешение окна:"
+
+[node name="ResOption" type="OptionButton" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VolTitle" type="Label" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Общая громкость:"
+
+[node name="VolBox" type="HBoxContainer" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/Panel/Margin/VBox/GridSettings/VolBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+
+[node name="VolumeLabel" type="Label" parent="CenterContainer/Panel/Margin/VBox/GridSettings/VolBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "100%"
+horizontal_alignment = 2
+
+[node name="ControlsHeader" type="Label" parent="CenterContainer/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 15
+text = "УПРАВЛЕНИЕ И ГОРЯЧИЕ КЛАВИШИ:"
+
+[node name="ControlsPanel" type="PanelContainer" parent="CenterContainer/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_controls_box")
+
+[node name="Margin" type="MarginContainer" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 8
+
+[node name="ControlsVBox" type="VBoxContainer" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="C1" type="Label" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin/ControlsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "• WASD / Стрелки — Перемещение персонажа"
+
+[node name="C2" type="Label" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin/ControlsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "• Мышь + ЛКМ — Прицеливание и атака"
+
+[node name="C3" type="Label" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin/ControlsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "• Пробел (Space) — Рывок (Dash) с фреймами неуязвимости"
+
+[node name="C4" type="Label" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin/ControlsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "• Q / E — Особые способности героя"
+
+[node name="C5" type="Label" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin/ControlsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "• F / E — Взаимодействие (выбор героя, сундуки, порталы)"
+
+[node name="C6" type="Label" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin/ControlsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "• F11 / Alt+Enter — Быстрое переключение полного экрана"
+
+[node name="C7" type="Label" parent="CenterContainer/Panel/Margin/VBox/ControlsPanel/Margin/ControlsVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "• Esc / P — Меню паузы, инвентарь и карта"
+
+[node name="Spacer" type="Control" parent="CenterContainer/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="CenterContainer/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="BtnApply" type="Button" parent="CenterContainer/Panel/Margin/VBox/ButtonsHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.9, 0.45, 1)
+theme_override_font_sizes/font_size = 15
+text = "ПРИМЕНИТЬ"
+
+[node name="BtnClose" type="Button" parent="CenterContainer/Panel/Margin/VBox/ButtonsHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 15
+text = "ОТМЕНА"

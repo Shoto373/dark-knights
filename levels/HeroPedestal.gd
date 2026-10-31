@@ -30,13 +30,31 @@ func _update_display() -> void:
 	hero_name_label.text = hero_data.name
 	statue_visual.color = hero_data.color
 	
+	# Установка детального спрайта статуи героя
+	var hero_tex: Texture2D = SpriteGenerator.get_hero_texture(hero_data.id)
+	if hero_tex != null:
+		var hero_sprite: Sprite2D = get_node_or_null("HeroSprite") as Sprite2D
+		if hero_sprite == null:
+			hero_sprite = Sprite2D.new()
+			hero_sprite.name = "HeroSprite"
+			hero_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			hero_sprite.scale = Vector2(1.4, 1.4)
+			hero_sprite.position = Vector2(0, -10)
+			add_child(hero_sprite)
+		hero_sprite.texture = hero_tex
+		if statue_visual != null:
+			statue_visual.visible = false
+	
 	var is_unlocked: bool = hero_data.unlocked_by_default or MetaProgress.is_hero_unlocked(hero_data.id)
 	var is_active: bool = (GameState.selected_hero_id == hero_data.id)
 	
 	selection_ring.visible = is_active
 	
+	var hero_sprite_node: Sprite2D = get_node_or_null("HeroSprite") as Sprite2D
 	if not is_unlocked:
 		statue_visual.color = Color(0.3, 0.3, 0.3, 0.7)
+		if hero_sprite_node != null:
+			hero_sprite_node.modulate = Color(0.3, 0.3, 0.3, 0.7)
 		if is_player_inside:
 			interaction_label.text = "[F] Разблокировать (%d душ)" % hero_data.unlock_cost_souls
 			interaction_label.visible = true
@@ -44,6 +62,8 @@ func _update_display() -> void:
 			interaction_label.text = "Закрыто (%d душ)" % hero_data.unlock_cost_souls
 			interaction_label.visible = true
 	else:
+		if hero_sprite_node != null:
+			hero_sprite_node.modulate = Color.WHITE
 		if is_active:
 			interaction_label.text = "Выбран"
 			interaction_label.visible = true

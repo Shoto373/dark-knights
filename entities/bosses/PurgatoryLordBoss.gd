@@ -75,6 +75,24 @@ func _ready() -> void:
 		attack_hitbox.base_damage = boss_data.damage
 		beam_hitbox.base_damage = int(round(boss_data.damage * 0.7))
 	
+	# Стилизованный спрайт босса
+	var boss_tex: Texture2D = SpriteGenerator.get_boss_texture("purgatory_lord")
+	if boss_tex != null and visuals != null:
+		var boss_sprite: Sprite2D = visuals.get_node_or_null("BossSprite") as Sprite2D
+		if boss_sprite == null:
+			boss_sprite = Sprite2D.new()
+			boss_sprite.name = "BossSprite"
+			boss_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			boss_sprite.scale = Vector2(2.2, 2.2)
+			visuals.add_child(boss_sprite)
+		boss_sprite.texture = boss_tex
+		if visuals.has_node("BodyRect"):
+			visuals.get_node("BodyRect").visible = false
+		if visuals.has_node("ChestCore"):
+			visuals.get_node("ChestCore").visible = false
+		if visuals.has_node("EyesRect"):
+			visuals.get_node("EyesRect").visible = false
+	
 	if status_effect_manager != null:
 		status_effect_manager.immunities = ["freeze", "burn", "poison", "stun"]
 	
@@ -410,3 +428,4 @@ func _trigger_victory_sequence() -> void:
 	
 	var victory: VictoryScreen = VICTORY_SCREEN_SCENE.instantiate() as VictoryScreen
 	get_tree().root.add_child(victory)
+

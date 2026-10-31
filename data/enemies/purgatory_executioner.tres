@@ -27,3 +27,4 @@ immunities = ["stun"]
 gold_reward = 20
 souls_reward = 4
 difficulty_cost = 4
+

@@ -1,20 +1,20 @@
 extends Control
 
+const SETTINGS_DIALOG_SCENE: PackedScene = preload("res://ui/SettingsDialog.tscn")
+
 @onready var btn_new_game: Button = %BtnNewGame
 @onready var btn_continue: Button = %BtnContinue
 @onready var btn_settings: Button = %BtnSettings
 @onready var btn_quit: Button = %BtnQuit
-@onready var settings_panel: PanelContainer = %SettingsPanel
-@onready var btn_close_settings: Button = %BtnCloseSettings
 
 func _ready() -> void:
 	btn_new_game.pressed.connect(_on_new_game_pressed)
 	btn_continue.pressed.connect(_on_continue_pressed)
 	btn_settings.pressed.connect(_on_settings_pressed)
 	btn_quit.pressed.connect(_on_quit_pressed)
-	btn_close_settings.pressed.connect(_on_close_settings_pressed)
 	
-	settings_panel.visible = false
+	if has_node("%SettingsPanel"):
+		get_node("%SettingsPanel").visible = false
 	btn_continue.disabled = not SaveManager.has_saved_run()
 
 func _on_new_game_pressed() -> void:
@@ -28,11 +28,8 @@ func _on_continue_pressed() -> void:
 			SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
 
 func _on_settings_pressed() -> void:
-	settings_panel.visible = true
-
-func _on_close_settings_pressed() -> void:
-	settings_panel.visible = false
+	var dialog: SettingsDialog = SETTINGS_DIALOG_SCENE.instantiate() as SettingsDialog
+	add_child(dialog)
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
-

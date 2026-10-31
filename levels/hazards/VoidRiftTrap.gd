@@ -59,3 +59,4 @@ func _tick_core_damage() -> void:
 			if hc != null and not hc.is_dead:
 				hc.take_damage(core_damage, true)
 				EventBus.screen_shake_requested.emit(3.0, 0.1)
+

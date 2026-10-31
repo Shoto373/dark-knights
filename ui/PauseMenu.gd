@@ -9,13 +9,18 @@ extends CanvasLayer
 @onready var items_container: VBoxContainer = %ItemsContainer
 @onready var btn_resume: Button = %BtnResume
 @onready var btn_world_map: Button = %BtnWorldMap
+@onready var btn_settings: Button = %BtnSettings
 @onready var btn_back_hub: Button = %BtnBackHub
+
+const SETTINGS_DIALOG_SCENE: PackedScene = preload("res://ui/SettingsDialog.tscn")
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	menu_panel.visible = false
 	btn_resume.pressed.connect(_resume)
 	btn_world_map.pressed.connect(_open_world_map)
+	if btn_settings:
+		btn_settings.pressed.connect(_open_settings)
 	btn_back_hub.pressed.connect(_back_to_hub)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -81,6 +86,10 @@ func _open_world_map() -> void:
 		add_child(map_inst)
 		if map_inst.has_method("set_mode"):
 			map_inst.set_mode(false)
+
+func _open_settings() -> void:
+	var dialog: SettingsDialog = SETTINGS_DIALOG_SCENE.instantiate() as SettingsDialog
+	add_child(dialog)
 
 func _back_to_hub() -> void:
 	_resume()

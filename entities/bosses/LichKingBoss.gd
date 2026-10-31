@@ -65,6 +65,21 @@ func _ready() -> void:
 		hurtbox_component.armor = boss_data.armor
 		attack_hitbox.base_damage = boss_data.damage
 	
+	# Стилизованный спрайт босса
+	var boss_tex: Texture2D = SpriteGenerator.get_boss_texture("lich_king")
+	if boss_tex != null and visuals != null:
+		var boss_sprite: Sprite2D = visuals.get_node_or_null("BossSprite") as Sprite2D
+		if boss_sprite == null:
+			boss_sprite = Sprite2D.new()
+			boss_sprite.name = "BossSprite"
+			boss_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			boss_sprite.scale = Vector2(1.9, 1.9)
+			visuals.add_child(boss_sprite)
+		boss_sprite.texture = boss_tex
+		for child in visuals.get_children():
+			if child != boss_sprite and child is CanvasItem:
+				(child as CanvasItem).visible = false
+	
 	if status_effect_manager != null:
 		status_effect_manager.immunities = ["freeze", "stun"]
 	

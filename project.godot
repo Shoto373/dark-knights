@@ -18,6 +18,7 @@ MetaProgress="*res://autoload/MetaProgress.gd"
 SaveManager="*res://autoload/SaveManager.gd"
 AudioManager="*res://autoload/AudioManager.gd"
 SceneRouter="*res://autoload/SceneRouter.gd"
+SettingsManager="*res://autoload/SettingsManager.gd"
 
 [editor_plugins]
 
@@ -29,7 +30,7 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/size/resizable=true
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="keep"
 
 [rendering]
 
