@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WorldNodeData" load_steps=4 format=3 uid="uid://world_fire_mines"]
+
+[ext_resource type="Script" path="res://data/world/WorldNodeData.gd" id="1_node"]
+[ext_resource type="Resource" uid="uid://biome_fire_mines_001" path="res://data/biomes/fire_mines.tres" id="2_biome"]
+[ext_resource type="Resource" uid="uid://world_purgatory" path="res://data/world/purgatory.tres" id="3_purg"]
+
+[resource]
+script = ExtResource("1_node")
+id = "fire_mines"
+name = "Вулканические шахты"
+description = "Побочные лавовые раскопки. Жар расплавит плоть неподготовленных."
+biome = ExtResource("2_biome")
+floors_count = 1
+next_nodes = [ExtResource("3_purg")]
+access_condition = ""
+is_final = false
+map_position = Vector2(960, 540)
+icon_symbol = "⛏"

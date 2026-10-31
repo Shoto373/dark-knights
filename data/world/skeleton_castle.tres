@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WorldNodeData" load_steps=5 format=3 uid="uid://world_skeleton_castle"]
+
+[ext_resource type="Script" path="res://data/world/WorldNodeData.gd" id="1_node"]
+[ext_resource type="Resource" uid="uid://biome_skeleton_001" path="res://data/biomes/skeleton_castle.tres" id="2_biome"]
+[ext_resource type="Resource" uid="uid://world_frost_world" path="res://data/world/frost_world.tres" id="3_frost"]
+[ext_resource type="Resource" uid="uid://world_fire_world" path="res://data/world/fire_world.tres" id="4_fire"]
+
+[resource]
+script = ExtResource("1_node")
+id = "skeleton_castle"
+name = "Замок Рыцаря-скелета"
+description = "Мрачная цитадель проклятого рыцаря. После победы открывается развилка миров."
+biome = ExtResource("2_biome")
+floors_count = 1
+next_nodes = [ExtResource("3_frost"), ExtResource("4_fire")]
+access_condition = ""
+is_final = false
+map_position = Vector2(620, 360)
+icon_symbol = "💀"

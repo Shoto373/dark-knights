@@ -99,3 +99,4 @@ func test_item_pedestal_purchase_and_blessing() -> void:
 	# Выбираем ped1 -> ped2 должен быть уничтожен
 	ped1._try_collect()
 	assert_true(ped2.is_queued_for_deletion(), "Sibling blessing pedestal must be freed when one is picked")
+

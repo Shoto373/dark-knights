@@ -51,3 +51,4 @@ func _collect() -> void:
 	tween.tween_property(visual, "scale", Vector2(1.5, 1.5), 0.15)
 	tween.tween_property(visual, "modulate:a", 0.0, 0.15)
 	tween.chain().tween_callback(queue_free)
+

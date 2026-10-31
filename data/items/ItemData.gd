@@ -21,3 +21,4 @@ func get_rarity_color() -> Color:
 		"epic": return Color(0.75, 0.3, 0.9, 1.0)
 		"legendary": return Color(1.0, 0.65, 0.1, 1.0)
 		_: return Color.WHITE
+

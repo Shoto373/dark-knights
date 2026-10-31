@@ -44,3 +44,4 @@ func roll_multiple_unique(count: int, rng: RandomNumberGenerator = null, exclude
 			break
 	
 	return result
+

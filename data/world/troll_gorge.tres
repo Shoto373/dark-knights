@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WorldNodeData" load_steps=4 format=3 uid="uid://world_troll_gorge"]
+
+[ext_resource type="Script" path="res://data/world/WorldNodeData.gd" id="1_node"]
+[ext_resource type="Resource" uid="uid://biome_troll_001" path="res://data/biomes/troll_gorge.tres" id="2_biome"]
+[ext_resource type="Resource" uid="uid://world_skeleton_castle" path="res://data/world/skeleton_castle.tres" id="3_skel"]
+
+[resource]
+script = ExtResource("1_node")
+id = "troll_gorge"
+name = "Ущелье троллей"
+description = "Горный разлом с коварными обрывами, узкими мостами и регенерирующими троллями."
+biome = ExtResource("2_biome")
+floors_count = 1
+next_nodes = [ExtResource("3_skel")]
+access_condition = ""
+is_final = false
+map_position = Vector2(440, 360)
+icon_symbol = "🪨"

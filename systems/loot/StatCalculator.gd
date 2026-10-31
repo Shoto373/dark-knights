@@ -53,3 +53,4 @@ static func get_tag_counts(items: Array) -> Dictionary:
 			for tag in item.tags:
 				counts[tag] = counts.get(tag, 0) + 1
 	return counts
+

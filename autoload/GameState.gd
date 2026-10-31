@@ -8,7 +8,11 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 var selected_hero_id: String = "warrior"
 var current_world_node_id: String = "hub"
+var current_world_node: WorldNodeData = null
+var visited_world_nodes: Array[String] = []
 var current_floor_index: int = 0
+
+var world_graph: WorldGraph = null
 
 var current_hp: int = 100
 var max_hp: int = 100
@@ -24,7 +28,13 @@ var run_stats: Dictionary = {
 	"time_elapsed": 0.0
 }
 
+func _ready() -> void:
+	world_graph = WorldGraph.new()
+
 func start_new_run(hero_id: String = "warrior", custom_seed: int = 0) -> void:
+	if world_graph == null:
+		world_graph = WorldGraph.new()
+		
 	is_run_active = true
 	selected_hero_id = hero_id
 	if custom_seed != 0:
@@ -34,6 +44,8 @@ func start_new_run(hero_id: String = "warrior", custom_seed: int = 0) -> void:
 	
 	rng.seed = current_seed
 	current_world_node_id = "goblin_dungeon"
+	current_world_node = world_graph.get_node("goblin_dungeon")
+	visited_world_nodes = ["goblin_dungeon"]
 	current_floor_index = 1
 	gold = 0
 	keys = 0
@@ -62,3 +74,31 @@ func add_gold(amount: int) -> void:
 func add_keys(amount: int) -> void:
 	keys = max(0, keys + amount)
 
+func get_current_biome() -> BiomeData:
+	if current_world_node != null and current_world_node.biome != null:
+		return current_world_node.biome
+	
+	var biome_path: String = "res://data/biomes/%s.tres" % current_world_node_id
+	if ResourceLoader.exists(biome_path):
+		var bio: Resource = load(biome_path)
+		if bio is BiomeData:
+			return bio as BiomeData
+			
+	return load("res://data/biomes/goblin_dungeon.tres") as BiomeData
+
+func advance_to_world_node(node: WorldNodeData) -> void:
+	if node == null:
+		return
+	current_world_node = node
+	current_world_node_id = node.id
+	if not visited_world_nodes.has(node.id):
+		visited_world_nodes.append(node.id)
+	current_floor_index += 1
+	
+	# Обновляем сид для детерминированности следующего этажа
+	current_seed = rng.randi()
+	
+	if node.is_final:
+		end_run(true)
+	else:
+		SceneRouter.change_scene("res://levels/DungeonFloor.tscn", 0.4)

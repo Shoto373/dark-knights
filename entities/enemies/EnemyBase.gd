@@ -21,6 +21,12 @@ var player_target: Node2D = null
 var attack_timer: float = 0.0
 var heal_cooldown_timer: float = 0.0
 
+# Механики регенерации и горения (тролли и др.)
+var time_since_damage: float = 3.0
+var regen_tick_timer: float = 0.0
+var is_burning: bool = false
+var burn_timer: float = 0.0
+
 func _ready() -> void:
 	add_to_group("enemies")
 	collision_layer = 4 # Слой 3: enemies
@@ -33,6 +39,7 @@ func _ready() -> void:
 	hurtbox_component.health_component = health_component
 	hurtbox_component.movement_component = movement_component
 	hurtbox_component.is_player_hurtbox = false
+	hurtbox_component.hit_received.connect(_on_hit_received)
 	
 	health_component.damaged.connect(_on_damaged)
 	health_component.died.connect(_on_died)
@@ -51,6 +58,8 @@ func setup_from_data(data: EnemyData) -> void:
 	body_rect.color = enemy_data.color
 	hp_bar.max_value = enemy_data.max_hp
 	hp_bar.value = enemy_data.max_hp
+	
+	time_since_damage = enemy_data.regen_delay_seconds
 
 func _physics_process(delta: float) -> void:
 	if health_component.is_dead:
@@ -61,18 +70,43 @@ func _physics_process(delta: float) -> void:
 	if heal_cooldown_timer > 0.0:
 		heal_cooldown_timer -= delta
 	
+	# Статус горения (сбивает регенерацию)
+	if is_burning:
+		burn_timer -= delta
+		if burn_timer <= 0.0:
+			is_burning = false
+	
+	# Пассивная регенерация (если не получал урон N секунд и не горит)
+	time_since_damage += delta
+	if enemy_data != null and enemy_data.can_regenerate and not is_burning:
+		if time_since_damage >= enemy_data.regen_delay_seconds:
+			if health_component.current_health < health_component.max_health:
+				regen_tick_timer += delta
+				if regen_tick_timer >= 1.0:
+					regen_tick_timer = 0.0
+					health_component.heal(enemy_data.regen_amount)
+					hp_bar.value = health_component.current_health
+					_flash_heal_effect(self)
+	
 	# Находим цель (игрока) если еще не найдена
 	if not is_instance_valid(player_target):
 		var players: Array[Node] = get_tree().get_nodes_in_group("player")
 		if not players.is_empty():
 			player_target = players[0] as Node2D
 		else:
-			# Ищем по типу
 			for child in get_tree().root.find_children("*", "Player", true, false):
 				player_target = child as Node2D
 				break
 
+func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
+	time_since_damage = 0.0
+	if hitbox != null and (hitbox.damage_type == "fire" or hitbox.tags.has("fire")):
+		is_burning = true
+		burn_timer = 4.0
+		visuals.modulate = Color(2.5, 0.8, 0.2, 1.0)
+
 func _on_damaged(_amount: int, current_hp: int, _max_hp: int) -> void:
+	time_since_damage = 0.0
 	hp_bar.value = current_hp
 	_flash_red()
 
@@ -86,7 +120,6 @@ func _on_died() -> void:
 	attack_shape.disabled = true
 	hurtbox_component.set_deferred("monitoring", false)
 	
-	# Начисление наград за победу над врагом
 	if enemy_data != null:
 		GameState.add_gold(enemy_data.gold_reward)
 		if enemy_data.souls_reward > 0:
@@ -106,8 +139,12 @@ func perform_attack() -> void:
 	
 	if enemy_data != null and enemy_data.enemy_type == "ranged":
 		_shoot_arrow()
+	elif enemy_data != null and enemy_data.enemy_type == "boulder_thrower":
+		_throw_boulder()
 	elif enemy_data != null and enemy_data.enemy_type == "support":
 		_try_heal_or_attack()
+	elif enemy_data != null and enemy_data.enemy_type == "heavy":
+		_heavy_attack()
 	else:
 		_melee_attack()
 
@@ -117,11 +154,45 @@ func _melee_attack() -> void:
 	attack_hitbox.reset_hits()
 	attack_shape.disabled = false
 	
-	# Небольшой выпад вперед
 	var tween: Tween = create_tween()
 	tween.tween_property(self, "position", position + dir * 18.0, 0.1)
 	tween.tween_callback(func(): attack_shape.disabled = true)
 	tween.tween_property(self, "position", position, 0.1)
+
+func _heavy_attack() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	attack_hitbox.rotation = dir.angle()
+	attack_hitbox.knockback_force = 420.0
+	attack_hitbox.reset_hits()
+	
+	# Замах тяжелого оружия
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(2.0, 1.2, 0.4, 1.0)
+	tween.tween_property(self, "position", position - dir * 10.0, 0.2)
+	tween.tween_callback(func():
+		attack_shape.disabled = false
+		visuals.modulate = Color.WHITE
+		EventBus.screen_shake_requested.emit(4.0, 0.15)
+	)
+	tween.tween_property(self, "position", position + dir * 28.0, 0.12)
+	tween.tween_callback(func(): attack_shape.disabled = true)
+	tween.tween_property(self, "position", position, 0.15)
+
+func _throw_boulder() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+	get_parent().add_child(proj)
+	proj.global_position = global_position + dir * 24.0
+	proj.scale = Vector2(1.7, 1.7)
+	proj.setup(
+		dir,
+		290.0, # Тяжелый и мощный валун
+		enemy_data.damage if enemy_data else 16,
+		false,
+		460.0,
+		280.0,
+		Color(0.6, 0.52, 0.42, 1.0)
+	)
 
 func _shoot_arrow() -> void:
 	var dir: Vector2 = (player_target.global_position - global_position).normalized()
@@ -132,7 +203,7 @@ func _shoot_arrow() -> void:
 		dir,
 		380.0,
 		enemy_data.damage if enemy_data else 10,
-		false, # Вражеский снаряд!
+		false,
 		400.0,
 		180.0,
 		Color(0.85, 0.4, 0.2, 1.0)
@@ -161,4 +232,3 @@ func _flash_heal_effect(target: EnemyBase) -> void:
 	var tween: Tween = target.create_tween()
 	target.visuals.modulate = Color(0.3, 2.5, 0.8, 1.0)
 	tween.tween_property(target.visuals, "modulate", Color.WHITE, 0.25)
-

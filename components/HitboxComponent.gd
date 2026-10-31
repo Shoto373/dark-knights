@@ -8,6 +8,8 @@ extends Area2D
 @export var crit_chance: float = 0.1
 @export var crit_multiplier: float = 2.0
 @export var knockback_force: float = 250.0
+@export var damage_type: String = "physical" # physical, fire, ice, etc.
+@export var tags: Array[String] = []
 @export var is_player_hitbox: bool = true:
 	set(val):
 		is_player_hitbox = val

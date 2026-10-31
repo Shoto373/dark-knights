@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="WorldNodeData" load_steps=4 format=3 uid="uid://world_goblin_dungeon"]
+
+[ext_resource type="Script" path="res://data/world/WorldNodeData.gd" id="1_node"]
+[ext_resource type="Resource" uid="uid://biome_goblin_001" path="res://data/biomes/goblin_dungeon.tres" id="2_biome"]
+[ext_resource type="Resource" uid="uid://world_troll_gorge" path="res://data/world/troll_gorge.tres" id="3_troll"]
+
+[resource]
+script = ExtResource("1_node")
+id = "goblin_dungeon"
+name = "Темница гоблинов"
+description = "Сырые катакомбы, кишащие разбойниками-гоблинами. Первый биом спуска."
+biome = ExtResource("2_biome")
+floors_count = 1
+next_nodes = [ExtResource("3_troll")]
+access_condition = ""
+is_final = false
+map_position = Vector2(260, 360)
+icon_symbol = "🗡"

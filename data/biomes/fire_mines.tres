@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BiomeData" load_steps=2 format=3 uid="uid://biome_fire_mines_001"]
+
+[ext_resource type="Script" path="res://data/biomes/BiomeData.gd" id="1_bio"]
+
+[resource]
+script = ExtResource("1_bio")
+id = "fire_mines"
+name = "Вулканические шахты"
+floor_theme_color = Color(0.24, 0.12, 0.09, 1)
+wall_theme_color = Color(0.12, 0.05, 0.04, 1)
+chasm_color = Color(0.08, 0.02, 0.02, 1)
+bridge_color = Color(0.42, 0.22, 0.12, 1)
+min_rooms = 7
+max_rooms = 10
+enemy_pool = []

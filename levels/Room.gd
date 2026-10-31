@@ -9,6 +9,8 @@ signal door_entered(direction: Vector2i)
 const ITEM_PEDESTAL_SCENE = preload("res://entities/loot/ItemPedestal.tscn")
 const TREASURE_CHEST_SCENE = preload("res://entities/loot/TreasureChest.tscn")
 const PICKUP_SCENE = preload("res://entities/pickups/PickupBase.tscn")
+const CHASM_HAZARD_SCENE = preload("res://levels/hazards/ChasmHazard.tscn")
+const BRIDGE_AREA_SCENE = preload("res://levels/hazards/BridgeArea.tscn")
 
 @onready var door_up: DungeonDoor = %DoorUp
 @onready var door_down: DungeonDoor = %DoorDown
@@ -25,6 +27,7 @@ const PICKUP_SCENE = preload("res://entities/pickups/PickupBase.tscn")
 @onready var objects_container: Node2D = %ObjectsContainer
 
 var room_data: RoomData
+var current_biome: BiomeData = null
 var active_enemies: Array[Node2D] = []
 var wave_spawner: WaveSpawner = WaveSpawner.new()
 
@@ -34,15 +37,61 @@ func _ready() -> void:
 	door_left.door_entered.connect(_on_door_entered)
 	door_right.door_entered.connect(_on_door_entered)
 
-func setup(data: RoomData) -> void:
+func setup(data: RoomData, biome: BiomeData = null) -> void:
 	room_data = data
+	current_biome = biome if biome != null else GameState.get_current_biome()
 	room_type_label.text = "[ %s ]" % room_data.get_type_name().to_upper()
+	_apply_biome_theme()
 	_configure_doors()
 	
 	if room_data.room_type == RoomData.RoomType.TREASURE:
 		_setup_treasure_room()
 	elif room_data.room_type == RoomData.RoomType.SHOP:
 		_setup_shop_room()
+	elif room_data.room_type == RoomData.RoomType.COMBAT:
+		_setup_biome_hazards()
+
+func _apply_biome_theme() -> void:
+	if current_biome == null:
+		return
+	var floor_node: ColorRect = get_node_or_null("Floor") as ColorRect
+	if floor_node != null:
+		floor_node.color = current_biome.floor_theme_color
+	var arena_floor: ColorRect = get_node_or_null("ArenaFloor") as ColorRect
+	if arena_floor != null:
+		arena_floor.color = current_biome.floor_theme_color.lightened(0.06)
+	var walls_node: Node2D = get_node_or_null("VisualWalls") as Node2D
+	if walls_node != null:
+		for wall in walls_node.get_children():
+			if wall is ColorRect:
+				wall.color = current_biome.wall_theme_color
+
+func _setup_biome_hazards() -> void:
+	if current_biome != null and current_biome.id == "troll_gorge":
+		if abs(room_data.grid_pos.x + room_data.grid_pos.y) % 2 == 1:
+			_create_gorge_chasm_and_bridge()
+
+func _create_gorge_chasm_and_bridge() -> void:
+	var top_chasm: ChasmHazard = CHASM_HAZARD_SCENE.instantiate() as ChasmHazard
+	objects_container.add_child(top_chasm)
+	top_chasm.position = Vector2(640, 180)
+	top_chasm.pit_size = Vector2(160, 200)
+	if current_biome != null:
+		top_chasm.visual_pit.color = current_biome.chasm_color
+	
+	var bottom_chasm: ChasmHazard = CHASM_HAZARD_SCENE.instantiate() as ChasmHazard
+	objects_container.add_child(bottom_chasm)
+	bottom_chasm.position = Vector2(640, 540)
+	bottom_chasm.pit_size = Vector2(160, 200)
+	if current_biome != null:
+		bottom_chasm.visual_pit.color = current_biome.chasm_color
+		
+	var bridge: BridgeArea = BRIDGE_AREA_SCENE.instantiate() as BridgeArea
+	objects_container.add_child(bridge)
+	bridge.position = Vector2(640, 360)
+	bridge.bridge_size = Vector2(160, 140)
+	if current_biome != null:
+		bridge.visual_rect.color = current_biome.bridge_color
 
 func _configure_doors() -> void:
 	_setup_door(door_up, wall_blocker_up, Vector2i.UP)
@@ -77,7 +126,7 @@ func on_player_entered() -> void:
 
 func _start_combat() -> void:
 	_lock_all_doors()
-	active_enemies = wave_spawner.spawn_room_enemies(self, room_data)
+	active_enemies = wave_spawner.spawn_room_enemies(self, room_data, current_biome)
 	
 	for enemy in active_enemies:
 		var hc: HealthComponent = enemy.get_node_or_null("HealthComponent") as HealthComponent
@@ -97,33 +146,28 @@ func _finish_combat() -> void:
 	room_cleared.emit()
 
 func _spawn_room_clear_reward() -> void:
-	# Награда за зачистку комнаты в стиле Isaac (монеты, сердца, ключи или сундук)
 	var rng: RandomNumberGenerator = GameState.rng
 	var roll: float = rng.randf()
 	
 	if roll < 0.25:
-		# Монета
 		var coin: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
 		coin.pickup_type = PickupBase.PickupType.GOLD
 		coin.amount = rng.randi_range(3, 8)
 		objects_container.add_child(coin)
 		coin.position = Vector2(640, 360)
 	elif roll < 0.45:
-		# Сердце
 		var heart: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
 		heart.pickup_type = PickupBase.PickupType.HEART
 		heart.amount = 25
 		objects_container.add_child(heart)
 		heart.position = Vector2(640, 360)
 	elif roll < 0.60:
-		# Ключ
 		var key: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
 		key.pickup_type = PickupBase.PickupType.KEY
 		key.amount = 1
 		objects_container.add_child(key)
 		key.position = Vector2(640, 360)
 	elif roll < 0.75:
-		# Сундук
 		var chest: TreasureChest = TREASURE_CHEST_SCENE.instantiate() as TreasureChest
 		chest.requires_key = (rng.randf() > 0.5)
 		objects_container.add_child(chest)
@@ -158,7 +202,6 @@ func _setup_treasure_room() -> void:
 		chest.position = Vector2(640, 360)
 
 func _setup_shop_room() -> void:
-	# Визуал торговца
 	var merchant: ColorRect = ColorRect.new()
 	merchant.size = Vector2(32, 40)
 	merchant.position = Vector2(624, 210)
@@ -177,7 +220,6 @@ func _setup_shop_room() -> void:
 	if loot_table != null:
 		rolled_items = loot_table.roll_multiple_unique(2, GameState.rng)
 	
-	# Слот 1: Случайный предмет
 	if rolled_items.size() > 0:
 		var it1: ItemData = rolled_items[0]
 		var ped1: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
@@ -185,7 +227,6 @@ func _setup_shop_room() -> void:
 		ped1.position = Vector2(480, 360)
 		ped1.setup(it1, it1.cost_gold, false)
 	
-	# Слот 2: Второй предмет
 	if rolled_items.size() > 1:
 		var it2: ItemData = rolled_items[1]
 		var ped2: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
@@ -193,7 +234,6 @@ func _setup_shop_room() -> void:
 		ped2.position = Vector2(640, 360)
 		ped2.setup(it2, it2.cost_gold, false)
 	
-	# Слот 3: Ключ за 10 золота
 	var key_ped: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
 	objects_container.add_child(key_ped)
 	key_ped.position = Vector2(800, 360)

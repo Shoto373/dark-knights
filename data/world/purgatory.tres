@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WorldNodeData" load_steps=3 format=3 uid="uid://world_purgatory"]
+
+[ext_resource type="Script" path="res://data/world/WorldNodeData.gd" id="1_node"]
+[ext_resource type="Resource" uid="uid://biome_purgatory_001" path="res://data/biomes/purgatory.tres" id="2_biome"]
+
+[resource]
+script = ExtResource("1_node")
+id = "purgatory"
+name = "Чистилище"
+description = "Финальный рубеж между бытием и забвением. Обитель Первородного Судии."
+biome = ExtResource("2_biome")
+floors_count = 1
+next_nodes = []
+access_condition = ""
+is_final = true
+map_position = Vector2(1120, 360)
+icon_symbol = "✨"

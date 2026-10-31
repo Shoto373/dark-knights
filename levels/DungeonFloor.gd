@@ -30,14 +30,19 @@ func _ready() -> void:
 	_build_floor()
 
 func _build_floor() -> void:
-	floor_data = floor_generator.generate_floor(GameState.current_seed, 10)
+	var current_biome: BiomeData = GameState.get_current_biome()
+	var target_rooms: int = 10
+	if current_biome != null:
+		target_rooms = GameState.rng.randi_range(current_biome.min_rooms, current_biome.max_rooms)
+		
+	floor_data = floor_generator.generate_floor(GameState.current_seed, target_rooms)
 	var rooms: Dictionary = floor_data["rooms"]
 	
 	for pos in rooms.keys():
 		var room_node: DungeonRoom = ROOM_SCENE.instantiate() as DungeonRoom
 		rooms_container.add_child(room_node)
 		room_node.position = Vector2(pos.x * ROOM_WIDTH, pos.y * ROOM_HEIGHT)
-		room_node.setup(rooms[pos])
+		room_node.setup(rooms[pos], current_biome)
 		room_node.door_entered.connect(_on_room_door_entered)
 		spawned_rooms[pos] = room_node
 	

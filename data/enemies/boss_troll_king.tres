@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=2 format=3 uid="uid://boss_troll_king_001"]
+
+[ext_resource type="Script" path="res://data/enemies/BossData.gd" id="1_boss"]
+
+[resource]
+script = ExtResource("1_boss")
+id = "boss_troll_king"
+name = "Король троллей"
+color = Color(0.35, 0.48, 0.32, 1)
+max_hp = 500
+armor = 3
+speed = 100.0
+damage = 25
+souls_reward = 40
+gold_reward = 80

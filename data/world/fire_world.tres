@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WorldNodeData" load_steps=5 format=3 uid="uid://world_fire_world"]
+
+[ext_resource type="Script" path="res://data/world/WorldNodeData.gd" id="1_node"]
+[ext_resource type="Resource" uid="uid://biome_fire_001" path="res://data/biomes/fire_world.tres" id="2_biome"]
+[ext_resource type="Resource" uid="uid://world_purgatory" path="res://data/world/purgatory.tres" id="3_purg"]
+[ext_resource type="Resource" uid="uid://world_fire_mines" path="res://data/world/fire_mines.tres" id="4_mines"]
+
+[resource]
+script = ExtResource("1_node")
+id = "fire_world"
+name = "Мир огня"
+description = "Пылающие пустоши, реки магмы и логово Древнего Огненного Дракона."
+biome = ExtResource("2_biome")
+floors_count = 1
+next_nodes = [ExtResource("3_purg"), ExtResource("4_mines")]
+access_condition = ""
+is_final = false
+map_position = Vector2(800, 480)
+icon_symbol = "🔥"

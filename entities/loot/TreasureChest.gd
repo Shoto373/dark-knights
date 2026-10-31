@@ -100,3 +100,4 @@ func _on_body_exited(body: Node2D) -> void:
 		is_player_inside = false
 		player_ref = null
 		_update_display()
+

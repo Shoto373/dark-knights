@@ -1,0 +1,112 @@
+[gd_scene load_steps=8 format=3 uid="uid://boss_troll_king_scene_001"]
+
+[ext_resource type="Script" path="res://entities/bosses/TrollKingBoss.gd" id="1_boss"]
+[ext_resource type="Script" path="res://components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" path="res://components/MovementComponent.gd" id="3_movement"]
+[ext_resource type="Script" path="res://components/HurtboxComponent.gd" id="4_hurtbox"]
+[ext_resource type="Script" path="res://components/HitboxComponent.gd" id="5_hitbox"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 24.0
+height = 56.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurt"]
+radius = 28.0
+height = 62.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_attack"]
+radius = 48.0
+
+[node name="TrollKingBoss" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_boss")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="HealthComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_health")
+max_health = 500
+
+[node name="MovementComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_movement")
+max_speed = 100.0
+acceleration = 600.0
+friction = 800.0
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("4_hurtbox")
+
+[node name="HurtCollision" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape2D_hurt")
+
+[node name="AttackHitbox" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("5_hitbox")
+base_damage = 25
+knockback_force = 450.0
+is_player_hitbox = false
+
+[node name="AttackShape" type="CollisionShape2D" parent="AttackHitbox"]
+unique_name_in_owner = true
+position = Vector2(36, 0)
+shape = SubResource("CircleShape2D_attack")
+disabled = true
+
+[node name="Visuals" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Body" type="ColorRect" parent="Visuals"]
+offset_left = -24.0
+offset_top = -28.0
+offset_right = 24.0
+offset_bottom = 28.0
+color = Color(0.35, 0.48, 0.32, 1)
+
+[node name="StoneSkin" type="ColorRect" parent="Visuals"]
+offset_left = -18.0
+offset_top = -14.0
+offset_right = 18.0
+offset_bottom = 18.0
+color = Color(0.24, 0.32, 0.22, 1)
+
+[node name="CrownRect" type="ColorRect" parent="Visuals"]
+unique_name_in_owner = true
+offset_left = -16.0
+offset_top = -34.0
+offset_right = 16.0
+offset_bottom = -26.0
+color = Color(0.9, 0.75, 0.2, 1)
+
+[node name="Club" type="ColorRect" parent="Visuals"]
+offset_left = 22.0
+offset_top = -18.0
+offset_right = 34.0
+offset_bottom = 22.0
+color = Color(0.45, 0.38, 0.3, 1)
+
+[node name="FlameFx" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+offset_left = -26.0
+offset_top = -36.0
+offset_right = 26.0
+offset_bottom = 30.0
+color = Color(1, 0.5, 0.1, 0.4)
+
+[node name="RegenFx" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+offset_left = -28.0
+offset_top = -32.0
+offset_right = 28.0
+offset_bottom = 32.0
+color = Color(0.2, 1, 0.5, 0.4)

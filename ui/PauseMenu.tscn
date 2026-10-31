@@ -81,6 +81,12 @@ custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 text = "Продолжить"
 
+[node name="BtnWorldMap" type="Button" parent="MenuPanel/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "Карта мира"
+
 [node name="BtnBackHub" type="Button" parent="MenuPanel/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 38)

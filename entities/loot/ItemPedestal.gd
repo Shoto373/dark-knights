@@ -112,3 +112,4 @@ func _on_body_exited(body: Node2D) -> void:
 	if body is Player:
 		is_player_inside = false
 		player_ref = null
+

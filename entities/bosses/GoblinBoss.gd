@@ -204,5 +204,5 @@ func _spawn_exit_portal() -> void:
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
 	portal.global_position = global_position + Vector2(0, -90.0)
-	portal.target_scene = "res://levels/Hub.tscn"
+	portal.target_scene = "res://levels/DungeonFloor.tscn"
 	portal.prompt_label.text = "[F] Перейти в Ущелье троллей"

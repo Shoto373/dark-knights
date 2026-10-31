@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_troll_brute_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+id = "troll_brute"
+name = "Тролль-громила"
+color = Color(0.42, 0.52, 0.32, 1)
+max_hp = 110
+speed = 95.0
+armor = 2
+damage = 22
+enemy_type = "heavy"
+attack_range = 45.0
+attack_cooldown = 1.6
+preferred_distance = 0.0
+knockback_resistance = 0.5
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 3.0
+gold_reward = 8
+souls_reward = 2
+difficulty_cost = 3

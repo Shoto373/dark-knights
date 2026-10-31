@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WorldNodeData" load_steps=5 format=3 uid="uid://world_frost_world"]
+
+[ext_resource type="Script" path="res://data/world/WorldNodeData.gd" id="1_node"]
+[ext_resource type="Resource" uid="uid://biome_frost_001" path="res://data/biomes/frost_world.tres" id="2_biome"]
+[ext_resource type="Resource" uid="uid://world_purgatory" path="res://data/world/purgatory.tres" id="3_purg"]
+[ext_resource type="Resource" uid="uid://world_frost_caves" path="res://data/world/frost_caves.tres" id="4_caves"]
+
+[resource]
+script = ExtResource("1_node")
+id = "frost_world"
+name = "Мир холода"
+description = "Ледяные пики и морозные залы. Владения бессмертного Короля-лича."
+biome = ExtResource("2_biome")
+floors_count = 1
+next_nodes = [ExtResource("3_purg"), ExtResource("4_caves")]
+access_condition = ""
+is_final = false
+map_position = Vector2(800, 240)
+icon_symbol = "❄"

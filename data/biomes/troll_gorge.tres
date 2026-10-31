@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="BiomeData" load_steps=6 format=3 uid="uid://biome_troll_001"]
+
+[ext_resource type="Script" path="res://data/biomes/BiomeData.gd" id="1_bio"]
+[ext_resource type="Resource" uid="uid://enemy_troll_brute_001" path="res://data/enemies/troll_brute.tres" id="2_brute"]
+[ext_resource type="Resource" uid="uid://enemy_stone_thrower_001" path="res://data/enemies/stone_thrower.tres" id="3_thrower"]
+[ext_resource type="Resource" uid="uid://enemy_troll_regen_001" path="res://data/enemies/troll_regenerator.tres" id="4_regen"]
+[ext_resource type="Resource" uid="uid://boss_troll_king_001" path="res://data/enemies/boss_troll_king.tres" id="5_boss"]
+
+[resource]
+script = ExtResource("1_bio")
+id = "troll_gorge"
+name = "Ущелье троллей"
+floor_theme_color = Color(0.24, 0.2, 0.16, 1)
+wall_theme_color = Color(0.12, 0.09, 0.07, 1)
+chasm_color = Color(0.04, 0.03, 0.03, 1)
+bridge_color = Color(0.44, 0.3, 0.16, 1)
+min_rooms = 9
+max_rooms = 14
+enemy_pool = [ExtResource("2_brute"), ExtResource("3_thrower"), ExtResource("4_regen")]
+elite_enemy = ExtResource("2_brute")
+boss_data = ExtResource("5_boss")
+boss_scene_path = "res://entities/bosses/TrollKingBoss.tscn"

@@ -60,3 +60,4 @@ theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
 theme_override_font_sizes/font_size = 10
 text = "[F] Взять"
 horizontal_alignment = 1
+

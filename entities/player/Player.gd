@@ -138,6 +138,13 @@ func recalculate_stats() -> void:
 	weapon_hitbox.crit_chance = new_crit_chance
 	weapon_hitbox.crit_multiplier = new_crit_mult
 	
+	# Проверка синергий и тегов предметов (например огонь)
+	var tag_counts: Dictionary = StatCalculator.get_tag_counts(items)
+	if tag_counts.get("fire", 0) > 0:
+		weapon_hitbox.damage_type = "fire"
+		if not weapon_hitbox.tags.has("fire"):
+			weapon_hitbox.tags.append("fire")
+	
 	GameState.current_hp = health_component.current_health
 	GameState.max_hp = health_component.max_health
 	EventBus.player_health_changed.emit(health_component.current_health, health_component.max_health)
@@ -241,6 +248,9 @@ func _shoot_basic_projectile() -> void:
 		180.0,
 		hero_data.color if hero_data else Color.WHITE
 	)
+	if weapon_hitbox.damage_type == "fire" or weapon_hitbox.tags.has("fire"):
+		proj.hitbox.damage_type = "fire"
+		proj.hitbox.tags = ["fire"]
 
 func _trigger_ability(ability: AbilityData, timer: Timer) -> void:
 	if not timer.is_stopped() or is_dashing:
@@ -300,6 +310,9 @@ func _apply_aoe_ability(ability: AbilityData) -> void:
 	var aoe: AreaOfEffect = AOE_SCENE.instantiate() as AreaOfEffect
 	get_parent().add_child(aoe)
 	aoe.setup(target_pos, ability.range_or_radius, ability.base_damage, true, 400.0)
+	if ability.id == "fireball" or ability.name.to_lower().contains("огн") or ability.name.to_lower().contains("fire"):
+		aoe.hitbox.damage_type = "fire"
+		aoe.hitbox.tags = ["fire"]
 
 func _apply_teleport_ability(ability: AbilityData) -> void:
 	var target_pos: Vector2 = global_position + aim_direction * ability.range_or_radius

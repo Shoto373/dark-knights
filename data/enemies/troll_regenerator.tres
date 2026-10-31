@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_troll_regen_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+id = "troll_regenerator"
+name = "Тролль-регенератор"
+color = Color(0.28, 0.68, 0.42, 1)
+max_hp = 85
+speed = 135.0
+armor = 1
+damage = 15
+enemy_type = "melee"
+attack_range = 38.0
+attack_cooldown = 1.1
+preferred_distance = 0.0
+knockback_resistance = 0.1
+can_regenerate = true
+regen_amount = 6
+regen_delay_seconds = 3.0
+gold_reward = 8
+souls_reward = 2
+difficulty_cost = 2
