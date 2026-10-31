@@ -104,6 +104,40 @@ func apply_hero_data(data: HeroData) -> void:
 	if hero_data.ability_2 != null:
 		ability_2_timer.wait_time = hero_data.ability_2.cooldown
 	
+	recalculate_stats()
+
+func recalculate_stats() -> void:
+	if hero_data == null:
+		return
+	
+	# Извлекаем все предметы
+	var items: Array[ItemData] = []
+	for inv in GameState.inventory_items:
+		if inv.has("item_ref") and inv["item_ref"] is ItemData:
+			items.append(inv["item_ref"])
+		elif inv.has("id"):
+			var it_path: String = "res://data/items/%s.tres" % inv["id"]
+			if ResourceLoader.exists(it_path):
+				items.append(load(it_path) as ItemData)
+	
+	var new_max_hp: int = int(round(StatCalculator.calculate_stat(hero_data.max_hp, items, "max_hp")))
+	var new_speed: float = StatCalculator.calculate_stat(hero_data.speed, items, "speed")
+	var new_armor: int = int(round(StatCalculator.calculate_stat(hero_data.armor, items, "armor")))
+	var new_damage: int = int(round(StatCalculator.calculate_stat(hero_data.attack_damage, items, "damage")))
+	var new_crit_chance: float = StatCalculator.calculate_stat(0.08, items, "crit_chance")
+	var new_crit_mult: float = StatCalculator.calculate_stat(2.0, items, "crit_multiplier")
+	
+	var hp_diff: int = new_max_hp - health_component.max_health
+	health_component.max_health = new_max_hp
+	if hp_diff > 0:
+		health_component.current_health += hp_diff
+	
+	movement_component.max_speed = new_speed
+	hurtbox_component.armor = new_armor
+	weapon_hitbox.base_damage = new_damage
+	weapon_hitbox.crit_chance = new_crit_chance
+	weapon_hitbox.crit_multiplier = new_crit_mult
+	
 	GameState.current_hp = health_component.current_health
 	GameState.max_hp = health_component.max_health
 	EventBus.player_health_changed.emit(health_component.current_health, health_component.max_health)

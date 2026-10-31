@@ -1,7 +1,7 @@
 class_name HUD
 extends CanvasLayer
 
-## Игровой интерфейс (HUD): Здоровье, Способности, Полоска Босса, Экран смерти, Всплывающий урон
+## Игровой интерфейс (HUD): Здоровье, Способности, Полоска Босса, Экран смерти, Всплывающий урон, Ключи
 
 @onready var hp_bar: ProgressBar = %PlayerHpBar
 @onready var hp_label: Label = %PlayerHpLabel
@@ -13,8 +13,8 @@ extends CanvasLayer
 @onready var hero_name_label: Label = %HeroNameLabel
 @onready var souls_label: Label = %SoulsLabel
 @onready var gold_label: Label = %GoldLabel
+@onready var keys_label: Label = %KeysLabel
 
-# Босс-бар
 @onready var boss_bar_container: Control = %BossBarContainer
 @onready var boss_hp_bar: ProgressBar = %BossHpBar
 @onready var boss_name_label: Label = %BossNameLabel
@@ -48,6 +48,7 @@ func _process(_delta: float) -> void:
 		dash_bar.value = player_ref.get_dash_cooldown_ratio() * 100.0
 		ability_1_bar.value = player_ref.get_ability_cooldown_ratio(1) * 100.0
 		ability_2_bar.value = player_ref.get_ability_cooldown_ratio(2) * 100.0
+	keys_label.text = "Ключи: %d" % GameState.keys
 
 func _on_player_spawned(player: Node2D) -> void:
 	player_ref = player as Player
@@ -71,6 +72,7 @@ func _on_player_health_changed(current_hp: int, max_hp: int) -> void:
 func _on_currency_changed(gold: int, souls: int) -> void:
 	gold_label.text = "Золото: %d" % gold
 	souls_label.text = "Души: %d" % souls
+	keys_label.text = "Ключи: %d" % GameState.keys
 
 func _on_boss_spawned(boss_name: String, max_hp: int) -> void:
 	boss_name_label.text = boss_name.to_upper()

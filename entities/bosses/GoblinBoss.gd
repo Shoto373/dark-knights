@@ -8,6 +8,7 @@ signal boss_defeated
 
 const PROJECTILE_SCENE = preload("res://entities/player/Projectile.tscn")
 const ENEMY_BASE_SCENE = preload("res://entities/enemies/EnemyBase.tscn")
+const ITEM_PEDESTAL_SCENE = preload("res://entities/loot/ItemPedestal.tscn")
 
 @onready var health_component: HealthComponent = %HealthComponent
 @onready var hurtbox_component: HurtboxComponent = %HurtboxComponent
@@ -79,7 +80,6 @@ func _physics_process(delta: float) -> void:
 		var to_player: Vector2 = player_target.global_position - global_position
 		var dist: float = to_player.length()
 		
-		# Выбор атаки
 		if special_timer <= 0.0:
 			_perform_special_ability(to_player.normalized())
 		elif dist <= 60.0 and attack_timer <= 0.0:
@@ -91,7 +91,6 @@ func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.boss_health_changed.emit(current_hp, max_hp)
 	_flash_red()
 	
-	# Проверка перехода во 2 фазу (50% HP)
 	if current_phase == 1 and current_hp <= (max_hp / 2):
 		_enter_phase_2()
 
@@ -99,18 +98,15 @@ func _enter_phase_2() -> void:
 	current_phase = 2
 	phase_changed.emit(2)
 	
-	# Усиление босса
 	movement_component.max_speed *= 1.35
 	attack_hitbox.base_damage = int(round(attack_hitbox.base_damage * 1.3))
 	
-	# Эффекты ярости
 	EventBus.screen_shake_requested.emit(10.0, 0.4)
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(2.5, 0.5, 0.2, 1.0)
 	crown_rect.color = Color(1.0, 0.1, 0.1, 1.0)
 	tween.tween_property(visuals, "modulate", Color.WHITE, 0.4)
 	
-	# Призыв подкрепления (2 гоблина-рубаки)
 	_summon_reinforcements()
 
 func _summon_reinforcements() -> void:
@@ -139,13 +135,11 @@ func _perform_special_ability(dir: Vector2) -> void:
 	special_timer = 4.0 if current_phase == 1 else 2.5
 	
 	if current_phase == 1:
-		# Бросок топора (летящий снаряд)
 		var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
 		get_parent().add_child(proj)
 		proj.global_position = global_position + dir * 30.0
 		proj.setup(dir, 420.0, attack_hitbox.base_damage, false, 500.0, 240.0, Color(0.9, 0.3, 0.1, 1.0))
 	else:
-		# Фаза 2: Быстрый таран (Charge)
 		_start_charge(dir)
 
 func _start_charge(dir: Vector2) -> void:
@@ -180,6 +174,9 @@ func _on_died() -> void:
 		GameState.add_gold(boss_data.gold_reward)
 		MetaProgress.add_souls(boss_data.souls_reward)
 	
+	# Спавн выбора 1 из 3 благословений (Isaac/Hades style)
+	_spawn_blessing_choice()
+	
 	# Появление портала выхода на арене
 	_spawn_exit_portal()
 	
@@ -188,10 +185,24 @@ func _on_died() -> void:
 	tween.tween_property(self, "scale", Vector2.ZERO, 0.8)
 	tween.chain().tween_callback(queue_free)
 
+func _spawn_blessing_choice() -> void:
+	var loot_table: LootTable = load("res://data/items/default_loot_table.tres") as LootTable
+	if loot_table == null:
+		return
+	
+	var choices: Array[ItemData] = loot_table.roll_multiple_unique(3, GameState.rng)
+	var x_offsets: Array[float] = [-140.0, 0.0, 140.0]
+	
+	for i in range(choices.size()):
+		var ped: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
+		get_parent().add_child(ped)
+		ped.global_position = global_position + Vector2(x_offsets[i], 30.0)
+		ped.setup(choices[i], 0, true) # is_blessing_choice = true!
+
 func _spawn_exit_portal() -> void:
 	var portal_scene = load("res://levels/Portal.tscn")
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
-	portal.global_position = global_position
-	portal.target_scene = "res://levels/Hub.tscn" # Пока заглушка Ущелья троллей
+	portal.global_position = global_position + Vector2(0, -90.0)
+	portal.target_scene = "res://levels/Hub.tscn"
 	portal.prompt_label.text = "[F] Перейти в Ущелье троллей"

@@ -118,3 +118,4 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_hp")
 max_value = 40.0
 value = 40.0
 show_percentage = false
+

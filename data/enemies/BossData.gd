@@ -12,3 +12,4 @@ extends Resource
 @export var damage: int = 22
 @export var souls_reward: int = 25
 @export var gold_reward: int = 50
+

@@ -1,10 +1,14 @@
 class_name DungeonRoom
 extends Node2D
 
-## Комната подземелья с системой волн врагов и босса
+## Комната подземелья в стиле The Binding of Isaac / Enter the Gungeon
 
 signal room_cleared
 signal door_entered(direction: Vector2i)
+
+const ITEM_PEDESTAL_SCENE = preload("res://entities/loot/ItemPedestal.tscn")
+const TREASURE_CHEST_SCENE = preload("res://entities/loot/TreasureChest.tscn")
+const PICKUP_SCENE = preload("res://entities/pickups/PickupBase.tscn")
 
 @onready var door_up: DungeonDoor = %DoorUp
 @onready var door_down: DungeonDoor = %DoorDown
@@ -37,6 +41,8 @@ func setup(data: RoomData) -> void:
 	
 	if room_data.room_type == RoomData.RoomType.TREASURE:
 		_setup_treasure_room()
+	elif room_data.room_type == RoomData.RoomType.SHOP:
+		_setup_shop_room()
 
 func _configure_doors() -> void:
 	_setup_door(door_up, wall_blocker_up, Vector2i.UP)
@@ -86,8 +92,42 @@ func _on_enemy_died(enemy: Node2D) -> void:
 func _finish_combat() -> void:
 	room_data.is_cleared = true
 	_unlock_all_doors()
+	_spawn_room_clear_reward()
 	EventBus.room_cleared.emit()
 	room_cleared.emit()
+
+func _spawn_room_clear_reward() -> void:
+	# Награда за зачистку комнаты в стиле Isaac (монеты, сердца, ключи или сундук)
+	var rng: RandomNumberGenerator = GameState.rng
+	var roll: float = rng.randf()
+	
+	if roll < 0.25:
+		# Монета
+		var coin: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
+		coin.pickup_type = PickupBase.PickupType.GOLD
+		coin.amount = rng.randi_range(3, 8)
+		objects_container.add_child(coin)
+		coin.position = Vector2(640, 360)
+	elif roll < 0.45:
+		# Сердце
+		var heart: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
+		heart.pickup_type = PickupBase.PickupType.HEART
+		heart.amount = 25
+		objects_container.add_child(heart)
+		heart.position = Vector2(640, 360)
+	elif roll < 0.60:
+		# Ключ
+		var key: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
+		key.pickup_type = PickupBase.PickupType.KEY
+		key.amount = 1
+		objects_container.add_child(key)
+		key.position = Vector2(640, 360)
+	elif roll < 0.75:
+		# Сундук
+		var chest: TreasureChest = TREASURE_CHEST_SCENE.instantiate() as TreasureChest
+		chest.requires_key = (rng.randf() > 0.5)
+		objects_container.add_child(chest)
+		chest.position = Vector2(640, 360)
 
 func _lock_all_doors() -> void:
 	door_up.is_open = false
@@ -102,11 +142,67 @@ func _unlock_all_doors() -> void:
 	door_right.is_open = true
 
 func _setup_treasure_room() -> void:
-	var pedestal = ColorRect.new()
-	pedestal.size = Vector2(40, 40)
-	pedestal.position = Vector2(620, 340)
-	pedestal.color = Color(0.95, 0.8, 0.2, 1.0)
-	objects_container.add_child(pedestal)
+	var loot_table: LootTable = load("res://data/items/default_loot_table.tres") as LootTable
+	var item: ItemData = null
+	if loot_table != null:
+		item = loot_table.roll_item(GameState.rng)
+	
+	if item != null:
+		var pedestal: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
+		objects_container.add_child(pedestal)
+		pedestal.position = Vector2(640, 360)
+		pedestal.setup(item, 0, false)
+	else:
+		var chest: TreasureChest = TREASURE_CHEST_SCENE.instantiate() as TreasureChest
+		objects_container.add_child(chest)
+		chest.position = Vector2(640, 360)
+
+func _setup_shop_room() -> void:
+	# Визуал торговца
+	var merchant: ColorRect = ColorRect.new()
+	merchant.size = Vector2(32, 40)
+	merchant.position = Vector2(624, 210)
+	merchant.color = Color(0.65, 0.45, 0.25, 1.0)
+	objects_container.add_child(merchant)
+	
+	var label: Label = Label.new()
+	label.text = "ТОРГОВЕЦ"
+	label.position = Vector2(600, 185)
+	label.add_theme_font_size_override("font_size", 11)
+	label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.5))
+	objects_container.add_child(label)
+	
+	var loot_table: LootTable = load("res://data/items/default_loot_table.tres") as LootTable
+	var rolled_items: Array[ItemData] = []
+	if loot_table != null:
+		rolled_items = loot_table.roll_multiple_unique(2, GameState.rng)
+	
+	# Слот 1: Случайный предмет
+	if rolled_items.size() > 0:
+		var it1: ItemData = rolled_items[0]
+		var ped1: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
+		objects_container.add_child(ped1)
+		ped1.position = Vector2(480, 360)
+		ped1.setup(it1, it1.cost_gold, false)
+	
+	# Слот 2: Второй предмет
+	if rolled_items.size() > 1:
+		var it2: ItemData = rolled_items[1]
+		var ped2: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
+		objects_container.add_child(ped2)
+		ped2.position = Vector2(640, 360)
+		ped2.setup(it2, it2.cost_gold, false)
+	
+	# Слот 3: Ключ за 10 золота
+	var key_ped: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
+	objects_container.add_child(key_ped)
+	key_ped.position = Vector2(800, 360)
+	var key_item: ItemData = ItemData.new()
+	key_item.id = "shop_key"
+	key_item.name = "Ключ"
+	key_item.rarity = "common"
+	key_ped.setup(key_item, 10, false)
+	key_ped.item_picked.connect(func(_it): GameState.add_keys(1))
 
 func _on_door_entered(direction: Vector2i) -> void:
 	door_entered.emit(direction)

@@ -11,3 +11,4 @@ func physics_update(_delta: float) -> void:
 	var dist: float = (enemy.player_target.global_position - enemy.global_position).length()
 	if dist <= 500.0:
 		state_machine.change_state("chase")
+

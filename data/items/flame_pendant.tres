@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_item"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "damage"
+operation = "mult"
+value = 0.15
+
+
+[resource]
+script = ExtResource("1_item")
+id = "flame_pendant"
+name = "Кулон пламени"
+description = "Окутывает атаки огненным жаром."
+rarity = "rare"
+item_type = "passive"
+cost_gold = 40
+weight = 60
+tags = ["fire"]
+modifiers = [SubResource("StatMod_1")]

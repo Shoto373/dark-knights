@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_item"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "speed"
+operation = "add"
+value = 60
+
+[sub_resource type="Resource" id="StatMod_2"]
+script = ExtResource("2_mod")
+stat_name = "speed"
+operation = "mult"
+value = 0.2
+
+[sub_resource type="Resource" id="StatMod_3"]
+script = ExtResource("2_mod")
+stat_name = "crit_chance"
+operation = "add"
+value = 0.1
+
+
+[resource]
+script = ExtResource("1_item")
+id = "celestial_boots"
+name = "Небесные сапоги"
+description = "Даруют сверхчеловеческую скорость и точность."
+rarity = "legendary"
+item_type = "passive"
+cost_gold = 110
+weight = 12
+tags = ["agility", "crit"]
+modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2"), SubResource("StatMod_3")]

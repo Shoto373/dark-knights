@@ -26,3 +26,4 @@ func exit() -> void:
 	var enemy: EnemyBase = actor as EnemyBase
 	if enemy != null:
 		enemy.visuals.modulate = Color.WHITE
+

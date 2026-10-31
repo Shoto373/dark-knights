@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_item"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "crit_chance"
+operation = "add"
+value = 0.08
+
+[sub_resource type="Resource" id="StatMod_2"]
+script = ExtResource("2_mod")
+stat_name = "crit_multiplier"
+operation = "add"
+value = 0.5
+
+
+[resource]
+script = ExtResource("1_item")
+id = "assassin_dagger"
+name = "Кинжал ассасина"
+description = "Оружие скрытных убийц."
+rarity = "rare"
+item_type = "passive"
+cost_gold = 45
+weight = 50
+tags = ["crit", "blade"]
+modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2")]

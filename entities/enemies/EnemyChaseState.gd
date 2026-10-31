@@ -35,3 +35,4 @@ func physics_update(delta: float) -> void:
 		move_dir = to_player.normalized()
 	
 	enemy.movement_component.move(enemy, move_dir, delta)
+

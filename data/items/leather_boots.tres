@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_item"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "speed"
+operation = "add"
+value = 25
+
+
+[resource]
+script = ExtResource("1_item")
+id = "leather_boots"
+name = "Кожаные сапоги"
+description = "Легкие сапоги странника."
+rarity = "common"
+item_type = "passive"
+cost_gold = 20
+weight = 100
+tags = ["agility"]
+modifiers = [SubResource("StatMod_1")]

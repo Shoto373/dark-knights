@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_item"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "armor"
+operation = "add"
+value = 2
+
+[sub_resource type="Resource" id="StatMod_2"]
+script = ExtResource("2_mod")
+stat_name = "speed"
+operation = "add"
+value = -10
+
+
+[resource]
+script = ExtResource("1_item")
+id = "heavy_buckler"
+name = "Тяжёлый баклер"
+description = "Даёт броню ценой небольшой потери скорости."
+rarity = "common"
+item_type = "passive"
+cost_gold = 25
+weight = 75
+tags = ["armor"]
+modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2")]

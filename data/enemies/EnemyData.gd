@@ -24,3 +24,4 @@ extends Resource
 @export var gold_reward: int = 5
 @export var souls_reward: int = 0
 @export var difficulty_cost: int = 1
+

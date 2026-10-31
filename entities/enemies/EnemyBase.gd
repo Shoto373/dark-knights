@@ -161,3 +161,4 @@ func _flash_heal_effect(target: EnemyBase) -> void:
 	var tween: Tween = target.create_tween()
 	target.visuals.modulate = Color(0.3, 2.5, 0.8, 1.0)
 	tween.tween_property(target.visuals, "modulate", Color.WHITE, 0.25)
+

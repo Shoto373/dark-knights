@@ -50,3 +50,4 @@ func change_state(new_state_name: String) -> void:
 	current_state.enter()
 	
 	state_changed.emit(old_state_name, new_state_name)
+

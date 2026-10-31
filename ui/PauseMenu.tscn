@@ -15,7 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.04, 0.05, 0.08, 0.8)
+color = Color(0.04, 0.05, 0.08, 0.85)
 
 [node name="CenterContainer" type="CenterContainer" parent="MenuPanel"]
 layout_mode = 1
@@ -26,9 +26,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MenuPanel/CenterContainer"]
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(460, 0)
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 
 [node name="Title" type="Label" parent="MenuPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
@@ -55,15 +55,34 @@ horizontal_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="MenuPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
 
+[node name="InventoryTitle" type="Label" parent="MenuPanel/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "СОБРАННЫЕ АРТЕФАКТЫ"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MenuPanel/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+
+[node name="ItemsContainer" type="VBoxContainer" parent="MenuPanel/CenterContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="HSeparator2" type="HSeparator" parent="MenuPanel/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="BtnResume" type="Button" parent="MenuPanel/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 text = "Продолжить"
 
 [node name="BtnBackHub" type="Button" parent="MenuPanel/CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 text = "Завершить забег (В Хаб)"
-

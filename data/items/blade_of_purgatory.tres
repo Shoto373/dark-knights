@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_item"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "damage"
+operation = "add"
+value = 24
+
+[sub_resource type="Resource" id="StatMod_2"]
+script = ExtResource("2_mod")
+stat_name = "damage"
+operation = "mult"
+value = 0.25
+
+[sub_resource type="Resource" id="StatMod_3"]
+script = ExtResource("2_mod")
+stat_name = "crit_chance"
+operation = "add"
+value = 0.1
+
+
+[resource]
+script = ExtResource("1_item")
+id = "blade_of_purgatory"
+name = "Клинок Чистилища"
+description = "Абсолютное оружие, закаленное в потустороннем огне."
+rarity = "legendary"
+item_type = "passive"
+cost_gold = 120
+weight = 12
+tags = ["blade", "fire", "blood"]
+modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2"), SubResource("StatMod_3")]
