@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://void_rift_trap_scene_001"]
+
+[ext_resource type="Script" path="res://levels/hazards/VoidRiftTrap.gd" id="1_rift"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pull"]
+radius = 180.0
+
+[node name="VoidRiftTrap" type="Area2D"]
+collision_layer = 0
+collision_mask = 6
+script = ExtResource("1_rift")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_pull")
+
+[node name="VisualVortex" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Arm1" type="ColorRect" parent="VisualVortex"]
+offset_left = -60.0
+offset_top = -6.0
+offset_right = 60.0
+offset_bottom = 6.0
+color = Color(0.35, 0.1, 0.55, 0.5)
+
+[node name="Arm2" type="ColorRect" parent="VisualVortex"]
+offset_left = -6.0
+offset_top = -60.0
+offset_right = 6.0
+offset_bottom = 60.0
+color = Color(0.35, 0.1, 0.55, 0.5)
+
+[node name="Arm3" type="ColorRect" parent="VisualVortex"]
+rotation = 0.785398
+offset_left = -50.0
+offset_top = -5.0
+offset_right = 50.0
+offset_bottom = 5.0
+color = Color(0.5, 0.15, 0.75, 0.4)
+
+[node name="Arm4" type="ColorRect" parent="VisualVortex"]
+rotation = -0.785398
+offset_left = -50.0
+offset_top = -5.0
+offset_right = 50.0
+offset_bottom = 5.0
+color = Color(0.5, 0.15, 0.75, 0.4)
+
+[node name="CoreRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+pivot_offset = Vector2(16, 16)
+color = Color(0.85, 0.35, 1, 0.95)

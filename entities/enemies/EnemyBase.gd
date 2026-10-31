@@ -256,6 +256,14 @@ func perform_attack() -> void:
 			_cast_flame_pillar()
 		"magma_worm":
 			_magma_worm_spit()
+		"shadow_chimera":
+			_shadow_chimera_strike()
+		"fallen_archon":
+			_fallen_archon_cross_barrage()
+		"void_specter":
+			_void_specter_phase_pulse()
+		"purgatory_executioner":
+			_executioner_cleave()
 		"support":
 			_try_heal_or_attack()
 		"heavy":
@@ -548,6 +556,92 @@ func _shoot_fireball_barrage() -> void:
 			)
 	)
 
+func _shadow_chimera_strike() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	attack_hitbox.rotation = dir.angle()
+	attack_hitbox.damage_type = "poison"
+	attack_hitbox.tags = ["poison"]
+	var poison_res: StatusEffect = load("res://data/status_effects/poison.tres") as StatusEffect
+	attack_hitbox.applied_effect = poison_res
+	attack_hitbox.reset_hits()
+	
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(0.4, 2.5, 0.6, 1.0)
+	tween.tween_callback(func(): attack_shape.disabled = false)
+	tween.tween_property(self, "position", position + dir * 75.0, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		attack_shape.disabled = true
+		visuals.modulate = Color.WHITE
+	)
+
+func _fallen_archon_cross_barrage() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	var base_ang: float = dir.angle()
+	var cardinal_angles: Array[float] = [base_ang, base_ang + PI * 0.5, base_ang + PI, base_ang + PI * 1.5]
+	
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(2.5, 2.2, 0.8, 1.0)
+	tween.tween_interval(0.2)
+	tween.tween_callback(func():
+		visuals.modulate = Color.WHITE
+		EventBus.screen_shake_requested.emit(5.0, 0.2)
+		for ang in cardinal_angles:
+			var pdir: Vector2 = Vector2(cos(ang), sin(ang))
+			var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+			get_parent().add_child(proj)
+			proj.global_position = global_position + pdir * 25.0
+			proj.setup(
+				pdir,
+				420.0,
+				enemy_data.damage if enemy_data else 18,
+				false,
+				550.0,
+				200.0,
+				Color(0.85, 0.75, 1.0, 1.0),
+				"astral",
+				["astral", "energy"]
+			)
+	)
+
+func _void_specter_phase_pulse() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	var tween: Tween = create_tween()
+	tween.tween_property(visuals, "modulate:a", 0.0, 0.12)
+	tween.tween_callback(func():
+		global_position = player_target.global_position + dir * 60.0
+		visuals.modulate = Color(2.0, 1.0, 3.5, 1.0)
+		EventBus.screen_shake_requested.emit(4.0, 0.15)
+		var stun_res: StatusEffect = load("res://data/status_effects/stun.tres") as StatusEffect
+		attack_hitbox.rotation = (-dir).angle()
+		attack_hitbox.applied_effect = stun_res
+		attack_hitbox.reset_hits()
+		attack_shape.disabled = false
+	)
+	tween.tween_interval(0.12)
+	tween.tween_callback(func():
+		attack_shape.disabled = true
+		visuals.modulate = Color.WHITE
+	)
+
+func _executioner_cleave() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	attack_hitbox.rotation = dir.angle()
+	attack_hitbox.knockback_force = 480.0
+	attack_hitbox.applied_effect = null
+	attack_hitbox.reset_hits()
+	
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(2.5, 0.3, 0.8, 1.0)
+	tween.tween_property(self, "position", position - dir * 14.0, 0.28)
+	tween.tween_callback(func():
+		attack_shape.disabled = false
+		visuals.modulate = Color.WHITE
+		EventBus.screen_shake_requested.emit(7.0, 0.2)
+	)
+	tween.tween_property(self, "position", position + dir * 32.0, 0.14)
+	tween.tween_callback(func(): attack_shape.disabled = true)
+	tween.tween_property(self, "position", position, 0.15)
+
 func _cast_flame_pillar() -> void:
 	var target_pos: Vector2 = player_target.global_position
 	var telegraph: ColorRect = ColorRect.new()
@@ -609,3 +703,4 @@ func _magma_worm_spit() -> void:
 				["fire"]
 			)
 	)
+

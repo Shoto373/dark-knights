@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=2 format=3 uid="uid://boss_purg_lord_001"]
+
+[ext_resource type="Script" path="res://data/enemies/BossData.gd" id="1_boss"]
+
+[resource]
+script = ExtResource("1_boss")
+id = "boss_purgatory_lord"
+name = "Владыка Чистилища"
+color = Color(0.48, 0.15, 0.65, 1)
+max_hp = 900
+armor = 4
+speed = 115.0
+damage = 30
+souls_reward = 150
+gold_reward = 300

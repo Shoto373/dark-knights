@@ -71,3 +71,4 @@ func _set_state(new_state: GeyserState) -> void:
 			var erupt_tween: Tween = create_tween()
 			erupt_tween.tween_property(eruption_visual, "scale", Vector2(1.1, 1.3), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 			erupt_tween.tween_property(eruption_visual, "scale", Vector2(1.0, 1.0), 0.15)
+

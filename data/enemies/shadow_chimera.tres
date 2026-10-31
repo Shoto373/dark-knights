@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_shadow_chimera_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "shadow_chimera"
+name = "Химера теней"
+color = Color(0.35, 0.15, 0.45, 0.95)
+max_hp = 110
+speed = 150.0
+armor = 1
+damage = 16
+enemy_type = "shadow_chimera"
+attack_range = 85.0
+attack_cooldown = 1.5
+preferred_distance = 0.0
+knockback_resistance = 0.2
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["poison"]
+gold_reward = 12
+souls_reward = 2
+difficulty_cost = 2

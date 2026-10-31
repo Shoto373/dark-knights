@@ -81,6 +81,11 @@ func _build_floor() -> void:
 		if haze_scene != null:
 			var haze = haze_scene.instantiate()
 			add_child(haze)
+	elif current_biome != null and current_biome.id == "purgatory":
+		var fog_scene: PackedScene = load("res://ui/PurgatoryFogOverlay.tscn")
+		if fog_scene != null:
+			var fog = fog_scene.instantiate()
+			add_child(fog)
 	
 	minimap.setup_minimap(rooms, Vector2i.ZERO)
 	

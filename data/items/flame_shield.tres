@@ -26,3 +26,4 @@ cost_gold = 60
 weight = 50.0
 tags = ["fire", "armor"]
 modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2")]
+

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_fallen_archon_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "fallen_archon"
+name = "Падший архонт"
+color = Color(0.65, 0.55, 0.85, 1)
+max_hp = 120
+speed = 125.0
+armor = 2
+damage = 18
+enemy_type = "fallen_archon"
+attack_range = 260.0
+attack_cooldown = 2.0
+preferred_distance = 180.0
+knockback_resistance = 0.3
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["stun"]
+gold_reward = 15
+souls_reward = 3
+difficulty_cost = 3

@@ -75,3 +75,4 @@ func is_body_immune(body: Node2D) -> bool:
 		return true
 		
 	return false
+

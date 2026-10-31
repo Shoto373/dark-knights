@@ -17,6 +17,7 @@ const SECRET_LEVER_SCENE = preload("res://levels/hazards/SecretLever.tscn")
 const ICE_PATCH_SCENE = preload("res://levels/hazards/IcePatch.tscn")
 const LAVA_HAZARD_SCENE = preload("res://levels/hazards/LavaHazard.tscn")
 const LAVA_GEYSER_SCENE = preload("res://levels/hazards/LavaGeyserTrap.tscn")
+const VOID_RIFT_SCENE = preload("res://levels/hazards/VoidRiftTrap.tscn")
 
 @onready var door_up: DungeonDoor = %DoorUp
 @onready var door_down: DungeonDoor = %DoorDown
@@ -84,6 +85,17 @@ func _setup_biome_hazards() -> void:
 		_create_frost_ice_patches()
 	elif current_biome.id == "fire_world" or current_biome.id == "fire_mines":
 		_create_fire_hazards()
+	elif current_biome.id == "purgatory":
+		_create_purgatory_hazards()
+
+func _create_purgatory_hazards() -> void:
+	var rift1: VoidRiftTrap = VOID_RIFT_SCENE.instantiate() as VoidRiftTrap
+	objects_container.add_child(rift1)
+	rift1.position = Vector2(420, 360)
+	
+	var rift2: VoidRiftTrap = VOID_RIFT_SCENE.instantiate() as VoidRiftTrap
+	objects_container.add_child(rift2)
+	rift2.position = Vector2(860, 360)
 
 func _create_fire_hazards() -> void:
 	# Лужа лавы

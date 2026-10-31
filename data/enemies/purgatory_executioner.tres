@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_purg_exec_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "purgatory_executioner"
+name = "Палач Чистилища"
+color = Color(0.4, 0.12, 0.3, 1)
+max_hp = 180
+speed = 90.0
+armor = 4
+damage = 24
+enemy_type = "purgatory_executioner"
+attack_range = 100.0
+attack_cooldown = 2.2
+preferred_distance = 0.0
+knockback_resistance = 0.8
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["stun"]
+gold_reward = 20
+souls_reward = 4
+difficulty_cost = 4

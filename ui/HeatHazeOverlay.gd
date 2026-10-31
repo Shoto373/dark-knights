@@ -9,3 +9,4 @@ extends CanvasLayer
 func _ready() -> void:
 	layer = 10
 	ember_particles.emitting = true
+

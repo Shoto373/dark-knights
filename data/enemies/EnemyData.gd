@@ -14,7 +14,7 @@ extends Resource
 @export var damage: int = 12
 
 @export_group("Боевое поведение")
-@export_enum("melee", "ranged", "support", "heavy", "boulder_thrower", "crossbowman", "necromancer", "frost_wraith", "frost_golem", "lich_apprentice", "ice_spider", "lava_slime", "fire_elemental", "flame_cultist", "magma_worm") var enemy_type: String = "melee"
+@export_enum("melee", "ranged", "support", "heavy", "boulder_thrower", "crossbowman", "necromancer", "frost_wraith", "frost_golem", "lich_apprentice", "ice_spider", "lava_slime", "fire_elemental", "flame_cultist", "magma_worm", "shadow_chimera", "fallen_archon", "void_specter", "purgatory_executioner") var enemy_type: String = "melee"
 @export var attack_range: float = 38.0
 @export var attack_cooldown: float = 1.0
 @export var preferred_distance: float = 0.0 # Дистанция удержания для стрелков

@@ -27,3 +27,4 @@ immunities = ["burn"]
 gold_reward = 6
 souls_reward = 1
 difficulty_cost = 1
+

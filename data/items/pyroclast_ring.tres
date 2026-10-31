@@ -20,3 +20,4 @@ cost_gold = 45
 weight = 60.0
 tags = ["fire", "magic"]
 modifiers = [SubResource("StatMod_1")]
+

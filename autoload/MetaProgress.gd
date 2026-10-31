@@ -19,8 +19,8 @@ var lifetime_stats: Dictionary = {
 }
 
 func add_souls(amount: int) -> void:
-	souls = max(0, souls + amount)
-	lifetime_stats["total_souls_collected"] = lifetime_stats.get("total_souls_collected", 0) + amount
+	souls = maxi(0, souls + amount)
+	lifetime_stats["total_souls_collected"] = int(lifetime_stats.get("total_souls_collected", 0)) + amount
 	EventBus.currency_changed.emit(GameState.gold if GameState else 0, souls)
 
 func unlock_hero(hero_id: String) -> bool:
@@ -42,9 +42,14 @@ func to_dict() -> Dictionary:
 	}
 
 func load_from_dict(data: Dictionary) -> void:
-	souls = data.get("souls", 0)
+	souls = int(data.get("souls", 0))
 	unlocked_heroes = Array(data.get("unlocked_heroes", ["warrior"]), TYPE_STRING, &"", null)
 	unlocked_items = Array(data.get("unlocked_items", []), TYPE_STRING, &"", null)
 	meta_upgrades = data.get("meta_upgrades", meta_upgrades)
-	lifetime_stats = data.get("lifetime_stats", lifetime_stats)
+	var raw_stats: Dictionary = data.get("lifetime_stats", lifetime_stats)
+	for key in raw_stats:
+		if raw_stats[key] is float or raw_stats[key] is int:
+			lifetime_stats[key] = int(raw_stats[key])
+		else:
+			lifetime_stats[key] = raw_stats[key]
 

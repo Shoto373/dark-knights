@@ -55,3 +55,4 @@ is_player_hitbox = false
 unique_name_in_owner = true
 shape = SubResource("CircleShape2D_erupt")
 disabled = true
+
