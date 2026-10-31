@@ -1,7 +1,7 @@
 class_name HUD
 extends CanvasLayer
 
-## Игровой интерфейс (HUD): Здоровье, Рывок, Способности, Экран смерти, Всплывающий урон
+## Игровой интерфейс (HUD): Здоровье, Способности, Полоска Босса, Экран смерти, Всплывающий урон
 
 @onready var hp_bar: ProgressBar = %PlayerHpBar
 @onready var hp_label: Label = %PlayerHpLabel
@@ -12,6 +12,13 @@ extends CanvasLayer
 @onready var ability_2_label: Label = %Ability2Label
 @onready var hero_name_label: Label = %HeroNameLabel
 @onready var souls_label: Label = %SoulsLabel
+@onready var gold_label: Label = %GoldLabel
+
+# Босс-бар
+@onready var boss_bar_container: Control = %BossBarContainer
+@onready var boss_hp_bar: ProgressBar = %BossHpBar
+@onready var boss_name_label: Label = %BossNameLabel
+
 @onready var death_screen: Control = %DeathScreen
 @onready var btn_respawn: Button = %BtnRespawn
 @onready var damage_numbers_container: Control = %DamageNumbersContainer
@@ -20,6 +27,7 @@ var player_ref: Player = null
 
 func _ready() -> void:
 	death_screen.visible = false
+	boss_bar_container.visible = false
 	btn_respawn.pressed.connect(_on_respawn_pressed)
 	
 	EventBus.player_spawned.connect(_on_player_spawned)
@@ -27,6 +35,10 @@ func _ready() -> void:
 	EventBus.player_died.connect(_on_player_died)
 	EventBus.damage_dealt.connect(_on_damage_dealt)
 	EventBus.currency_changed.connect(_on_currency_changed)
+	
+	EventBus.boss_spawned.connect(_on_boss_spawned)
+	EventBus.boss_health_changed.connect(_on_boss_health_changed)
+	EventBus.boss_defeated.connect(_on_boss_defeated)
 	
 	_update_hero_info()
 	_on_currency_changed(GameState.gold, MetaProgress.souls)
@@ -56,8 +68,26 @@ func _on_player_health_changed(current_hp: int, max_hp: int) -> void:
 	hp_bar.value = current_hp
 	hp_label.text = "%d / %d HP" % [current_hp, max_hp]
 
-func _on_currency_changed(_gold: int, souls: int) -> void:
+func _on_currency_changed(gold: int, souls: int) -> void:
+	gold_label.text = "Золото: %d" % gold
 	souls_label.text = "Души: %d" % souls
+
+func _on_boss_spawned(boss_name: String, max_hp: int) -> void:
+	boss_name_label.text = boss_name.to_upper()
+	boss_hp_bar.max_value = max_hp
+	boss_hp_bar.value = max_hp
+	boss_bar_container.visible = true
+	boss_bar_container.modulate.a = 0.0
+	var tween: Tween = create_tween()
+	tween.tween_property(boss_bar_container, "modulate:a", 1.0, 0.4)
+
+func _on_boss_health_changed(current_hp: int, _max_hp: int) -> void:
+	boss_hp_bar.value = current_hp
+
+func _on_boss_defeated(_boss_name: String) -> void:
+	var tween: Tween = create_tween()
+	tween.tween_property(boss_bar_container, "modulate:a", 0.0, 0.6)
+	tween.tween_callback(func(): boss_bar_container.visible = false)
 
 func _on_player_died() -> void:
 	death_screen.visible = true

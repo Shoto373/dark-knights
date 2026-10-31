@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=2 format=3 uid="uid://boss_goblin_001"]
+
+[ext_resource type="Script" path="res://data/enemies/BossData.gd" id="1_boss"]
+
+[resource]
+script = ExtResource("1_boss")
+id = "boss_goblin_chieftain"
+name = "Вождь гоблинов"
+color = Color(0.85, 0.25, 0.15, 1)
+max_hp = 350
+armor = 2
+speed = 120.0
+damage = 22
+souls_reward = 25
+gold_reward = 50

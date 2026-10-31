@@ -10,3 +10,4 @@ extends Resource
 @export var min_rooms: int = 8
 @export var max_rooms: int = 14
 @export var background_music: AudioStream
+

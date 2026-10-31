@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_goblin_shaman"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_en"]
+
+[resource]
+script = ExtResource("1_en")
+id = "goblin_shaman"
+name = "Гоблин-шаман"
+color = Color(0.2, 0.75, 0.65, 1)
+max_hp = 40
+speed = 120.0
+armor = 0
+damage = 8
+enemy_type = "support"
+attack_range = 300.0
+attack_cooldown = 2.0
+preferred_distance = 160.0
+knockback_resistance = 0.0
+gold_reward = 12
+souls_reward = 2
+difficulty_cost = 2

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_goblin_slasher"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_en"]
+
+[resource]
+script = ExtResource("1_en")
+id = "goblin_slasher"
+name = "Гоблин-рубака"
+color = Color(0.25, 0.7, 0.3, 1)
+max_hp = 45
+speed = 150.0
+armor = 0
+damage = 14
+enemy_type = "melee"
+attack_range = 40.0
+attack_cooldown = 0.9
+preferred_distance = 0.0
+knockback_resistance = 0.0
+gold_reward = 6
+souls_reward = 1
+difficulty_cost = 1

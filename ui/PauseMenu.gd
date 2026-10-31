@@ -39,3 +39,4 @@ func _back_to_hub() -> void:
 	_resume()
 	GameState.end_run(false)
 	SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
+

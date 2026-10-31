@@ -91,3 +91,4 @@ func _get_room_color(room: RoomData) -> Color:
 			return Color(0.85, 0.2, 0.25, 1.0)
 		_:
 			return Color(0.45, 0.5, 0.58, 1.0)
+

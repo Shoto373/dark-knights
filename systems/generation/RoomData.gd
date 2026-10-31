@@ -32,3 +32,4 @@ func get_type_name() -> String:
 		RoomType.BOSS: return "boss"
 		RoomType.SECRET: return "secret"
 		_: return "unknown"
+

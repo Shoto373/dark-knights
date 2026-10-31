@@ -80,3 +80,4 @@ func test_dungeon_floor_scene_instantiation() -> void:
 	assert_not_null(instance, "DungeonFloor instance should be created")
 	add_child_autofree(instance)
 	assert_true(instance.is_inside_tree(), "DungeonFloor is inside tree")
+

@@ -20,3 +20,4 @@ offset_right = 170.0
 offset_bottom = 130.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 script = ExtResource("1_map")
+

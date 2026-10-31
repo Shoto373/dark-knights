@@ -66,3 +66,4 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 text = "Завершить забег (В Хаб)"
+

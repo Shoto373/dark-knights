@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_goblin_brute"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_en"]
+
+[resource]
+script = ExtResource("1_en")
+id = "goblin_brute"
+name = "Гоблин-громила"
+color = Color(0.15, 0.45, 0.2, 1)
+max_hp = 120
+speed = 100.0
+armor = 2
+damage = 22
+enemy_type = "heavy"
+attack_range = 52.0
+attack_cooldown = 1.4
+preferred_distance = 0.0
+knockback_resistance = 0.6
+gold_reward = 20
+souls_reward = 3
+difficulty_cost = 3

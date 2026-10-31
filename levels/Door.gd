@@ -39,3 +39,4 @@ func _update_door_state() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if is_open and body is Player:
 		door_entered.emit(direction)
+

@@ -152,3 +152,4 @@ func verify_all_rooms_reachable(floor_data: Dictionary) -> bool:
 					queue.append(next_pos)
 	
 	return visited.size() == rooms.size()
+

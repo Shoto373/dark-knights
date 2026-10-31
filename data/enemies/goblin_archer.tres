@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_goblin_archer"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_en"]
+
+[resource]
+script = ExtResource("1_en")
+id = "goblin_archer"
+name = "Гоблин-лучник"
+color = Color(0.4, 0.65, 0.25, 1)
+max_hp = 35
+speed = 135.0
+armor = 0
+damage = 10
+enemy_type = "ranged"
+attack_range = 380.0
+attack_cooldown = 1.6
+preferred_distance = 180.0
+knockback_resistance = 0.0
+gold_reward = 8
+souls_reward = 1
+difficulty_cost = 1

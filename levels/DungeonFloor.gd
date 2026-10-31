@@ -89,3 +89,4 @@ func _on_room_door_entered(direction: Vector2i) -> void:
 	player.global_position = room_base_pos + spawn_offset
 	player.velocity = Vector2.ZERO
 	target_room.on_player_entered()
+

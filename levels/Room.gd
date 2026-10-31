@@ -1,12 +1,10 @@
 class_name DungeonRoom
 extends Node2D
 
-## Комната подземелья
+## Комната подземелья с системой волн врагов и босса
 
 signal room_cleared
 signal door_entered(direction: Vector2i)
-
-const DUMMY_SCENE = preload("res://entities/enemies/Dummy.tscn")
 
 @onready var door_up: DungeonDoor = %DoorUp
 @onready var door_down: DungeonDoor = %DoorDown
@@ -24,6 +22,7 @@ const DUMMY_SCENE = preload("res://entities/enemies/Dummy.tscn")
 
 var room_data: RoomData
 var active_enemies: Array[Node2D] = []
+var wave_spawner: WaveSpawner = WaveSpawner.new()
 
 func _ready() -> void:
 	door_up.door_entered.connect(_on_door_entered)
@@ -34,12 +33,9 @@ func _ready() -> void:
 func setup(data: RoomData) -> void:
 	room_data = data
 	room_type_label.text = "[ %s ]" % room_data.get_type_name().to_upper()
-	
 	_configure_doors()
 	
-	if room_data.room_type == RoomData.RoomType.BOSS:
-		_setup_boss_room()
-	elif room_data.room_type == RoomData.RoomType.TREASURE:
+	if room_data.room_type == RoomData.RoomType.TREASURE:
 		_setup_treasure_room()
 
 func _configure_doors() -> void:
@@ -64,30 +60,23 @@ func on_player_entered() -> void:
 		"type": room_data.get_type_name()
 	})
 	
-	if room_data.room_type == RoomData.RoomType.COMBAT and not room_data.is_cleared:
+	var is_hostile: bool = (room_data.room_type == RoomData.RoomType.COMBAT or \
+							room_data.room_type == RoomData.RoomType.ELITE or \
+							room_data.room_type == RoomData.RoomType.BOSS)
+	
+	if is_hostile and not room_data.is_cleared:
 		_start_combat()
 	else:
 		_unlock_all_doors()
 
 func _start_combat() -> void:
 	_lock_all_doors()
-	_spawn_combat_enemies()
-
-func _spawn_combat_enemies() -> void:
-	active_enemies.clear()
-	# Спавним 2-3 манекена для проверки боя в комнате
-	var spawn_positions: Array[Vector2] = [
-		Vector2(450, 360),
-		Vector2(830, 360),
-		Vector2(640, 480)
-	]
+	active_enemies = wave_spawner.spawn_room_enemies(self, room_data)
 	
-	for pos in spawn_positions:
-		var dummy: Dummy = DUMMY_SCENE.instantiate() as Dummy
-		enemies_container.add_child(dummy)
-		dummy.global_position = pos
-		active_enemies.append(dummy)
-		dummy.health_component.died.connect(func(): _on_enemy_died(dummy))
+	for enemy in active_enemies:
+		var hc: HealthComponent = enemy.get_node_or_null("HealthComponent") as HealthComponent
+		if hc != null:
+			hc.died.connect(func(): _on_enemy_died(enemy))
 
 func _on_enemy_died(enemy: Node2D) -> void:
 	active_enemies.erase(enemy)
@@ -112,20 +101,11 @@ func _unlock_all_doors() -> void:
 	door_left.is_open = true
 	door_right.is_open = true
 
-func _setup_boss_room() -> void:
-	# Портал перехода на следующий этаж в центре комнаты босса
-	var portal_scene = load("res://levels/Portal.tscn")
-	var portal = portal_scene.instantiate()
-	objects_container.add_child(portal)
-	portal.position = Vector2(640, 360)
-	portal.target_scene = "res://levels/DungeonFloor.tscn"
-	portal.prompt_label.text = "[F] Следующий этаж"
-
 func _setup_treasure_room() -> void:
 	var pedestal = ColorRect.new()
 	pedestal.size = Vector2(40, 40)
 	pedestal.position = Vector2(620, 340)
-	pedestal.color = Color(0.9, 0.75, 0.2, 1.0)
+	pedestal.color = Color(0.95, 0.8, 0.2, 1.0)
 	objects_container.add_child(pedestal)
 
 func _on_door_entered(direction: Vector2i) -> void:

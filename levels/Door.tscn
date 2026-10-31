@@ -39,3 +39,4 @@ collision_mask = 0
 
 [node name="BarrierShape" type="CollisionShape2D" parent="BarrierCollider"]
 shape = SubResource("RectangleShape2D_barrier")
+
