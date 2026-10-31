@@ -137,3 +137,61 @@ func test_chasm_hazard_restores_scale_and_recovers_to_room_center() -> void:
 	# Масштаб и координаты должны восстановиться корректно
 	assert_ne(player.scale, Vector2.ZERO, "Масштаб игрока не должен быть нулевым после падения")
 
+func test_door_size_covers_full_opening_without_gaps() -> void:
+	var door_scene: PackedScene = load("res://levels/Door.tscn")
+	assert_not_null(door_scene)
+	
+	# Горизонтальная дверь (Сверху / Снизу)
+	var door_h: DungeonDoor = door_scene.instantiate() as DungeonDoor
+	door_h.direction = Vector2i.UP
+	add_child_autofree(door_h)
+	assert_eq(door_h.door_visual.size.x, 96.0, "Ширина горизонтальной двери должна быть 96px без щелей")
+	assert_eq(door_h.door_visual.size.y, 40.0)
+	
+	# Вертикальная дверь (Слева / Справа)
+	var door_v: DungeonDoor = door_scene.instantiate() as DungeonDoor
+	door_v.direction = Vector2i.LEFT
+	add_child_autofree(door_v)
+	assert_eq(door_v.door_visual.size.x, 40.0)
+	assert_eq(door_v.door_visual.size.y, 96.0, "Высота вертикальной двери должна быть 96px без щелей")
+
+func test_all_biome_enemies_load_distinct_textures() -> void:
+	var troll_data: EnemyData = load("res://data/enemies/troll_brute.tres") as EnemyData
+	var skeleton_data: EnemyData = load("res://data/enemies/skeleton_swordsman.tres") as EnemyData
+	var slime_data: EnemyData = load("res://data/enemies/lava_slime.tres") as EnemyData
+	var goblin_data: EnemyData = load("res://data/enemies/goblin_slasher.tres") as EnemyData
+	
+	assert_not_null(troll_data)
+	assert_not_null(skeleton_data)
+	assert_not_null(slime_data)
+	assert_not_null(goblin_data)
+	
+	var tex_troll: Texture2D = SpriteGenerator.get_enemy_texture(troll_data.id)
+	var tex_skeleton: Texture2D = SpriteGenerator.get_enemy_texture(skeleton_data.id)
+	var tex_slime: Texture2D = SpriteGenerator.get_enemy_texture(slime_data.id)
+	var tex_goblin: Texture2D = SpriteGenerator.get_enemy_texture(goblin_data.id)
+	
+	assert_not_null(tex_troll)
+	assert_not_null(tex_skeleton)
+	assert_not_null(tex_slime)
+	assert_not_null(tex_goblin)
+	
+	# Текстуры разных мобов должны быть уникальными (не одинаковыми)
+	assert_ne(tex_troll, tex_goblin, "Тролль не должен использовать спрайт гоблина")
+	assert_ne(tex_skeleton, tex_goblin, "Скелет не должен использовать спрайт гоблина")
+	assert_ne(tex_slime, tex_goblin, "Слизень не должен использовать спрайт гоблина")
+
+func test_world_map_closes_on_escape() -> void:
+	var map_scene: PackedScene = load("res://ui/WorldMap.tscn")
+	assert_not_null(map_scene)
+	var map: WorldMap = map_scene.instantiate() as WorldMap
+	add_child_autofree(map)
+	map.set_mode(false)
+	
+	var ev: InputEventKey = InputEventKey.new()
+	ev.pressed = true
+	ev.keycode = KEY_ESCAPE
+	map._input(ev)
+	
+	assert_true(map.is_queued_for_deletion(), "Карта мира должна закрываться по нажатию ESC")
+

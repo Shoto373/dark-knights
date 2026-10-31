@@ -98,3 +98,9 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 text = "Завершить забег (В Хаб)"
+
+[node name="BtnQuit" type="Button" parent="MenuPanel/CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+text = "Выход из игры"

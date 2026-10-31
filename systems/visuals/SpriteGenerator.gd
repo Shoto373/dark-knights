@@ -79,11 +79,18 @@ static func get_hero_icon(hero_id: String) -> Texture2D:
 	return tex
 
 static func get_enemy_texture(enemy_type: String) -> Texture2D:
-	var key: String = "enemy_" + enemy_type
+	var clean_type: String = enemy_type.trim_prefix("enemy_")
+	match clean_type:
+		"boulder_thrower": clean_type = "stone_thrower"
+		"frost_wraith": clean_type = "ice_wraith"
+		"necromancer": clean_type = "necromancer_acolyte"
+		"crossbowman": clean_type = "skeleton_crossbowman"
+
+	var key: String = "enemy_" + clean_type
 	if _cache.has(key):
 		return _cache[key]
 		
-	var svg_path: String = "res://assets/sprites/enemy_%s.svg" % enemy_type
+	var svg_path: String = "res://assets/sprites/enemy_%s.svg" % clean_type
 	if ResourceLoader.exists(svg_path):
 		var tex: Texture2D = load(svg_path)
 		if tex:
@@ -93,7 +100,7 @@ static func get_enemy_texture(enemy_type: String) -> Texture2D:
 	var img: Image = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	img.fill(C_TRANSPARENT)
 	
-	match enemy_type:
+	match clean_type:
 		# Темница гоблинов
 		"goblin_slasher":
 			_draw_goblin_slasher(img)

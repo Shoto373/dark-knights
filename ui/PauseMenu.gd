@@ -11,6 +11,7 @@ extends CanvasLayer
 @onready var btn_world_map: Button = %BtnWorldMap
 @onready var btn_settings: Button = %BtnSettings
 @onready var btn_back_hub: Button = %BtnBackHub
+@onready var btn_quit: Button = %BtnQuit
 
 const SETTINGS_DIALOG_SCENE: PackedScene = preload("res://ui/SettingsDialog.tscn")
 
@@ -22,10 +23,25 @@ func _ready() -> void:
 	if btn_settings:
 		btn_settings.pressed.connect(_open_settings)
 	btn_back_hub.pressed.connect(_back_to_hub)
+	if btn_quit:
+		btn_quit.pressed.connect(_quit_game)
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause"):
-		toggle_pause()
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE or event.physical_keycode == KEY_ESCAPE:
+			# Если открыто дочернее окно (Настройки или Карта мира) — закрываем сначала его
+			for child in get_children():
+				if child is SettingsDialog or child is WorldMap:
+					child.queue_free()
+					get_viewport().set_input_as_handled()
+					return
+				elif child.name == "WorldMap" or child.name == "SettingsDialog":
+					child.queue_free()
+					get_viewport().set_input_as_handled()
+					return
+			
+			toggle_pause()
+			get_viewport().set_input_as_handled()
 
 func toggle_pause() -> void:
 	if menu_panel.visible:
@@ -34,8 +50,18 @@ func toggle_pause() -> void:
 		_pause()
 
 func _pause() -> void:
-	seed_label.text = "Seed: %d" % GameState.current_seed
-	floor_label.text = "Этаж: %d | Локация: %s" % [GameState.current_floor_index, GameState.current_world_node_id]
+	var is_in_hub: bool = (not GameState.is_run_active or GameState.current_world_node_id == "hub")
+	if is_in_hub:
+		seed_label.text = "Хаб героев"
+		floor_label.text = "Локация: Обитель рыцарей"
+		btn_back_hub.text = "В Главное меню"
+		btn_world_map.visible = false
+	else:
+		seed_label.text = "Seed: %d" % GameState.current_seed
+		floor_label.text = "Этаж: %d | Локация: %s" % [GameState.current_floor_index, GameState.current_world_node_id]
+		btn_back_hub.text = "Завершить забег (В Хаб)"
+		btn_world_map.visible = true
+
 	_update_inventory_display()
 	menu_panel.visible = true
 	get_tree().paused = true
@@ -93,5 +119,12 @@ func _open_settings() -> void:
 
 func _back_to_hub() -> void:
 	_resume()
-	GameState.end_run(false)
-	SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
+	var is_in_hub: bool = (not GameState.is_run_active or GameState.current_world_node_id == "hub")
+	if is_in_hub:
+		SceneRouter.change_scene("res://ui/MainMenu.tscn", 0.3)
+	else:
+		GameState.end_run(false)
+		SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
+
+func _quit_game() -> void:
+	get_tree().quit()

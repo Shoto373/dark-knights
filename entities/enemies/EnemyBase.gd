@@ -33,6 +33,7 @@ var burn_timer: float = 0.0
 var is_collapsed: bool = false
 var has_reassembled: bool = false
 var reassemble_timer: float = 0.0
+var _walk_anim_phase: float = randf_range(0.0, 10.0)
 
 func _ready() -> void:
 	add_to_group("enemies")
@@ -64,8 +65,9 @@ func setup_from_data(data: EnemyData) -> void:
 	
 	body_rect.color = enemy_data.color
 	
-	# Установка стилизованного пиксель-арт спрайта монстра
-	var enemy_tex: Texture2D = SpriteGenerator.get_enemy_texture(enemy_data.enemy_type)
+	# Установка стилизованного векторного спрайта монстра
+	var type_key: String = enemy_data.id if not enemy_data.id.is_empty() else enemy_data.enemy_type
+	var enemy_tex: Texture2D = SpriteGenerator.get_enemy_texture(type_key)
 	if enemy_tex != null and visuals != null:
 		var enemy_sprite: Sprite2D = visuals.get_node_or_null("EnemySprite") as Sprite2D
 		if enemy_sprite == null:
@@ -146,6 +148,18 @@ func _physics_process(delta: float) -> void:
 	elif velocity.x > 5.0:
 		visuals.scale.x = 1.0
 
+	var is_moving: bool = velocity.length_squared() > 100.0
+	if is_moving:
+		_walk_anim_phase += delta * 12.0
+		visuals.position.y = -abs(sin(_walk_anim_phase)) * 2.5
+		visuals.rotation = sin(_walk_anim_phase) * 0.05
+		visuals.scale.y = 1.0 + sin(_walk_anim_phase * 2.0) * 0.03
+	else:
+		_walk_anim_phase += delta * 2.5
+		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
+		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 2.0)
+		visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.02
+
 func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
 	# Проверка щита рыцаря-стража: блок спереди, уязвим со спины
 	if enemy_data != null and enemy_data.has_front_shield and is_instance_valid(hitbox):
@@ -177,11 +191,15 @@ func _on_damaged(_amount: int, current_hp: int, _max_hp: int) -> void:
 	time_since_damage = 0.0
 	hp_bar.value = current_hp
 	_flash_red()
+	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, enemy_data.color if enemy_data else Color.WHITE, 5)
 
 func _flash_red() -> void:
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(2.5, 0.4, 0.4, 1.0)
 	tween.tween_property(visuals, "modulate", Color.WHITE, 0.12)
+	visuals.scale.y = 0.8
+	var sq_tween: Tween = create_tween()
+	sq_tween.tween_property(visuals, "scale:y", 1.0, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _on_died() -> void:
 	# Скелет-мечник: рассыпается в кости и восстанавливается, если не разбить кучу костей
@@ -215,8 +233,9 @@ func _reassemble_skeleton() -> void:
 	body_rect.scale = Vector2.ONE
 	body_rect.color = enemy_data.color
 	
-	# Установка стилизованного пиксель-арт спрайта монстра
-	var enemy_tex: Texture2D = SpriteGenerator.get_enemy_texture(enemy_data.enemy_type)
+	# Установка стилизованного векторного спрайта монстра
+	var type_key: String = enemy_data.id if not enemy_data.id.is_empty() else enemy_data.enemy_type
+	var enemy_tex: Texture2D = SpriteGenerator.get_enemy_texture(type_key)
 	if enemy_tex != null and visuals != null:
 		var enemy_sprite: Sprite2D = visuals.get_node_or_null("EnemySprite") as Sprite2D
 		if enemy_sprite == null:
@@ -254,12 +273,14 @@ func _permanent_death() -> void:
 			MetaProgress.add_souls(enemy_data.souls_reward)
 		GameState.run_stats["kills"] = GameState.run_stats.get("kills", 0) + 1
 	
-	if enemy_data != null and enemy_data.enemy_type == "lava_slime":
+	if enemy_data != null and (enemy_data.id == "lava_slime" or enemy_data.enemy_type == "lava_slime"):
 		_spawn_death_lava_puddle()
 	
+	EffectsHelper.spawn_death_burst(get_parent(), global_position, enemy_data.color if enemy_data else Color(0.85, 0.2, 0.2))
+	
 	var tween: Tween = create_tween().set_parallel(true)
-	tween.tween_property(self, "modulate:a", 0.0, 0.35)
-	tween.tween_property(self, "scale", Vector2.ZERO, 0.35)
+	tween.tween_property(self, "modulate:a", 0.0, 0.25)
+	tween.tween_property(self, "scale", Vector2.ZERO, 0.25)
 	tween.chain().tween_callback(queue_free)
 
 func perform_attack() -> void:
@@ -270,16 +291,17 @@ func perform_attack() -> void:
 	
 	attack_timer = enemy_data.attack_cooldown if enemy_data else 1.2
 	
-	match enemy_data.enemy_type if enemy_data else "melee":
-		"ranged":
+	var atk_type: String = enemy_data.id if (enemy_data and not enemy_data.id.is_empty()) else (enemy_data.enemy_type if enemy_data else "melee")
+	match atk_type:
+		"ranged", "goblin_archer":
 			_shoot_arrow()
-		"crossbowman":
+		"crossbowman", "skeleton_crossbowman":
 			_shoot_crossbow()
-		"boulder_thrower":
+		"boulder_thrower", "stone_thrower":
 			_throw_boulder()
-		"necromancer":
+		"necromancer", "necromancer_acolyte":
 			_cast_necromancy()
-		"frost_wraith":
+		"frost_wraith", "ice_wraith":
 			_shoot_frost_bolt()
 		"frost_golem":
 			_frost_golem_smash()
@@ -303,9 +325,9 @@ func perform_attack() -> void:
 			_void_specter_phase_pulse()
 		"purgatory_executioner":
 			_executioner_cleave()
-		"support":
+		"support", "goblin_shaman":
 			_try_heal_or_attack()
-		"heavy":
+		"heavy", "goblin_brute", "troll_brute", "knight_guard":
 			_heavy_attack()
 		_:
 			_melee_attack()

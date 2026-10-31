@@ -140,7 +140,12 @@ func _on_select_path_pressed() -> void:
 func _on_close_pressed() -> void:
 	queue_free()
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_just_pressed("ui_cancel") and not is_choice_mode:
-		_on_close_pressed()
+func _input(event: InputEvent) -> void:
+	if not is_inside_tree() or not visible:
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE or event.physical_keycode == KEY_ESCAPE:
+			if not is_choice_mode:
+				_on_close_pressed()
+				get_viewport().set_input_as_handled()
 

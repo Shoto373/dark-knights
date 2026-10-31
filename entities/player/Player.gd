@@ -33,6 +33,8 @@ var aim_direction: Vector2 = Vector2.RIGHT
 
 var ability_1_timer: Timer
 var ability_2_timer: Timer
+var _walk_anim_phase: float = 0.0
+var _ghost_timer: float = 0.0
 
 func _ready() -> void:
 	add_to_group("player")
@@ -194,7 +196,35 @@ func _process(delta: float) -> void:
 		return
 	_update_aim()
 	_handle_input()
+	_update_procedural_animations(delta)
 	_update_iframes_blink(delta)
+
+func _update_procedural_animations(delta: float) -> void:
+	if is_dashing:
+		_ghost_timer += delta
+		if _ghost_timer >= 0.035:
+			_ghost_timer = 0.0
+			var char_sprite: Sprite2D = visuals.get_node_or_null("CharacterSprite") as Sprite2D
+			var tex: Texture2D = char_sprite.texture if char_sprite else null
+			var ghost_tint: Color = hero_data.color if hero_data else Color(0.3, 0.8, 1.0, 0.7)
+			ghost_tint.a = 0.65
+			EffectsHelper.spawn_dash_ghost(get_parent(), global_position, tex, visuals.scale.x < 0, ghost_tint)
+		return
+	
+	var is_moving: bool = velocity.length_squared() > 100.0
+	if is_moving:
+		_walk_anim_phase += delta * 14.0
+		# Пошаговое покачивание (Bobbing) в стиле Isaac / Gungeon
+		visuals.position.y = -abs(sin(_walk_anim_phase)) * 3.5
+		visuals.rotation = sin(_walk_anim_phase) * 0.07
+		var squash: float = 1.0 + sin(_walk_anim_phase * 2.0) * 0.04
+		visuals.scale.y = squash
+	else:
+		_walk_anim_phase += delta * 3.0
+		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 20.0)
+		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 3.0)
+		# Дыхание в покое (Idle breathing)
+		visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.02
 
 func _physics_process(delta: float) -> void:
 	if health_component.is_dead:
@@ -254,6 +284,7 @@ func _start_dash() -> void:
 	
 	health_component.set_invulnerable(true)
 	visuals.modulate.a = 0.5
+	EffectsHelper.spawn_dust_puff(get_parent(), global_position)
 	dash_timer.start()
 	dash_cooldown_timer.start()
 
@@ -284,10 +315,18 @@ func _swing_melee_weapon() -> void:
 	tween.tween_callback(func(): attack_collision.disabled = true)
 	tween.tween_property(weapon_pivot, "rotation", base_angle, 0.08)
 
+	var thrust_tween: Tween = visuals.create_tween()
+	thrust_tween.tween_property(visuals, "position", aim_direction * 6.0, 0.08)
+	thrust_tween.tween_property(visuals, "position", Vector2.ZERO, 0.1)
+
 func _shoot_basic_projectile() -> void:
 	var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
 	get_parent().add_child(proj)
 	proj.global_position = global_position + aim_direction * 20.0
+	
+	var recoil_tween: Tween = visuals.create_tween()
+	recoil_tween.tween_property(visuals, "position", -aim_direction * 4.0, 0.06)
+	recoil_tween.tween_property(visuals, "position", Vector2.ZERO, 0.1)
 	proj.setup(
 		aim_direction,
 		hero_data.projectile_speed if hero_data else 500.0,
@@ -408,6 +447,14 @@ func _on_health_damaged(amount: int, current_hp: int, max_hp: int) -> void:
 	GameState.current_hp = current_hp
 	GameState.max_hp = max_hp
 	EventBus.player_health_changed.emit(current_hp, max_hp)
+	EventBus.screen_shake_requested.emit(5.0, 0.2)
+	EventBus.hit_stop_requested.emit(40.0)
+	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.0, 0.3, 0.3, 1.0), 6)
+	
+	var fl_tween: Tween = visuals.create_tween()
+	visuals.modulate = Color(2.5, 0.4, 0.4, 1.0)
+	fl_tween.tween_property(visuals, "modulate", Color.WHITE, 0.15)
+	
 	if status_effect_manager == null or not status_effect_manager.is_processing_dot:
 		health_component.set_invulnerable(true)
 		iframes_timer.start()
