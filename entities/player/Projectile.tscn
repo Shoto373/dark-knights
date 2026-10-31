@@ -36,3 +36,4 @@ is_player_hitbox = true
 
 [node name="HitboxCollision" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("CircleShape2D_hitbox")
+

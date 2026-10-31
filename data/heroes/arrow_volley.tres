@@ -15,3 +15,4 @@ duration = 1.0
 speed = 600.0
 projectile_count = 5
 spread_angle_deg = 36.0
+

@@ -22,3 +22,4 @@ ability_1 = ExtResource("2_block")
 ability_2 = ExtResource("3_charge")
 unlocked_by_default = true
 unlock_cost_souls = 0
+

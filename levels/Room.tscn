@@ -1,0 +1,228 @@
+[gd_scene load_steps=7 format=3 uid="uid://room_scene_001"]
+
+[ext_resource type="Script" path="res://levels/Room.gd" id="1_room"]
+[ext_resource type="PackedScene" uid="uid://door_scene_001" path="res://levels/Door.tscn" id="2_door"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
+size = Vector2(572, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
+size = Vector2(40, 252)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door_blocker_h"]
+size = Vector2(96, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door_blocker_v"]
+size = Vector2(40, 96)
+
+[node name="Room" type="Node2D"]
+script = ExtResource("1_room")
+
+[node name="Floor" type="ColorRect" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 1260.0
+offset_bottom = 700.0
+color = Color(0.1, 0.12, 0.16, 1)
+
+[node name="ArenaFloor" type="ColorRect" parent="."]
+offset_left = 60.0
+offset_top = 60.0
+offset_right = 1220.0
+offset_bottom = 660.0
+color = Color(0.14, 0.17, 0.22, 1)
+
+[node name="Borders" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="TopLeft" type="CollisionShape2D" parent="Borders"]
+position = Vector2(306, 40)
+shape = SubResource("RectangleShape2D_wall_h")
+
+[node name="TopRight" type="CollisionShape2D" parent="Borders"]
+position = Vector2(974, 40)
+shape = SubResource("RectangleShape2D_wall_h")
+
+[node name="BottomLeft" type="CollisionShape2D" parent="Borders"]
+position = Vector2(306, 680)
+shape = SubResource("RectangleShape2D_wall_h")
+
+[node name="BottomRight" type="CollisionShape2D" parent="Borders"]
+position = Vector2(974, 680)
+shape = SubResource("RectangleShape2D_wall_h")
+
+[node name="LeftTop" type="CollisionShape2D" parent="Borders"]
+position = Vector2(40, 186)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="LeftBottom" type="CollisionShape2D" parent="Borders"]
+position = Vector2(40, 534)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="RightTop" type="CollisionShape2D" parent="Borders"]
+position = Vector2(1240, 186)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="RightBottom" type="CollisionShape2D" parent="Borders"]
+position = Vector2(1240, 534)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="VisualWalls" type="Node2D" parent="."]
+
+[node name="W1" type="ColorRect" parent="VisualWalls"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 592.0
+offset_bottom = 60.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="W2" type="ColorRect" parent="VisualWalls"]
+offset_left = 688.0
+offset_top = 20.0
+offset_right = 1260.0
+offset_bottom = 60.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="W3" type="ColorRect" parent="VisualWalls"]
+offset_left = 20.0
+offset_top = 660.0
+offset_right = 592.0
+offset_bottom = 700.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="W4" type="ColorRect" parent="VisualWalls"]
+offset_left = 688.0
+offset_top = 660.0
+offset_right = 1260.0
+offset_bottom = 700.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="W5" type="ColorRect" parent="VisualWalls"]
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 60.0
+offset_bottom = 312.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="W6" type="ColorRect" parent="VisualWalls"]
+offset_left = 20.0
+offset_top = 408.0
+offset_right = 60.0
+offset_bottom = 660.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="W7" type="ColorRect" parent="VisualWalls"]
+offset_left = 1220.0
+offset_top = 60.0
+offset_right = 1260.0
+offset_bottom = 312.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="W8" type="ColorRect" parent="VisualWalls"]
+offset_left = 1220.0
+offset_top = 408.0
+offset_right = 1260.0
+offset_bottom = 660.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="DoorUp" parent="." instance=ExtResource("2_door")]
+unique_name_in_owner = true
+position = Vector2(640, 40)
+direction = Vector2i(0, -1)
+
+[node name="DoorDown" parent="." instance=ExtResource("2_door")]
+unique_name_in_owner = true
+position = Vector2(640, 680)
+direction = Vector2i(0, 1)
+
+[node name="DoorLeft" parent="." instance=ExtResource("2_door")]
+unique_name_in_owner = true
+position = Vector2(40, 360)
+direction = Vector2i(-1, 0)
+
+[node name="DoorRight" parent="." instance=ExtResource("2_door")]
+unique_name_in_owner = true
+position = Vector2(1240, 360)
+direction = Vector2i(1, 0)
+
+[node name="WallBlockerUp" type="StaticBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(640, 40)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="WallBlockerUp"]
+shape = SubResource("RectangleShape2D_door_blocker_h")
+
+[node name="Visual" type="ColorRect" parent="WallBlockerUp"]
+offset_left = -48.0
+offset_top = -20.0
+offset_right = 48.0
+offset_bottom = 20.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="WallBlockerDown" type="StaticBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(640, 680)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="WallBlockerDown"]
+shape = SubResource("RectangleShape2D_door_blocker_h")
+
+[node name="Visual" type="ColorRect" parent="WallBlockerDown"]
+offset_left = -48.0
+offset_top = -20.0
+offset_right = 48.0
+offset_bottom = 20.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="WallBlockerLeft" type="StaticBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(40, 360)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="WallBlockerLeft"]
+shape = SubResource("RectangleShape2D_door_blocker_v")
+
+[node name="Visual" type="ColorRect" parent="WallBlockerLeft"]
+offset_left = -20.0
+offset_top = -48.0
+offset_right = 20.0
+offset_bottom = 48.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="WallBlockerRight" type="StaticBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(1240, 360)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Collision" type="CollisionShape2D" parent="WallBlockerRight"]
+shape = SubResource("RectangleShape2D_door_blocker_v")
+
+[node name="Visual" type="ColorRect" parent="WallBlockerRight"]
+offset_left = -20.0
+offset_top = -48.0
+offset_right = 20.0
+offset_bottom = 48.0
+color = Color(0.06, 0.08, 0.1, 1)
+
+[node name="RoomTypeLabel" type="Label" parent="."]
+unique_name_in_owner = true
+offset_left = 490.0
+offset_top = 80.0
+offset_right = 790.0
+offset_bottom = 110.0
+theme_override_colors/font_color = Color(0.5, 0.6, 0.7, 0.6)
+theme_override_font_sizes/font_size = 18
+text = "[ COMBAT ]"
+horizontal_alignment = 1
+
+[node name="EnemiesContainer" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="ObjectsContainer" type="Node2D" parent="."]
+unique_name_in_owner = true

@@ -74,3 +74,4 @@ func test_hero_unlock_with_souls() -> void:
 	var unlocked: bool = MetaProgress.unlock_hero("ranger")
 	assert_true(unlocked, "unlock_hero should return true on success")
 	assert_true(MetaProgress.is_hero_unlocked("ranger"), "Ranger is now unlocked")
+

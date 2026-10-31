@@ -17,3 +17,4 @@ extends Resource
 @export var speed: float = 450.0
 @export var projectile_count: int = 1
 @export var spread_angle_deg: float = 0.0
+

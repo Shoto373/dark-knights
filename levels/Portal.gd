@@ -6,7 +6,7 @@ extends Area2D
 @onready var prompt_label: Label = %PromptLabel
 @onready var portal_glow: ColorRect = %PortalGlow
 
-@export var target_scene: String = "res://levels/Hub.tscn"
+@export var target_scene: String = "res://levels/DungeonFloor.tscn"
 
 var is_player_inside: bool = false
 
@@ -35,3 +35,4 @@ func _on_body_exited(body: Node2D) -> void:
 	if body is Player:
 		is_player_inside = false
 		prompt_label.visible = false
+

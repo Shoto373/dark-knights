@@ -48,3 +48,4 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(_body: Node2D) -> void:
 	# Попадание в стену окружения
 	queue_free()
+

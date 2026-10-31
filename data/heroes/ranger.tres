@@ -22,3 +22,4 @@ ability_1 = ExtResource("2_trap")
 ability_2 = ExtResource("3_volley")
 unlocked_by_default = false
 unlock_cost_souls = 10
+

@@ -28,3 +28,4 @@ extends Resource
 @export_group("Разблокировка")
 @export var unlocked_by_default: bool = true
 @export var unlock_cost_souls: int = 0
+

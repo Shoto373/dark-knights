@@ -22,3 +22,4 @@ ability_1 = ExtResource("2_fireball")
 ability_2 = ExtResource("3_teleport")
 unlocked_by_default = true
 unlock_cost_souls = 0
+
