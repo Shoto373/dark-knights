@@ -1,0 +1,25 @@
+# Godot 4 2D Roguelike .gitignore
+
+# Godot-specific files
+.godot/
+*.translation
+
+# Export directories and binaries
+export/
+*.apk
+*.aab
+*.exe
+*.zip
+*.tar.gz
+
+# Mono/C# if ever used
+.mono/
+*.csproj
+*.sln
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Crash logs
+godot.log
