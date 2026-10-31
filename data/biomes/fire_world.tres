@@ -1,6 +1,11 @@
-[gd_resource type="Resource" script_class="BiomeData" load_steps=2 format=3 uid="uid://biome_fire_001"]
+[gd_resource type="Resource" script_class="BiomeData" load_steps=7 format=3 uid="uid://biome_fire_001"]
 
 [ext_resource type="Script" path="res://data/biomes/BiomeData.gd" id="1_bio"]
+[ext_resource type="Resource" uid="uid://enemy_lava_slime_001" path="res://data/enemies/lava_slime.tres" id="2_slime"]
+[ext_resource type="Resource" uid="uid://enemy_fire_elemental_001" path="res://data/enemies/fire_elemental.tres" id="3_elem"]
+[ext_resource type="Resource" uid="uid://enemy_flame_cultist_001" path="res://data/enemies/flame_cultist.tres" id="4_cultist"]
+[ext_resource type="Resource" uid="uid://enemy_magma_worm_001" path="res://data/enemies/magma_worm.tres" id="5_worm"]
+[ext_resource type="Resource" uid="uid://boss_dragon_001" path="res://data/enemies/boss_dragon.tres" id="6_boss"]
 
 [resource]
 script = ExtResource("1_bio")
@@ -11,6 +16,8 @@ wall_theme_color = Color(0.15, 0.06, 0.05, 1)
 chasm_color = Color(0.06, 0.02, 0.02, 1)
 bridge_color = Color(0.5, 0.28, 0.15, 1)
 min_rooms = 10
-max_rooms = 15
-enemy_pool = []
-
+max_rooms = 14
+enemy_pool = [ExtResource("2_slime"), ExtResource("3_elem"), ExtResource("4_cultist"), ExtResource("5_worm")]
+elite_enemy = ExtResource("5_worm")
+boss_data = ExtResource("6_boss")
+boss_scene_path = "res://entities/bosses/DragonBoss.tscn"

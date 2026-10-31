@@ -53,3 +53,4 @@ func _on_died() -> void:
 	tween.tween_property(self, "modulate:a", 0.0, 0.5)
 	tween.tween_property(self, "scale", Vector2(2.5, 2.5), 0.5)
 	tween.chain().tween_callback(queue_free)
+

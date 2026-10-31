@@ -15,6 +15,8 @@ const FIRE_GRATE_SCENE = preload("res://levels/hazards/FireGrateTrap.tscn")
 const CHANDELIER_SCENE = preload("res://levels/hazards/FallingChandelierTrap.tscn")
 const SECRET_LEVER_SCENE = preload("res://levels/hazards/SecretLever.tscn")
 const ICE_PATCH_SCENE = preload("res://levels/hazards/IcePatch.tscn")
+const LAVA_HAZARD_SCENE = preload("res://levels/hazards/LavaHazard.tscn")
+const LAVA_GEYSER_SCENE = preload("res://levels/hazards/LavaGeyserTrap.tscn")
 
 @onready var door_up: DungeonDoor = %DoorUp
 @onready var door_down: DungeonDoor = %DoorDown
@@ -80,6 +82,24 @@ func _setup_biome_hazards() -> void:
 		_create_castle_traps()
 	elif current_biome.id == "frost_world" or current_biome.id == "frost_caves":
 		_create_frost_ice_patches()
+	elif current_biome.id == "fire_world" or current_biome.id == "fire_mines":
+		_create_fire_hazards()
+
+func _create_fire_hazards() -> void:
+	# Лужа лавы
+	var lava1: LavaHazard = LAVA_HAZARD_SCENE.instantiate() as LavaHazard
+	objects_container.add_child(lava1)
+	lava1.position = Vector2(460, 360)
+	
+	# Лавовый гейзер
+	var geyser1: LavaGeyserTrap = LAVA_GEYSER_SCENE.instantiate() as LavaGeyserTrap
+	objects_container.add_child(geyser1)
+	geyser1.position = Vector2(820, 360)
+	
+	if abs(room_data.grid_pos.x + room_data.grid_pos.y) % 2 == 1:
+		var lava2: LavaHazard = LAVA_HAZARD_SCENE.instantiate() as LavaHazard
+		objects_container.add_child(lava2)
+		lava2.position = Vector2(640, 240)
 
 func _create_frost_ice_patches() -> void:
 	var patch1: IcePatch = ICE_PATCH_SCENE.instantiate() as IcePatch

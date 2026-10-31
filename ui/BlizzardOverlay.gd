@@ -9,3 +9,4 @@ extends CanvasLayer
 func _ready() -> void:
 	layer = 10
 	snow_particles.emitting = true
+

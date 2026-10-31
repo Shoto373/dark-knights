@@ -26,3 +26,4 @@ cost_gold = 85
 weight = 30.0
 tags = ["frost", "crit"]
 modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2")]
+

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_fire_elemental_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "fire_elemental"
+name = "Огненный элементаль"
+color = Color(1, 0.3, 0.05, 0.9)
+max_hp = 80
+speed = 140.0
+armor = 0
+damage = 14
+enemy_type = "fire_elemental"
+attack_range = 240.0
+attack_cooldown = 1.8
+preferred_distance = 180.0
+knockback_resistance = 0.1
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["burn"]
+gold_reward = 9
+souls_reward = 1
+difficulty_cost = 2

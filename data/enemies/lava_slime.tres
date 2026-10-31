@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_lava_slime_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "lava_slime"
+name = "Лавовый слизень"
+color = Color(0.95, 0.45, 0.1, 1)
+max_hp = 50
+speed = 120.0
+armor = 0
+damage = 10
+enemy_type = "lava_slime"
+attack_range = 80.0
+attack_cooldown = 1.4
+preferred_distance = 0.0
+knockback_resistance = 0.0
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["burn"]
+gold_reward = 6
+souls_reward = 1
+difficulty_cost = 1

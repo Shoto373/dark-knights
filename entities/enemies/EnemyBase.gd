@@ -215,6 +215,9 @@ func _permanent_death() -> void:
 			MetaProgress.add_souls(enemy_data.souls_reward)
 		GameState.run_stats["kills"] = GameState.run_stats.get("kills", 0) + 1
 	
+	if enemy_data != null and enemy_data.enemy_type == "lava_slime":
+		_spawn_death_lava_puddle()
+	
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.tween_property(self, "modulate:a", 0.0, 0.35)
 	tween.tween_property(self, "scale", Vector2.ZERO, 0.35)
@@ -245,6 +248,14 @@ func perform_attack() -> void:
 			_lich_apprentice_cast()
 		"ice_spider":
 			_ice_spider_leap()
+		"lava_slime":
+			_lava_slime_bounce_attack()
+		"fire_elemental":
+			_shoot_fireball_barrage()
+		"flame_cultist":
+			_cast_flame_pillar()
+		"magma_worm":
+			_magma_worm_spit()
 		"support":
 			_try_heal_or_attack()
 		"heavy":
@@ -483,4 +494,118 @@ func _ice_spider_leap() -> void:
 	tween.tween_callback(func():
 		attack_shape.disabled = true
 		visuals.modulate = Color.WHITE
+	)
+
+func _spawn_death_lava_puddle() -> void:
+	var lava_scene: PackedScene = load("res://levels/hazards/LavaHazard.tscn")
+	if lava_scene != null and get_parent() != null:
+		var puddle: LavaHazard = lava_scene.instantiate() as LavaHazard
+		puddle.lifetime = 4.0
+		puddle.scale = Vector2(0.5, 0.5)
+		puddle.tick_damage = 4
+		get_parent().add_child(puddle)
+		puddle.global_position = global_position
+
+func _lava_slime_bounce_attack() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	attack_hitbox.rotation = dir.angle()
+	attack_hitbox.damage_type = "fire"
+	attack_hitbox.tags = ["fire"]
+	attack_hitbox.reset_hits()
+	
+	var tween: Tween = create_tween()
+	visuals.scale = Vector2(1.3, 0.7)
+	tween.tween_property(visuals, "scale", Vector2(0.8, 1.3), 0.12)
+	tween.tween_callback(func(): attack_shape.disabled = false)
+	tween.tween_property(self, "position", position + dir * 65.0, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		attack_shape.disabled = true
+		visuals.scale = Vector2.ONE
+	)
+
+func _shoot_fireball_barrage() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(2.5, 1.2, 0.3, 1.0)
+	tween.tween_interval(0.15)
+	tween.tween_callback(func():
+		visuals.modulate = Color.WHITE
+		for i in range(2):
+			var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+			get_parent().add_child(proj)
+			var spread_dir: Vector2 = dir.rotated(randf_range(-0.12, 0.12))
+			proj.global_position = global_position + spread_dir * (20.0 + i * 8.0)
+			proj.setup(
+				spread_dir,
+				340.0,
+				enemy_data.damage if enemy_data else 14,
+				false,
+				480.0,
+				200.0,
+				Color(1.0, 0.45, 0.1, 1.0),
+				"fire",
+				["fire"]
+			)
+	)
+
+func _cast_flame_pillar() -> void:
+	var target_pos: Vector2 = player_target.global_position
+	var telegraph: ColorRect = ColorRect.new()
+	telegraph.size = Vector2(56, 56)
+	telegraph.position = target_pos - Vector2(28, 28)
+	telegraph.color = Color(1.0, 0.3, 0.1, 0.4)
+	get_parent().add_child(telegraph)
+	
+	var tween: Tween = create_tween()
+	tween.tween_property(telegraph, "color:a", 0.9, 0.5)
+	tween.tween_callback(func():
+		telegraph.queue_free()
+		EventBus.screen_shake_requested.emit(5.0, 0.2)
+		var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+		get_parent().add_child(proj)
+		proj.global_position = target_pos
+		proj.scale = Vector2(2.0, 2.0)
+		proj.setup(
+			Vector2.RIGHT,
+			0.001,
+			enemy_data.damage if enemy_data else 16,
+			false,
+			10.0,
+			220.0,
+			Color(1.0, 0.5, 0.1, 1.0),
+			"fire",
+			["fire"]
+		)
+		var p_tween: Tween = proj.create_tween()
+		p_tween.tween_interval(0.2)
+		p_tween.tween_callback(proj.queue_free)
+	)
+
+func _magma_worm_spit() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	var base_ang: float = dir.angle()
+	var angles: Array[float] = [base_ang - 0.28, base_ang, base_ang + 0.28]
+	
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(2.5, 0.8, 0.2, 1.0)
+	tween.tween_interval(0.2)
+	tween.tween_callback(func():
+		visuals.modulate = Color.WHITE
+		EventBus.screen_shake_requested.emit(4.0, 0.15)
+		for a in angles:
+			var pdir: Vector2 = Vector2(cos(a), sin(a))
+			var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+			get_parent().add_child(proj)
+			proj.global_position = global_position + pdir * 25.0
+			proj.setup(
+				pdir,
+				300.0,
+				enemy_data.damage if enemy_data else 18,
+				false,
+				420.0,
+				240.0,
+				Color(1.0, 0.35, 0.05, 1.0),
+				"fire",
+				["fire"]
+			)
 	)

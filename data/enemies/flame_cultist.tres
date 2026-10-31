@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_flame_cultist_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "flame_cultist"
+name = "Культист пламени"
+color = Color(0.85, 0.2, 0.15, 1)
+max_hp = 90
+speed = 110.0
+armor = 1
+damage = 16
+enemy_type = "flame_cultist"
+attack_range = 260.0
+attack_cooldown = 2.2
+preferred_distance = 200.0
+knockback_resistance = 0.1
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["burn"]
+gold_reward = 11
+souls_reward = 1
+difficulty_cost = 2

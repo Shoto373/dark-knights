@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=3 format=3 uid="uid://item_pyroclast_ring_001"]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_it"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "damage"
+operation = "mult"
+value = 0.15
+
+[resource]
+script = ExtResource("1_it")
+id = "pyroclast_ring"
+name = "Пирокластическое кольцо"
+description = "Кольцо с пульсирующим вулканическим стеклом. +15% к урону, атаки поджигают врагов."
+rarity = "rare"
+item_type = "passive"
+cost_gold = 45
+weight = 60.0
+tags = ["fire", "magic"]
+modifiers = [SubResource("StatMod_1")]

@@ -416,3 +416,4 @@ func _spawn_portal_exit() -> void:
 	portal.global_position = global_position + Vector2(0, -90.0)
 	portal.prompt_label.text = "[F] Войти в Чистилище"
 	portal.next_world_node_id = "purgatory"
+

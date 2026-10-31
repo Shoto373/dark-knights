@@ -13,3 +13,4 @@ damage_per_tick = 4
 speed_multiplier = 1.0
 max_stacks = 1
 color = Color(1, 0.45, 0.1, 1)
+

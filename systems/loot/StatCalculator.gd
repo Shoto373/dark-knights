@@ -32,6 +32,8 @@ static func calculate_stat(
 	
 	if tag_counts.get("fire", 0) >= 2 and stat_name == "damage":
 		mult_sum += 0.15 # Синергия огня: +15% к урону
+	if tag_counts.get("fire", 0) >= 4 and stat_name == "crit_multiplier":
+		mult_sum += 0.25 # Синергия бушующего пламени: +25% к множителю крита
 	if tag_counts.get("blade", 0) >= 2 and stat_name == "damage":
 		flat_sum += 6.0  # Синергия клинков: +6 к базовому урону
 	if tag_counts.get("armor", 0) >= 2 and stat_name == "armor":

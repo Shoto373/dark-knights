@@ -1,0 +1,57 @@
+[gd_scene load_steps=5 format=3 uid="uid://lava_geyser_scene_001"]
+
+[ext_resource type="Script" path="res://levels/hazards/LavaGeyserTrap.gd" id="1_geyser"]
+[ext_resource type="Script" path="res://components/HitboxComponent.gd" id="2_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_crater"]
+radius = 28.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_erupt"]
+radius = 34.0
+
+[node name="LavaGeyserTrap" type="Node2D"]
+script = ExtResource("1_geyser")
+
+[node name="CraterVisual" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_left = -26.0
+offset_top = -26.0
+offset_right = 26.0
+offset_bottom = 26.0
+color = Color(0.18, 0.08, 0.06, 1)
+
+[node name="BubbleVisual" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+pivot_offset = Vector2(16, 16)
+color = Color(1, 0.55, 0.1, 0.85)
+
+[node name="EruptionVisual" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+pivot_offset = Vector2(30, 30)
+color = Color(1, 0.3, 0.05, 0.95)
+
+[node name="HitboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("2_hitbox")
+base_damage = 22
+knockback_force = 260.0
+damage_type = "fire"
+tags = ["fire"]
+is_player_hitbox = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_erupt")
+disabled = true

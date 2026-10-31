@@ -1,0 +1,161 @@
+[gd_scene load_steps=10 format=3 uid="uid://boss_dragon_scene_001"]
+
+[ext_resource type="Script" path="res://entities/bosses/DragonBoss.gd" id="1_boss"]
+[ext_resource type="Script" path="res://components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" path="res://components/MovementComponent.gd" id="3_movement"]
+[ext_resource type="Script" path="res://components/StatusEffectManager.gd" id="4_sem"]
+[ext_resource type="Script" path="res://components/HurtboxComponent.gd" id="5_hurtbox"]
+[ext_resource type="Script" path="res://components/HitboxComponent.gd" id="6_hitbox"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 26.0
+height = 64.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurt"]
+radius = 30.0
+height = 70.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_attack"]
+radius = 48.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tail"]
+radius = 52.0
+
+[node name="DragonBoss" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_boss")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="HealthComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_health")
+max_health = 750
+
+[node name="MovementComponent" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_movement")
+max_speed = 120.0
+acceleration = 650.0
+friction = 850.0
+
+[node name="StatusEffectManager" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("4_sem")
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("5_hurtbox")
+
+[node name="HurtCollision" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape2D_hurt")
+
+[node name="AttackHitbox" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_hitbox")
+base_damage = 28
+knockback_force = 320.0
+damage_type = "fire"
+tags = ["fire"]
+is_player_hitbox = false
+
+[node name="AttackShape" type="CollisionShape2D" parent="AttackHitbox"]
+unique_name_in_owner = true
+position = Vector2(36, 0)
+shape = SubResource("CircleShape2D_attack")
+disabled = true
+
+[node name="TailHitbox" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("6_hitbox")
+base_damage = 24
+knockback_force = 400.0
+damage_type = "fire"
+tags = ["fire"]
+is_player_hitbox = false
+
+[node name="TailShape" type="CollisionShape2D" parent="TailHitbox"]
+unique_name_in_owner = true
+position = Vector2(-36, 0)
+shape = SubResource("CircleShape2D_tail")
+disabled = true
+
+[node name="FloorTelegraph" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color(1, 0.25, 0.05, 0.4)
+
+[node name="ShadowRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_left = -30.0
+offset_top = 18.0
+offset_right = 30.0
+offset_bottom = 34.0
+pivot_offset = Vector2(30, 8)
+color = Color(0.08, 0.04, 0.04, 0.5)
+
+[node name="Visuals" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="WingLeft" type="ColorRect" parent="Visuals"]
+unique_name_in_owner = true
+offset_left = -55.0
+offset_top = -24.0
+offset_right = -15.0
+offset_bottom = 8.0
+color = Color(0.65, 0.12, 0.08, 1)
+
+[node name="WingRight" type="ColorRect" parent="Visuals"]
+unique_name_in_owner = true
+offset_left = 15.0
+offset_top = -24.0
+offset_right = 55.0
+offset_bottom = 8.0
+color = Color(0.65, 0.12, 0.08, 1)
+
+[node name="TailRect" type="ColorRect" parent="Visuals"]
+offset_left = -38.0
+offset_top = -6.0
+offset_right = -18.0
+offset_bottom = 6.0
+color = Color(0.7, 0.18, 0.08, 1)
+
+[node name="BodyRect" type="ColorRect" parent="Visuals"]
+offset_left = -25.0
+offset_top = -28.0
+offset_right = 25.0
+offset_bottom = 28.0
+color = Color(0.85, 0.22, 0.1, 1)
+
+[node name="HornsRect" type="ColorRect" parent="Visuals"]
+offset_left = 12.0
+offset_top = -34.0
+offset_right = 34.0
+offset_bottom = -24.0
+color = Color(0.25, 0.1, 0.08, 1)
+
+[node name="HeadRect" type="ColorRect" parent="Visuals"]
+offset_left = 10.0
+offset_top = -24.0
+offset_right = 36.0
+offset_bottom = 6.0
+color = Color(0.95, 0.3, 0.1, 1)
+
+[node name="EyesRect" type="ColorRect" parent="Visuals"]
+offset_left = 22.0
+offset_top = -18.0
+offset_right = 32.0
+offset_bottom = -12.0
+color = Color(1, 0.85, 0.2, 1)

@@ -76,6 +76,11 @@ func _build_floor() -> void:
 		if blizzard_scene != null:
 			var blizzard = blizzard_scene.instantiate()
 			add_child(blizzard)
+	elif current_biome != null and (current_biome.id == "fire_world" or current_biome.id == "fire_mines"):
+		var haze_scene: PackedScene = load("res://ui/HeatHazeOverlay.tscn")
+		if haze_scene != null:
+			var haze = haze_scene.instantiate()
+			add_child(haze)
 	
 	minimap.setup_minimap(rooms, Vector2i.ZERO)
 	

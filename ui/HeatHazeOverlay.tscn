@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://heat_haze_overlay_001"]
+
+[ext_resource type="Script" path="res://ui/HeatHazeOverlay.gd" id="1_haze"]
+
+[node name="HeatHazeOverlay" type="CanvasLayer"]
+script = ExtResource("1_haze")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VignetteRect" type="ColorRect" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 0.35, 0.08, 0.12)
+
+[node name="EmberParticles" type="CPUParticles2D" parent="Control"]
+unique_name_in_owner = true
+position = Vector2(640, 740)
+amount = 90
+lifetime = 3.0
+emission_shape = 3
+emission_rect_extents = Vector2(700, 10)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, -40)
+initial_velocity_min = 80.0
+initial_velocity_max = 180.0
+scale_amount_min = 2.0
+scale_amount_max = 4.5
+color = Color(1, 0.65, 0.15, 0.85)

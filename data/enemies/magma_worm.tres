@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_magma_worm_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_ed"]
+
+[resource]
+script = ExtResource("1_ed")
+id = "magma_worm"
+name = "Магматический червь"
+color = Color(0.65, 0.22, 0.1, 1)
+max_hp = 130
+speed = 95.0
+armor = 3
+damage = 18
+enemy_type = "magma_worm"
+attack_range = 160.0
+attack_cooldown = 2.0
+preferred_distance = 0.0
+knockback_resistance = 0.7
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 0.0
+can_reassemble = false
+reassemble_time = 0.0
+bone_pile_hp = 0
+has_front_shield = false
+immunities = ["burn"]
+gold_reward = 14
+souls_reward = 2
+difficulty_cost = 3

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="LootTable" load_steps=29 format=3]
+[gd_resource type="Resource" script_class="LootTable" load_steps=34 format=3]
 
 [ext_resource type="Script" path="res://systems/loot/LootTable.gd" id="1_loot"]
 [ext_resource type="Resource" path="res://data/items/aegis_shield.tres" id="1_it"]
@@ -28,7 +28,12 @@
 [ext_resource type="Resource" path="res://data/items/blizzard_orb.tres" id="25_it"]
 [ext_resource type="Resource" path="res://data/items/frozen_heart.tres" id="26_it"]
 [ext_resource type="Resource" path="res://data/items/absolute_zero_amulet.tres" id="27_it"]
+[ext_resource type="Resource" path="res://data/items/magma_boots.tres" id="28_it"]
+[ext_resource type="Resource" path="res://data/items/pyroclast_ring.tres" id="29_it"]
+[ext_resource type="Resource" path="res://data/items/flame_shield.tres" id="30_it"]
+[ext_resource type="Resource" path="res://data/items/molten_core.tres" id="31_it"]
+[ext_resource type="Resource" path="res://data/items/infernal_wrath_tome.tres" id="32_it"]
 
 [resource]
 script = ExtResource("1_loot")
-items = [ExtResource("1_it"), ExtResource("2_it"), ExtResource("3_it"), ExtResource("4_it"), ExtResource("5_it"), ExtResource("6_it"), ExtResource("7_it"), ExtResource("8_it"), ExtResource("9_it"), ExtResource("10_it"), ExtResource("11_it"), ExtResource("12_it"), ExtResource("13_it"), ExtResource("14_it"), ExtResource("15_it"), ExtResource("16_it"), ExtResource("17_it"), ExtResource("18_it"), ExtResource("19_it"), ExtResource("20_it"), ExtResource("21_it"), ExtResource("22_it"), ExtResource("23_it"), ExtResource("24_it"), ExtResource("25_it"), ExtResource("26_it"), ExtResource("27_it")]
+items = [ExtResource("1_it"), ExtResource("2_it"), ExtResource("3_it"), ExtResource("4_it"), ExtResource("5_it"), ExtResource("6_it"), ExtResource("7_it"), ExtResource("8_it"), ExtResource("9_it"), ExtResource("10_it"), ExtResource("11_it"), ExtResource("12_it"), ExtResource("13_it"), ExtResource("14_it"), ExtResource("15_it"), ExtResource("16_it"), ExtResource("17_it"), ExtResource("18_it"), ExtResource("19_it"), ExtResource("20_it"), ExtResource("21_it"), ExtResource("22_it"), ExtResource("23_it"), ExtResource("24_it"), ExtResource("25_it"), ExtResource("26_it"), ExtResource("27_it"), ExtResource("28_it"), ExtResource("29_it"), ExtResource("30_it"), ExtResource("31_it"), ExtResource("32_it")]

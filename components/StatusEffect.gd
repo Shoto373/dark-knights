@@ -14,3 +14,4 @@ enum EffectType { FREEZE, BURN, POISON, STUN }
 @export var speed_multiplier: float = 0.65
 @export var max_stacks: int = 3
 @export var color: Color = Color(0.4, 0.8, 1.0, 1.0)
+

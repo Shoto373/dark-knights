@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=2 format=3 uid="uid://boss_dragon_001"]
+
+[ext_resource type="Script" path="res://data/enemies/BossData.gd" id="1_boss"]
+
+[resource]
+script = ExtResource("1_boss")
+id = "boss_dragon"
+name = "Магматический Дракон"
+color = Color(0.85, 0.25, 0.1, 1)
+max_hp = 750
+armor = 4
+speed = 120.0
+damage = 28
+souls_reward = 70
+gold_reward = 150

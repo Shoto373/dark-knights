@@ -153,12 +153,19 @@ func recalculate_stats() -> void:
 		if not weapon_hitbox.tags.has("freeze"):
 			weapon_hitbox.tags.append("freeze")
 	
-	# Проверка особых свойств артефактов (например Замерзшее сердце)
+	# Проверка особых свойств артефактов (например Замерзшее сердце и Магматические сапоги)
 	for it in items:
-		if it is ItemData and it.id == "frozen_heart":
-			if status_effect_manager != null and not status_effect_manager.immunities.has("freeze"):
-				status_effect_manager.immunities.append("freeze")
-			movement_component.is_on_ice = false
+		if it is ItemData:
+			if it.id == "frozen_heart":
+				if status_effect_manager != null and not status_effect_manager.immunities.has("freeze"):
+					status_effect_manager.immunities.append("freeze")
+				movement_component.is_on_ice = false
+			elif it.id == "magma_boots":
+				if status_effect_manager != null:
+					if not status_effect_manager.immunities.has("burn"):
+						status_effect_manager.immunities.append("burn")
+					if not status_effect_manager.immunities.has("fire"):
+						status_effect_manager.immunities.append("fire")
 	
 	GameState.current_hp = health_component.current_health
 	GameState.max_hp = health_component.max_health

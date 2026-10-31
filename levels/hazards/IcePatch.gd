@@ -27,3 +27,4 @@ func _on_body_exited(body: Node2D) -> void:
 	var mov: MovementComponent = body.get_node_or_null("MovementComponent") as MovementComponent
 	if mov != null:
 		mov.is_on_ice = false
+

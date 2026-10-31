@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=4 format=3 uid="uid://item_flame_shield_001"]
+
+[ext_resource type="Script" path="res://data/items/ItemData.gd" id="1_it"]
+[ext_resource type="Script" path="res://data/items/StatModifier.gd" id="2_mod"]
+
+[sub_resource type="Resource" id="StatMod_1"]
+script = ExtResource("2_mod")
+stat_name = "armor"
+operation = "add"
+value = 3.0
+
+[sub_resource type="Resource" id="StatMod_2"]
+script = ExtResource("2_mod")
+stat_name = "max_hp"
+operation = "add"
+value = 25.0
+
+[resource]
+script = ExtResource("1_it")
+id = "flame_shield"
+name = "Огненный щит"
+description = "Щит из пылающей руды. +3 к броне и +25 к максимальному здоровью."
+rarity = "epic"
+item_type = "passive"
+cost_gold = 60
+weight = 50.0
+tags = ["fire", "armor"]
+modifiers = [SubResource("StatMod_1"), SubResource("StatMod_2")]
