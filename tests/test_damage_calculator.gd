@@ -25,3 +25,4 @@ func test_minimum_damage_is_one() -> void:
 func test_roll_crit_boundaries() -> void:
 	assert_false(DamageCalculator.roll_crit(0.0), "0% crit chance should never crit")
 	assert_true(DamageCalculator.roll_crit(1.0), "100% crit chance should always crit")
+

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="HeroData" load_steps=4 format=3 uid="uid://hero_ranger_001"]
+
+[ext_resource type="Script" path="res://data/heroes/HeroData.gd" id="1_hero"]
+[ext_resource type="Resource" uid="uid://ability_spike_trap" path="res://data/heroes/spike_trap.tres" id="2_trap"]
+[ext_resource type="Resource" uid="uid://ability_arrow_volley" path="res://data/heroes/arrow_volley.tres" id="3_volley"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "ranger"
+name = "Следопыт"
+description = "Ловкий стрелок с луком. Высокая скорость передвижения, капканы и веерный залп."
+color = Color(0.2, 0.68, 0.35, 1)
+max_hp = 95
+speed = 240.0
+armor = 1
+attack_type = "ranged"
+attack_damage = 24
+attack_cooldown = 0.34
+attack_range = 550.0
+projectile_speed = 580.0
+ability_1 = ExtResource("2_trap")
+ability_2 = ExtResource("3_volley")
+unlocked_by_default = false
+unlock_cost_souls = 10

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://ability_shield_charge"]
+
+[ext_resource type="Script" path="res://data/heroes/AbilityData.gd" id="1_ab"]
+
+[resource]
+script = ExtResource("1_ab")
+id = "shield_charge"
+name = "Рывок-удар"
+description = "Мощный таран щитом вперёд, наносящий 40 урона и отбрасывающий врагов."
+cooldown = 3.5
+effect_type = "dash"
+base_damage = 40
+range_or_radius = 200.0
+duration = 0.22
+speed = 700.0
+projectile_count = 1
+spread_angle_deg = 0.0

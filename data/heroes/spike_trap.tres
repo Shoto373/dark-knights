@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://ability_spike_trap"]
+
+[ext_resource type="Script" path="res://data/heroes/AbilityData.gd" id="1_ab"]
+
+[resource]
+script = ExtResource("1_ab")
+id = "spike_trap"
+name = "Ловушка"
+description = "Бросает под ноги ловушку, наносящую 35 урона и отбрасывающую врагов."
+cooldown = 4.0
+effect_type = "aoe"
+base_damage = 35
+range_or_radius = 60.0
+duration = 0.2
+speed = 0.0
+projectile_count = 1
+spread_angle_deg = 0.0

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="HeroData" load_steps=4 format=3 uid="uid://hero_warrior_001"]
+
+[ext_resource type="Script" path="res://data/heroes/HeroData.gd" id="1_hero"]
+[ext_resource type="Resource" uid="uid://ability_shield_block" path="res://data/heroes/shield_block.tres" id="2_block"]
+[ext_resource type="Resource" uid="uid://ability_shield_charge" path="res://data/heroes/shield_charge.tres" id="3_charge"]
+
+[resource]
+script = ExtResource("1_hero")
+id = "warrior"
+name = "Воин"
+description = "Тяжеловооружённый боец с щитом и мечом. Высокая живучесть и броня."
+color = Color(0.2, 0.45, 0.75, 1)
+max_hp = 120
+speed = 210.0
+armor = 3
+attack_type = "melee"
+attack_damage = 25
+attack_cooldown = 0.32
+attack_range = 42.0
+projectile_speed = 0.0
+ability_1 = ExtResource("2_block")
+ability_2 = ExtResource("3_charge")
+unlocked_by_default = true
+unlock_cost_souls = 0

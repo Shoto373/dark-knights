@@ -1,11 +1,17 @@
 class_name HUD
 extends CanvasLayer
 
-## Игровой интерфейс (HUD): Здоровье, Перезарядка рывка, Экран смерти, Всплывающий урон
+## Игровой интерфейс (HUD): Здоровье, Рывок, Способности, Экран смерти, Всплывающий урон
 
 @onready var hp_bar: ProgressBar = %PlayerHpBar
 @onready var hp_label: Label = %PlayerHpLabel
 @onready var dash_bar: ProgressBar = %DashBar
+@onready var ability_1_bar: ProgressBar = %Ability1Bar
+@onready var ability_2_bar: ProgressBar = %Ability2Bar
+@onready var ability_1_label: Label = %Ability1Label
+@onready var ability_2_label: Label = %Ability2Label
+@onready var hero_name_label: Label = %HeroNameLabel
+@onready var souls_label: Label = %SoulsLabel
 @onready var death_screen: Control = %DeathScreen
 @onready var btn_respawn: Button = %BtnRespawn
 @onready var damage_numbers_container: Control = %DamageNumbersContainer
@@ -20,20 +26,38 @@ func _ready() -> void:
 	EventBus.player_health_changed.connect(_on_player_health_changed)
 	EventBus.player_died.connect(_on_player_died)
 	EventBus.damage_dealt.connect(_on_damage_dealt)
+	EventBus.currency_changed.connect(_on_currency_changed)
+	
+	_update_hero_info()
+	_on_currency_changed(GameState.gold, MetaProgress.souls)
 
 func _process(_delta: float) -> void:
 	if is_instance_valid(player_ref):
 		dash_bar.value = player_ref.get_dash_cooldown_ratio() * 100.0
+		ability_1_bar.value = player_ref.get_ability_cooldown_ratio(1) * 100.0
+		ability_2_bar.value = player_ref.get_ability_cooldown_ratio(2) * 100.0
 
 func _on_player_spawned(player: Node2D) -> void:
 	player_ref = player as Player
+	_update_hero_info()
 	if is_instance_valid(player_ref) and player_ref.health_component:
 		_on_player_health_changed(player_ref.health_component.current_health, player_ref.health_component.max_health)
+
+func _update_hero_info() -> void:
+	if is_instance_valid(player_ref) and player_ref.hero_data != null:
+		hero_name_label.text = player_ref.hero_data.name
+		if player_ref.hero_data.ability_1:
+			ability_1_label.text = "Q: %s" % player_ref.hero_data.ability_1.name
+		if player_ref.hero_data.ability_2:
+			ability_2_label.text = "E: %s" % player_ref.hero_data.ability_2.name
 
 func _on_player_health_changed(current_hp: int, max_hp: int) -> void:
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	hp_label.text = "%d / %d HP" % [current_hp, max_hp]
+
+func _on_currency_changed(_gold: int, souls: int) -> void:
+	souls_label.text = "Души: %d" % souls
 
 func _on_player_died() -> void:
 	death_screen.visible = true
@@ -54,7 +78,6 @@ func _on_damage_dealt(target: Node2D, amount: int, is_crit: bool) -> void:
 	label.add_theme_font_size_override("font_size", 18 if is_crit else 14)
 	label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2) if is_crit else Color(1.0, 1.0, 1.0))
 	
-	# Преобразуем глобальную позицию цели в координаты экрана
 	var canvas_pos: Vector2 = target.get_global_transform_with_canvas().origin + Vector2(randf_range(-12, 12), -24)
 	label.position = canvas_pos
 	damage_numbers_container.add_child(label)

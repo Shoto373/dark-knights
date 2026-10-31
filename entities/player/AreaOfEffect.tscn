@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://aoe_scene_001"]
+
+[ext_resource type="Script" path="res://entities/player/AreaOfEffect.gd" id="1_aoe"]
+[ext_resource type="Script" path="res://components/HitboxComponent.gd" id="2_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_aoe"]
+radius = 80.0
+
+[node name="AreaOfEffect" type="Node2D"]
+script = ExtResource("1_aoe")
+
+[node name="VisualCircle" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_left = -80.0
+offset_top = -80.0
+offset_right = 80.0
+offset_bottom = 80.0
+color = Color(1, 0.45, 0.1, 0.6)
+
+[node name="HitboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("2_hitbox")
+base_damage = 40
+knockback_force = 350.0
+is_player_hitbox = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_aoe")

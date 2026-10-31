@@ -20,3 +20,4 @@ func _process(delta: float) -> void:
 	if _timer >= tick_rate:
 		_timer = 0.0
 		hitbox.reset_hits()
+

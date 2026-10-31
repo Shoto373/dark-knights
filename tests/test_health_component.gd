@@ -52,3 +52,4 @@ func test_healing_cannot_exceed_max_health() -> void:
 	assert_eq(healed, 40, "Should only heal missing 40 HP")
 	assert_eq(hc.current_health, 100, "HP should be at max")
 	assert_signal_emitted_with_parameters(hc, "healed", [40, 100, 100])
+

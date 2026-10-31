@@ -1,7 +1,10 @@
 class_name Player
 extends CharacterBody2D
 
-## Персонаж игрока
+## Персонаж игрока, конфигурируемый через HeroData (Data-Driven)
+
+const PROJECTILE_SCENE = preload("res://entities/player/Projectile.tscn")
+const AOE_SCENE = preload("res://entities/player/AreaOfEffect.tscn")
 
 @onready var movement_component: MovementComponent = %MovementComponent
 @onready var health_component: HealthComponent = %HealthComponent
@@ -10,21 +13,25 @@ extends CharacterBody2D
 @onready var weapon_hitbox: HitboxComponent = %WeaponHitbox
 @onready var attack_collision: CollisionShape2D = %AttackCollision
 @onready var visuals: Node2D = %Visuals
+@onready var body_rect: ColorRect = $Visuals/BodyRect
 @onready var dash_timer: Timer = %DashTimer
 @onready var dash_cooldown_timer: Timer = %DashCooldownTimer
 @onready var attack_timer: Timer = %AttackTimer
 @onready var iframes_timer: Timer = %IframesTimer
 
+@export var hero_data: HeroData
 @export var dash_speed: float = 550.0
 @export var dash_duration: float = 0.18
 @export var dash_cooldown: float = 0.8
-@export var attack_cooldown: float = 0.32
 @export var iframes_duration: float = 0.6
 
 var is_dashing: bool = false
 var can_attack: bool = true
 var dash_direction: Vector2 = Vector2.RIGHT
 var aim_direction: Vector2 = Vector2.RIGHT
+
+var ability_1_timer: Timer
+var ability_2_timer: Timer
 
 func _ready() -> void:
 	collision_layer = 2 # Слой 2: player
@@ -45,7 +52,6 @@ func _ready() -> void:
 	dash_cooldown_timer.wait_time = dash_cooldown
 	dash_cooldown_timer.one_shot = true
 	
-	attack_timer.wait_time = attack_cooldown
 	attack_timer.one_shot = true
 	attack_timer.timeout.connect(_on_attack_cooldown_finished)
 	
@@ -57,10 +63,49 @@ func _ready() -> void:
 	health_component.healed.connect(_on_health_healed)
 	health_component.died.connect(_on_health_died)
 	
-	# Обновляем глобальное состояние HP
+	# Создаем таймеры способностей
+	ability_1_timer = Timer.new()
+	ability_1_timer.one_shot = true
+	add_child(ability_1_timer)
+	
+	ability_2_timer = Timer.new()
+	ability_2_timer.one_shot = true
+	add_child(ability_2_timer)
+	
+	# Загружаем героя из данных
+	if hero_data == null:
+		var hero_path: String = "res://data/heroes/%s.tres" % GameState.selected_hero_id
+		if ResourceLoader.exists(hero_path):
+			hero_data = load(hero_path) as HeroData
+		else:
+			hero_data = load("res://data/heroes/warrior.tres") as HeroData
+	
+	apply_hero_data(hero_data)
+	EventBus.player_spawned.emit(self)
+
+func apply_hero_data(data: HeroData) -> void:
+	if data == null:
+		return
+	hero_data = data
+	
+	health_component.max_health = hero_data.max_hp
+	health_component.reset(hero_data.max_hp)
+	movement_component.max_speed = hero_data.speed
+	hurtbox_component.armor = hero_data.armor
+	
+	weapon_hitbox.base_damage = hero_data.attack_damage
+	attack_timer.wait_time = hero_data.attack_cooldown
+	
+	if body_rect != null:
+		body_rect.color = hero_data.color
+	
+	if hero_data.ability_1 != null:
+		ability_1_timer.wait_time = hero_data.ability_1.cooldown
+	if hero_data.ability_2 != null:
+		ability_2_timer.wait_time = hero_data.ability_2.cooldown
+	
 	GameState.current_hp = health_component.current_health
 	GameState.max_hp = health_component.max_health
-	EventBus.player_spawned.emit(self)
 	EventBus.player_health_changed.emit(health_component.current_health, health_component.max_health)
 
 func _process(delta: float) -> void:
@@ -84,7 +129,6 @@ func _physics_process(delta: float) -> void:
 		movement_component.move(self, input_vector, delta)
 
 func _update_aim() -> void:
-	# Определение направления прицеливания: мышь или геймпад
 	var mouse_pos: Vector2 = get_global_mouse_position()
 	var to_mouse: Vector2 = (mouse_pos - global_position)
 	if to_mouse.length_squared() > 100.0:
@@ -92,7 +136,6 @@ func _update_aim() -> void:
 	
 	weapon_pivot.rotation = aim_direction.angle()
 	
-	# Разворот спрайта влево/вправо
 	if aim_direction.x < 0:
 		visuals.scale.x = -1.0
 	elif aim_direction.x > 0:
@@ -104,6 +147,12 @@ func _handle_input() -> void:
 	
 	if Input.is_action_just_pressed("attack") and can_attack and not is_dashing:
 		_perform_attack()
+	
+	if Input.is_action_just_pressed("ability_1") and hero_data != null and hero_data.ability_1 != null:
+		_trigger_ability(hero_data.ability_1, ability_1_timer)
+		
+	if Input.is_action_just_pressed("ability_2") and hero_data != null and hero_data.ability_2 != null:
+		_trigger_ability(hero_data.ability_2, ability_2_timer)
 
 func _start_dash() -> void:
 	is_dashing = true
@@ -127,10 +176,16 @@ func _on_dash_finished() -> void:
 func _perform_attack() -> void:
 	can_attack = false
 	attack_timer.start()
+	
+	if hero_data != null and hero_data.attack_type == "ranged":
+		_shoot_basic_projectile()
+	else:
+		_swing_melee_weapon()
+
+func _swing_melee_weapon() -> void:
 	weapon_hitbox.reset_hits()
 	attack_collision.disabled = false
 	
-	# Анимация дуги взмаха оружием через твин
 	var base_angle: float = aim_direction.angle()
 	weapon_pivot.rotation = base_angle - deg_to_rad(65.0)
 	
@@ -139,6 +194,117 @@ func _perform_attack() -> void:
 	tween.tween_callback(func(): attack_collision.disabled = true)
 	tween.tween_property(weapon_pivot, "rotation", base_angle, 0.08)
 
+func _shoot_basic_projectile() -> void:
+	var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+	get_parent().add_child(proj)
+	proj.global_position = global_position + aim_direction * 20.0
+	proj.setup(
+		aim_direction,
+		hero_data.projectile_speed if hero_data else 500.0,
+		hero_data.attack_damage if hero_data else 20,
+		true,
+		hero_data.attack_range if hero_data else 500.0,
+		180.0,
+		hero_data.color if hero_data else Color.WHITE
+	)
+
+func _trigger_ability(ability: AbilityData, timer: Timer) -> void:
+	if not timer.is_stopped() or is_dashing:
+		return
+	
+	timer.start()
+	match ability.effect_type:
+		"buff":
+			_apply_buff_ability(ability)
+		"dash":
+			_apply_dash_ability(ability)
+		"aoe":
+			_apply_aoe_ability(ability)
+		"teleport":
+			_apply_teleport_ability(ability)
+		"projectile":
+			_apply_projectile_ability(ability)
+
+func _apply_buff_ability(ability: AbilityData) -> void:
+	health_component.set_invulnerable(true)
+	visuals.modulate = Color(1.5, 1.5, 0.5, 1.0)
+	var tween: Tween = create_tween()
+	tween.tween_interval(ability.duration)
+	tween.tween_callback(func():
+		if iframes_timer.is_stopped():
+			health_component.set_invulnerable(false)
+		visuals.modulate = Color.WHITE
+	)
+
+func _apply_dash_ability(ability: AbilityData) -> void:
+	is_dashing = true
+	dash_direction = aim_direction
+	health_component.set_invulnerable(true)
+	visuals.modulate = Color(1.5, 0.5, 0.5, 0.8)
+	
+	weapon_hitbox.base_damage = ability.base_damage
+	weapon_hitbox.reset_hits()
+	attack_collision.disabled = false
+	
+	var tween: Tween = create_tween()
+	tween.tween_property(self, "velocity", dash_direction * ability.speed, ability.duration)
+	tween.tween_callback(func():
+		is_dashing = false
+		attack_collision.disabled = true
+		weapon_hitbox.base_damage = hero_data.attack_damage if hero_data else 25
+		health_component.set_invulnerable(false)
+		visuals.modulate = Color.WHITE
+	)
+
+func _apply_aoe_ability(ability: AbilityData) -> void:
+	var target_pos: Vector2 = get_global_mouse_position()
+	# Ограничение дальности применения AoE
+	var dist: float = (target_pos - global_position).length()
+	if dist > 350.0:
+		target_pos = global_position + (target_pos - global_position).normalized() * 350.0
+	
+	var aoe: AreaOfEffect = AOE_SCENE.instantiate() as AreaOfEffect
+	get_parent().add_child(aoe)
+	aoe.setup(target_pos, ability.range_or_radius, ability.base_damage, true, 400.0)
+
+func _apply_teleport_ability(ability: AbilityData) -> void:
+	var target_pos: Vector2 = global_position + aim_direction * ability.range_or_radius
+	health_component.set_invulnerable(true)
+	visuals.modulate.a = 0.2
+	
+	global_position = target_pos
+	
+	var tween: Tween = create_tween()
+	tween.tween_interval(0.15)
+	tween.tween_callback(func():
+		health_component.set_invulnerable(false)
+		visuals.modulate.a = 1.0
+	)
+
+func _apply_projectile_ability(ability: AbilityData) -> void:
+	var count: int = ability.projectile_count
+	var half_spread: float = deg_to_rad(ability.spread_angle_deg) / 2.0
+	var base_angle: float = aim_direction.angle()
+	
+	for i in range(count):
+		var angle_offset: float = 0.0
+		if count > 1:
+			angle_offset = -half_spread + (float(i) / float(count - 1)) * (half_spread * 2.0)
+		
+		var dir: Vector2 = Vector2.from_angle(base_angle + angle_offset)
+		var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+		get_parent().add_child(proj)
+		proj.global_position = global_position + dir * 20.0
+		proj.setup(
+			dir,
+			ability.speed,
+			ability.base_damage,
+			true,
+			ability.range_or_radius,
+			220.0,
+			hero_data.color if hero_data else Color.WHITE
+		)
+
 func _on_attack_cooldown_finished() -> void:
 	can_attack = true
 
@@ -146,8 +312,6 @@ func _on_health_damaged(amount: int, current_hp: int, max_hp: int) -> void:
 	GameState.current_hp = current_hp
 	GameState.max_hp = max_hp
 	EventBus.player_health_changed.emit(current_hp, max_hp)
-	
-	# Запуск i-frames после получения урона
 	health_component.set_invulnerable(true)
 	iframes_timer.start()
 
@@ -180,3 +344,8 @@ func get_dash_cooldown_ratio() -> float:
 		return 1.0
 	return 1.0 - (dash_cooldown_timer.time_left / dash_cooldown_timer.wait_time)
 
+func get_ability_cooldown_ratio(slot: int) -> float:
+	var t: Timer = ability_1_timer if slot == 1 else ability_2_timer
+	if t == null or t.is_stopped() or t.wait_time <= 0.0:
+		return 1.0
+	return 1.0 - (t.time_left / t.wait_time)

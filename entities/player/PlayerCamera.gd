@@ -31,3 +31,4 @@ func _process(delta: float) -> void:
 func add_shake(intensity: float, duration: float) -> void:
 	shake_intensity = maxf(shake_intensity, intensity)
 	shake_timer = maxf(shake_timer, duration)
+

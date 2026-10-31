@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://ability_teleport"]
+
+[ext_resource type="Script" path="res://data/heroes/AbilityData.gd" id="1_ab"]
+
+[resource]
+script = ExtResource("1_ab")
+id = "teleport"
+name = "Телепорт"
+description = "Мгновенное перемещение в направлении взгляда с неуязвимостью."
+cooldown = 4.0
+effect_type = "teleport"
+base_damage = 0
+range_or_radius = 180.0
+duration = 0.1
+speed = 0.0
+projectile_count = 1
+spread_angle_deg = 0.0

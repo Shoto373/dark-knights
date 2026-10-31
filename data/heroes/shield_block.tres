@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://ability_shield_block"]
+
+[ext_resource type="Script" path="res://data/heroes/AbilityData.gd" id="1_ab"]
+
+[resource]
+script = ExtResource("1_ab")
+id = "shield_block"
+name = "Блок щитом"
+description = "Поднимает щит, блокируя любой входящий урон на 1.5 сек."
+cooldown = 4.0
+effect_type = "buff"
+base_damage = 0
+range_or_radius = 0.0
+duration = 1.5
+speed = 0.0
+projectile_count = 1
+spread_angle_deg = 0.0

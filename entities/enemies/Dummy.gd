@@ -68,3 +68,4 @@ func _respawn() -> void:
 	health_component.reset(max_hp)
 	visuals.modulate = Color.WHITE
 	_update_hp_bar()
+

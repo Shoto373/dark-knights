@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://hud_scene_001"]
+[gd_scene load_steps=7 format=3 uid="uid://hud_scene_001"]
 
 [ext_resource type="Script" path="res://ui/HUD.gd" id="1_hud"]
 
@@ -16,6 +16,13 @@ corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ability_bar"]
+bg_color = Color(0.8, 0.5, 0.9, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0.1, 0.1, 0.12, 0.75)
 corner_radius_top_left = 3
@@ -27,21 +34,39 @@ corner_radius_bottom_left = 3
 script = ExtResource("1_hud")
 
 [node name="TopLeftUI" type="MarginContainer" parent="."]
-offset_right = 260.0
-offset_bottom = 90.0
+offset_right = 320.0
+offset_bottom = 150.0
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 
 [node name="VBoxContainer" type="VBoxContainer" parent="TopLeftUI"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
+
+[node name="HeroHeader" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HeroNameLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 14
+text = "Воин"
+
+[node name="SoulsLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Души: 0"
 
 [node name="HpContainer" type="VBoxContainer" parent="TopLeftUI/VBoxContainer"]
 layout_mode = 2
 
 [node name="PlayerHpBar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/HpContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 20)
+custom_minimum_size = Vector2(240, 18)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hp_bar")
@@ -52,7 +77,7 @@ show_percentage = false
 [node name="PlayerHpLabel" type="Label" parent="TopLeftUI/VBoxContainer/HpContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 text = "100 / 100 HP"
 
 [node name="DashContainer" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
@@ -60,17 +85,62 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="DashLabel" type="Label" parent="TopLeftUI/VBoxContainer/DashContainer"]
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 text = "Рывок [Shift]:"
 
 [node name="DashBar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/DashContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 12)
+custom_minimum_size = Vector2(120, 10)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_dash_bar")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Ability1Container" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Ability1Label" type="Label" parent="TopLeftUI/VBoxContainer/Ability1Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Q: Навык 1"
+
+[node name="Ability1Bar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/Ability1Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ability_bar")
+max_value = 100.0
+value = 100.0
+show_percentage = false
+
+[node name="Ability2Container" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Ability2Label" type="Label" parent="TopLeftUI/VBoxContainer/Ability2Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "E: Навык 2"
+
+[node name="Ability2Bar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/Ability2Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ability_bar")
 max_value = 100.0
 value = 100.0
 show_percentage = false

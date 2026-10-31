@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="AbilityData" load_steps=2 format=3 uid="uid://ability_arrow_volley"]
+
+[ext_resource type="Script" path="res://data/heroes/AbilityData.gd" id="1_ab"]
+
+[resource]
+script = ExtResource("1_ab")
+id = "arrow_volley"
+name = "Залп стрел"
+description = "Выпускает веер из 5 скоростных стрел в секторе перед собой."
+cooldown = 3.2
+effect_type = "projectile"
+base_damage = 18
+range_or_radius = 550.0
+duration = 1.0
+speed = 600.0
+projectile_count = 5
+spread_angle_deg = 36.0

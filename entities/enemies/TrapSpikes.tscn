@@ -55,3 +55,4 @@ is_player_hitbox = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
 shape = SubResource("RectangleShape2D_box")
+
