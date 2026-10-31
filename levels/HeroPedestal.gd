@@ -101,6 +101,7 @@ func _select_hero() -> void:
 	GameState.selected_hero_id = hero_data.id
 	if is_instance_valid(player_ref):
 		player_ref.apply_hero_data(hero_data)
+	EventBus.hero_changed.emit(hero_data)
 	
 	# Обновляем все пьедесталы в Хабе
 	for pedestal in get_tree().get_nodes_in_group("hero_pedestals"):

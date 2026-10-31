@@ -123,6 +123,8 @@ func apply_hero_data(data: HeroData) -> void:
 		ability_2_timer.wait_time = hero_data.ability_2.cooldown
 	
 	recalculate_stats()
+	EventBus.player_health_changed.emit(health_component.current_health, health_component.max_health)
+	EventBus.hero_changed.emit(hero_data)
 
 func recalculate_stats() -> void:
 	if hero_data == null:

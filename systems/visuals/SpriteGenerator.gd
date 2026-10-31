@@ -20,6 +20,13 @@ static func get_hero_texture(hero_id: String) -> Texture2D:
 	if _cache.has(key):
 		return _cache[key]
 	
+	var svg_path: String = "res://assets/sprites/hero_%s.svg" % hero_id
+	if ResourceLoader.exists(svg_path):
+		var tex: Texture2D = load(svg_path)
+		if tex:
+			_cache[key] = tex
+			return tex
+	
 	var img: Image = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	img.fill(C_TRANSPARENT)
 	
@@ -41,6 +48,13 @@ static func get_hero_icon(hero_id: String) -> Texture2D:
 	var key: String = "icon_hero_" + hero_id
 	if _cache.has(key):
 		return _cache[key]
+	
+	var svg_path: String = "res://assets/sprites/icon_%s.svg" % hero_id
+	if ResourceLoader.exists(svg_path):
+		var tex: Texture2D = load(svg_path)
+		if tex:
+			_cache[key] = tex
+			return tex
 	
 	var img: Image = Image.create(40, 40, false, Image.FORMAT_RGBA8)
 	img.fill(C_TRANSPARENT)
@@ -69,6 +83,13 @@ static func get_enemy_texture(enemy_type: String) -> Texture2D:
 	if _cache.has(key):
 		return _cache[key]
 		
+	var svg_path: String = "res://assets/sprites/enemy_%s.svg" % enemy_type
+	if ResourceLoader.exists(svg_path):
+		var tex: Texture2D = load(svg_path)
+		if tex:
+			_cache[key] = tex
+			return tex
+			
 	var img: Image = Image.create(32, 32, false, Image.FORMAT_RGBA8)
 	img.fill(C_TRANSPARENT)
 	
@@ -143,6 +164,27 @@ static func get_boss_texture(boss_id: String) -> Texture2D:
 	if _cache.has(key):
 		return _cache[key]
 		
+	var mapped_name: String = ""
+	match boss_id:
+		"goblin_boss", "boss_goblin": mapped_name = "boss_goblin"
+		"troll_king", "boss_troll": mapped_name = "boss_troll"
+		"skeleton_knight", "boss_skeleton_knight", "boss_skeleton": mapped_name = "boss_skeleton"
+		"lich_king", "boss_lich_king", "boss_lich": mapped_name = "boss_lich"
+		"dragon", "boss_dragon": mapped_name = "boss_dragon"
+		"purgatory_lord", "boss_purgatory_lord", "boss_purgatory": mapped_name = "boss_purgatory"
+		_:
+			if boss_id.begins_with("boss_"):
+				mapped_name = boss_id
+			else:
+				mapped_name = "boss_" + boss_id
+
+	var svg_path: String = "res://assets/sprites/%s.svg" % mapped_name
+	if ResourceLoader.exists(svg_path):
+		var tex: Texture2D = load(svg_path)
+		if tex:
+			_cache[key] = tex
+			return tex
+
 	var img: Image = Image.create(48, 48, false, Image.FORMAT_RGBA8)
 	img.fill(C_TRANSPARENT)
 	
@@ -575,3 +617,4 @@ static func _draw_boss_purgatory(img: Image) -> void:
 	# Астральные крылья пустоты
 	_fill_rect(img, 2, 10, 10, 22, Color(0.4, 0.15, 0.55))
 	_fill_rect(img, 36, 10, 10, 22, Color(0.4, 0.15, 0.55))
+

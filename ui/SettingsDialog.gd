@@ -63,3 +63,4 @@ func _on_apply_and_close() -> void:
 func _on_close_pressed() -> void:
 	closed.emit()
 	queue_free()
+

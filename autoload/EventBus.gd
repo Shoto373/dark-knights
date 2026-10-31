@@ -4,6 +4,7 @@ extends Node
 
 # Сигналы игрока
 signal player_spawned(player: Node2D)
+signal hero_changed(hero_data: HeroData)
 signal player_health_changed(current: int, max_hp: int)
 signal player_died
 signal player_healed(amount: int)

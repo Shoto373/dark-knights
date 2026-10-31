@@ -32,6 +32,7 @@ func _ready() -> void:
 	btn_respawn.pressed.connect(_on_respawn_pressed)
 	
 	EventBus.player_spawned.connect(_on_player_spawned)
+	EventBus.hero_changed.connect(_on_hero_changed)
 	EventBus.player_health_changed.connect(_on_player_health_changed)
 	EventBus.player_died.connect(_on_player_died)
 	EventBus.damage_dealt.connect(_on_damage_dealt)
@@ -57,15 +58,39 @@ func _on_player_spawned(player: Node2D) -> void:
 	if is_instance_valid(player_ref) and player_ref.health_component:
 		_on_player_health_changed(player_ref.health_component.current_health, player_ref.health_component.max_health)
 
-func _update_hero_info() -> void:
-	if is_instance_valid(player_ref) and player_ref.hero_data != null:
-		hero_name_label.text = player_ref.hero_data.name
+func _on_hero_changed(data: HeroData) -> void:
+	_update_hero_info(data)
+
+func _update_hero_info(custom_hero_data: HeroData = null) -> void:
+	var h_data: HeroData = custom_hero_data
+	if h_data == null and is_instance_valid(player_ref):
+		h_data = player_ref.hero_data
+	if h_data == null and not GameState.selected_hero_id.is_empty():
+		var h_path: String = "res://data/heroes/%s.tres" % GameState.selected_hero_id
+		if ResourceLoader.exists(h_path):
+			h_data = load(h_path) as HeroData
+	if h_data == null:
+		var def_path: String = "res://data/heroes/warrior.tres"
+		if ResourceLoader.exists(def_path):
+			h_data = load(def_path) as HeroData
+
+	if h_data != null:
+		hero_name_label.text = h_data.name
 		if hero_portrait != null:
-			hero_portrait.texture = SpriteGenerator.get_hero_icon(player_ref.hero_data.id)
-		if player_ref.hero_data.ability_1:
-			ability_1_label.text = "Q: %s" % player_ref.hero_data.ability_1.name
-		if player_ref.hero_data.ability_2:
-			ability_2_label.text = "E: %s" % player_ref.hero_data.ability_2.name
+			hero_portrait.texture = SpriteGenerator.get_hero_icon(h_data.id)
+		if h_data.ability_1:
+			ability_1_label.text = "Q: %s" % h_data.ability_1.name
+		else:
+			ability_1_label.text = "Q: -"
+		if h_data.ability_2:
+			ability_2_label.text = "E: %s" % h_data.ability_2.name
+		else:
+			ability_2_label.text = "E: -"
+			
+		if is_instance_valid(player_ref) and player_ref.health_component:
+			_on_player_health_changed(player_ref.health_component.current_health, player_ref.health_component.max_health)
+		elif hp_bar != null:
+			_on_player_health_changed(h_data.max_hp, h_data.max_hp)
 
 func _on_player_health_changed(current_hp: int, max_hp: int) -> void:
 	hp_bar.max_value = max_hp

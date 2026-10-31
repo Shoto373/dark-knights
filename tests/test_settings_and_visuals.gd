@@ -65,3 +65,75 @@ func test_settings_dialog_instantiation() -> void:
 	assert_not_null(dialog.mode_option)
 	assert_not_null(dialog.res_option)
 	assert_not_null(dialog.volume_slider)
+
+func test_hud_realtime_hero_change_updates_portrait_and_name() -> void:
+	var hud_scene: PackedScene = load("res://ui/HUD.tscn")
+	assert_not_null(hud_scene)
+	var hud: HUD = hud_scene.instantiate() as HUD
+	add_child_autofree(hud)
+	
+	var warrior_data: HeroData = load("res://data/heroes/warrior.tres") as HeroData
+	var mage_data: HeroData = load("res://data/heroes/mage.tres") as HeroData
+	
+	EventBus.hero_changed.emit(warrior_data)
+	assert_eq(hud.hero_name_label.text, warrior_data.name)
+	assert_not_null(hud.hero_portrait.texture)
+	
+	EventBus.hero_changed.emit(mage_data)
+	assert_eq(hud.hero_name_label.text, mage_data.name)
+	assert_eq(hud.ability_1_label.text, "Q: %s" % mage_data.ability_1.name)
+
+func test_troll_gorge_room_door_corridors_are_chasm_free() -> void:
+	var room_scene: PackedScene = load("res://levels/Room.tscn")
+	assert_not_null(room_scene)
+	var room: DungeonRoom = room_scene.instantiate() as DungeonRoom
+	add_child_autofree(room)
+	
+	var rdata: RoomData = RoomData.new()
+	rdata.grid_pos = Vector2i(1, 0)
+	rdata.room_type = RoomData.RoomType.COMBAT
+	rdata.doors[Vector2i.UP] = true
+	rdata.doors[Vector2i.DOWN] = true
+	rdata.doors[Vector2i.LEFT] = true
+	rdata.doors[Vector2i.RIGHT] = true
+	
+	var troll_biome: BiomeData = load("res://data/biomes/troll_gorge.tres") as BiomeData
+	assert_not_null(troll_biome)
+	
+	room.setup(rdata, troll_biome)
+	
+	# Точки входа дверей
+	var door_points: Array[Vector2] = [
+		Vector2(640, 120),  # Сверху
+		Vector2(640, 600),  # Снизу
+		Vector2(120, 360),  # Слева
+		Vector2(1160, 360)  # Справа
+	]
+	
+	# Проверяем, что ни одна точка входа не находится внутри пропасти
+	for obj in room.objects_container.get_children():
+		if obj is ChasmHazard:
+			var chasm: ChasmHazard = obj as ChasmHazard
+			var half_size: Vector2 = chasm.pit_size / 2.0
+			var rect: Rect2 = Rect2(chasm.position - half_size, chasm.pit_size)
+			for pt in door_points:
+				assert_false(rect.has_point(pt), "Дверная точка входа %s не должна быть в пропасти!" % pt)
+
+func test_chasm_hazard_restores_scale_and_recovers_to_room_center() -> void:
+	var chasm_scene: PackedScene = load("res://levels/hazards/ChasmHazard.tscn")
+	var chasm: ChasmHazard = chasm_scene.instantiate() as ChasmHazard
+	add_child_autofree(chasm)
+	chasm.position = Vector2(300, 300)
+	chasm.pit_size = Vector2(100, 100)
+	
+	var player_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var player: Player = player_scene.instantiate() as Player
+	add_child_autofree(player)
+	player.global_position = Vector2(300, 300)
+	player.scale = Vector2.ONE
+	
+	# Провоцируем падение
+	chasm._check_player_fall(player)
+	# Масштаб и координаты должны восстановиться корректно
+	assert_ne(player.scale, Vector2.ZERO, "Масштаб игрока не должен быть нулевым после падения")
+

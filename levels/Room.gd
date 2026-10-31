@@ -146,24 +146,28 @@ func _create_castle_traps() -> void:
 		lever.position = Vector2(200, 180)
 
 func _create_gorge_chasm_and_bridge() -> void:
-	var top_chasm: ChasmHazard = CHASM_HAZARD_SCENE.instantiate() as ChasmHazard
-	objects_container.add_child(top_chasm)
-	top_chasm.position = Vector2(640, 180)
-	top_chasm.pit_size = Vector2(160, 200)
+	# Размещаем пропасти строго в угловых квадрантах комнаты,
+	# чтобы коридоры у ВСЕХ 4 дверей (Сверху, Снизу, Слева, Справа) были полностью свободны и безопасны.
+	var chasm1: ChasmHazard = CHASM_HAZARD_SCENE.instantiate() as ChasmHazard
+	objects_container.add_child(chasm1)
+	chasm1.position = Vector2(340, 220)
+	chasm1.pit_size = Vector2(200, 140)
+	chasm1.safe_respawn_position = global_position + Vector2(640, 360)
 	if current_biome != null:
-		top_chasm.visual_pit.color = current_biome.chasm_color
+		chasm1.visual_pit.color = current_biome.chasm_color
 	
-	var bottom_chasm: ChasmHazard = CHASM_HAZARD_SCENE.instantiate() as ChasmHazard
-	objects_container.add_child(bottom_chasm)
-	bottom_chasm.position = Vector2(640, 540)
-	bottom_chasm.pit_size = Vector2(160, 200)
+	var chasm2: ChasmHazard = CHASM_HAZARD_SCENE.instantiate() as ChasmHazard
+	objects_container.add_child(chasm2)
+	chasm2.position = Vector2(940, 500)
+	chasm2.pit_size = Vector2(200, 140)
+	chasm2.safe_respawn_position = global_position + Vector2(640, 360)
 	if current_biome != null:
-		bottom_chasm.visual_pit.color = current_biome.chasm_color
+		chasm2.visual_pit.color = current_biome.chasm_color
 		
 	var bridge: BridgeArea = BRIDGE_AREA_SCENE.instantiate() as BridgeArea
 	objects_container.add_child(bridge)
-	bridge.position = Vector2(640, 360)
-	bridge.bridge_size = Vector2(160, 140)
+	bridge.position = Vector2(340, 220)
+	bridge.bridge_size = Vector2(80, 140)
 	if current_biome != null:
 		bridge.visual_rect.color = current_biome.bridge_color
 

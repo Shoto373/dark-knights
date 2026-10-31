@@ -109,3 +109,4 @@ func load_settings() -> void:
 		current_window_mode_index = int(parsed.get("window_mode", 1))
 		current_resolution_index = int(parsed.get("resolution_index", 0))
 		master_volume = float(parsed.get("master_volume", 1.0))
+
