@@ -1,15 +1,18 @@
 class_name Projectile
 extends Area2D
 
-## Снаряд для дальних атак и способностей
+## Снаряд для дальних атак и способностей с частицами и векторной графикой
 
 @onready var hitbox: HitboxComponent = %HitboxComponent
 @onready var collision_shape: CollisionShape2D = %CollisionShape2D
+@onready var projectile_sprite: Sprite2D = %ProjectileSprite
 
 var direction: Vector2 = Vector2.RIGHT
 var speed: float = 400.0
 var max_distance: float = 600.0
 var distance_traveled: float = 0.0
+var proj_type: String = "magic"
+var _trail_timer: float = 0.0
 
 func _ready() -> void:
 	# Снаряд врезается в стены (слой 1: world)
@@ -25,7 +28,8 @@ func setup(
 	knockback: float = 200.0,
 	color: Color = Color.WHITE,
 	p_damage_type: String = "physical",
-	p_tags: Array[String] = []
+	p_tags: Array[String] = [],
+	p_proj_type: String = ""
 ) -> void:
 	direction = dir.normalized()
 	speed = proj_speed
@@ -39,6 +43,20 @@ func setup(
 	hitbox.damage_type = p_damage_type
 	hitbox.tags = p_tags.duplicate()
 	
+	# Определение типа снаряда для текстуры
+	if not p_proj_type.is_empty():
+		proj_type = p_proj_type
+	elif p_damage_type == "fire" or p_tags.has("fire"):
+		proj_type = "fireball"
+	elif p_damage_type == "freeze" or p_tags.has("frost") or p_tags.has("freeze"):
+		proj_type = "frost"
+	else:
+		proj_type = "magic"
+	
+	var tex: Texture2D = SpriteGenerator.get_projectile_texture(proj_type)
+	if tex != null and projectile_sprite != null:
+		projectile_sprite.texture = tex
+	
 	modulate = color
 
 func _physics_process(delta: float) -> void:
@@ -46,10 +64,47 @@ func _physics_process(delta: float) -> void:
 	global_position += step
 	distance_traveled += step.length()
 	
+	_trail_timer += delta
+	if _trail_timer >= 0.04:
+		_trail_timer = 0.0
+		_spawn_trail()
+	
 	if distance_traveled >= max_distance:
-		queue_free()
+		_destroy()
+
+func _spawn_trail() -> void:
+	var p_parent: Node = get_parent()
+	if p_parent == null:
+		return
+	var spark: ColorRect = ColorRect.new()
+	var sz: float = randf_range(2.0, 4.0)
+	spark.size = Vector2(sz, sz)
+	spark.position = global_position - Vector2(sz, sz) / 2.0 - direction * 6.0
+	
+	var trail_color: Color = modulate
+	if proj_type == "fireball":
+		trail_color = Color(1.0, randf_range(0.4, 0.7), 0.1, 0.8)
+	elif proj_type == "frost":
+		trail_color = Color(0.4, 0.85, 1.0, 0.8)
+	elif proj_type == "arrow":
+		trail_color = Color(0.7, 0.7, 0.7, 0.5)
+	
+	spark.color = trail_color
+	p_parent.add_child(spark)
+	
+	var tween: Tween = spark.create_tween()
+	tween.tween_property(spark, "scale", Vector2.ZERO, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(spark, "modulate:a", 0.0, 0.16)
+	tween.tween_callback(spark.queue_free)
 
 func _on_body_entered(_body: Node2D) -> void:
-	# Попадание в стену окружения
-	queue_free()
+	_destroy()
 
+func _destroy() -> void:
+	var spark_color: Color = modulate
+	if proj_type == "fireball":
+		spark_color = Color(1.0, 0.5, 0.1)
+	elif proj_type == "frost":
+		spark_color = Color(0.3, 0.8, 1.0)
+	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, spark_color, 5)
+	queue_free()

@@ -44,6 +44,7 @@ func save_run() -> bool:
 		"seed": GameState.current_seed,
 		"hero_id": GameState.selected_hero_id,
 		"node_id": GameState.current_world_node_id,
+		"visited_nodes": GameState.visited_world_nodes,
 		"floor": GameState.current_floor_index,
 		"hp": GameState.current_hp,
 		"max_hp": GameState.max_hp,
@@ -67,6 +68,14 @@ func load_run() -> bool:
 	GameState.rng.seed = GameState.current_seed
 	GameState.selected_hero_id = dict_data.get("hero_id", "warrior")
 	GameState.current_world_node_id = dict_data.get("node_id", "goblin_dungeon")
+	if GameState.world_graph != null:
+		GameState.current_world_node = GameState.world_graph.get_node(GameState.current_world_node_id)
+	GameState.visited_world_nodes.clear()
+	var saved_visited = dict_data.get("visited_nodes", [])
+	for vn in saved_visited:
+		GameState.visited_world_nodes.append(str(vn))
+	if not GameState.visited_world_nodes.has(GameState.current_world_node_id):
+		GameState.visited_world_nodes.append(GameState.current_world_node_id)
 	GameState.current_floor_index = dict_data.get("floor", 1)
 	GameState.current_hp = dict_data.get("hp", 100)
 	GameState.max_hp = dict_data.get("max_hp", 100)

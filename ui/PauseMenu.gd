@@ -65,6 +65,8 @@ func _pause() -> void:
 	_update_inventory_display()
 	menu_panel.visible = true
 	get_tree().paused = true
+	if GameState.is_run_active:
+		SaveManager.save_run()
 
 func _update_inventory_display() -> void:
 	for child in items_container.get_children():
@@ -127,4 +129,6 @@ func _back_to_hub() -> void:
 		SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
 
 func _quit_game() -> void:
+	if GameState.is_run_active:
+		SaveManager.save_run()
 	get_tree().quit()

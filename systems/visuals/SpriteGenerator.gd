@@ -215,6 +215,162 @@ static func get_boss_texture(boss_id: String) -> Texture2D:
 	_cache[key] = tex
 	return tex
 
+static func get_weapon_texture(hero_or_weapon: String) -> Texture2D:
+	var key: String = "weapon_" + hero_or_weapon
+	if _cache.has(key):
+		return _cache[key]
+	var weapon_file: String = "weapon_sword.svg"
+	match hero_or_weapon:
+		"warrior", "sword":
+			weapon_file = "weapon_sword.svg"
+		"mage", "staff":
+			weapon_file = "weapon_staff.svg"
+		"ranger", "bow":
+			weapon_file = "weapon_bow.svg"
+		_:
+			weapon_file = "weapon_sword.svg"
+	var path: String = "res://assets/sprites/" + weapon_file
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache[key] = t
+			return t
+	return null
+
+static func get_projectile_texture(proj_type: String) -> Texture2D:
+	var key: String = "proj_" + proj_type
+	if _cache.has(key):
+		return _cache[key]
+	var file_name: String = "projectile_magic_bolt.svg"
+	match proj_type:
+		"arrow", "ranger":
+			file_name = "projectile_arrow.svg"
+		"fire", "fireball":
+			file_name = "projectile_fireball.svg"
+		"frost", "freeze", "ice":
+			file_name = "projectile_frost_shard.svg"
+		"magic", "mage", _:
+			file_name = "projectile_magic_bolt.svg"
+	var path: String = "res://assets/sprites/" + file_name
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache[key] = t
+			return t
+	return null
+
+static func get_portal_texture() -> Texture2D:
+	if _cache.has("portal_rift"):
+		return _cache["portal_rift"]
+	var path: String = "res://assets/sprites/portal_rift.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["portal_rift"] = t
+			return t
+	return null
+
+static func get_torch_texture() -> Texture2D:
+	if _cache.has("wall_torch"):
+		return _cache["wall_torch"]
+	var path: String = "res://assets/sprites/wall_torch.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["wall_torch"] = t
+			return t
+	return null
+
+static func get_torch_flame_texture() -> Texture2D:
+	if _cache.has("torch_flame"):
+		return _cache["torch_flame"]
+	var path: String = "res://assets/sprites/torch_flame.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["torch_flame"] = t
+			return t
+	return null
+
+static func get_light_halo_texture() -> Texture2D:
+	if _cache.has("light_halo"):
+		return _cache["light_halo"]
+	var path: String = "res://assets/sprites/light_halo.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["light_halo"] = t
+			return t
+	return null
+
+static func get_target_dummy_texture() -> Texture2D:
+	if _cache.has("target_dummy"):
+		return _cache["target_dummy"]
+	var path: String = "res://assets/sprites/target_dummy.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["target_dummy"] = t
+			return t
+	return null
+
+static func get_trap_texture(extended: bool) -> Texture2D:
+	var key: String = "trap_spikes_" + ("ext" if extended else "ret")
+	if _cache.has(key):
+		return _cache[key]
+	var file_name: String = "trap_spikes_extended.svg" if extended else "trap_spikes_retracted.svg"
+	var path: String = "res://assets/sprites/" + file_name
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache[key] = t
+			return t
+	return null
+
+static func get_pillar_texture() -> Texture2D:
+	if _cache.has("pillar_corner"):
+		return _cache["pillar_corner"]
+	var path: String = "res://assets/sprites/pillar_corner.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["pillar_corner"] = t
+			return t
+	return null
+
+static func get_dungeon_tile_texture() -> Texture2D:
+	if _cache.has("dungeon_stone_tile"):
+		return _cache["dungeon_stone_tile"]
+	var path: String = "res://assets/sprites/dungeon_stone_tile.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["dungeon_stone_tile"] = t
+			return t
+	return null
+
+static func get_wall_brick_texture() -> Texture2D:
+	if _cache.has("dungeon_wall_brick"):
+		return _cache["dungeon_wall_brick"]
+	var path: String = "res://assets/sprites/dungeon_wall_brick.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["dungeon_wall_brick"] = t
+			return t
+	return null
+
+static func get_floor_crest_texture() -> Texture2D:
+	if _cache.has("dungeon_floor_crest"):
+		return _cache["dungeon_floor_crest"]
+	var path: String = "res://assets/sprites/dungeon_floor_crest.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["dungeon_floor_crest"] = t
+			return t
+	return null
+
 # ==========================================
 # ВСПОМОГАТЕЛЬНЫЕ ГРАФИЧЕСКИЕ ПРИМИТИВЫ
 # ==========================================

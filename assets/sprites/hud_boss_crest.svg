@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="28" viewBox="0 0 48 28">
+  <defs>
+    <linearGradient id="crestGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#713f12" />
+    </linearGradient>
+  </defs>
+  <!-- Bat Wings flanking skull -->
+  <path d="M 24 14 Q 14 6 2 12 Q 10 18 16 16 Q 14 24 24 20 Z" fill="#450a0a" stroke="#b91c1c" stroke-width="1"/>
+  <path d="M 24 14 Q 34 6 46 12 Q 38 18 32 16 Q 34 24 24 20 Z" fill="#450a0a" stroke="#b91c1c" stroke-width="1"/>
+  <!-- Demon Skull Head -->
+  <path d="M 17 8 C 17 3, 31 3, 31 8 L 33 18 L 29 24 L 19 24 L 15 18 Z" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.2"/>
+  <!-- Horns -->
+  <path d="M 18 8 Q 12 4 10 1" stroke="url(#crestGold)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M 30 8 Q 36 4 38 1" stroke="url(#crestGold)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- Glowing Red Eye Sockets -->
+  <ellipse cx="20.5" cy="12" rx="2" ry="2.5" fill="#090d16"/>
+  <circle cx="20.5" cy="12" r="1.2" fill="#ef4444"/>
+  <ellipse cx="27.5" cy="12" rx="2" ry="2.5" fill="#090d16"/>
+  <circle cx="27.5" cy="12" r="1.2" fill="#ef4444"/>
+  <!-- Fangs -->
+  <polygon points="21,19 22,23 23,19" fill="#f8fafc"/>
+  <polygon points="25,19 26,23 27,19" fill="#f8fafc"/>
+</svg>

@@ -84,8 +84,9 @@ func _interact() -> void:
 	var is_unlocked: bool = hero_data.unlocked_by_default or MetaProgress.is_hero_unlocked(hero_data.id)
 	if not is_unlocked:
 		if MetaProgress.souls >= hero_data.unlock_cost_souls:
-			MetaProgress.souls -= hero_data.unlock_cost_souls
+			MetaProgress.add_souls(-hero_data.unlock_cost_souls)
 			MetaProgress.unlock_hero(hero_data.id)
+			SaveManager.save_meta()
 			_select_hero()
 		else:
 			# Недостаточно душ

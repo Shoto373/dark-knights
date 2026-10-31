@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36">
+  <defs>
+    <linearGradient id="ironGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="50%" stop-color="#475569" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <!-- Wall Mount Plate with Rivets -->
+  <rect x="8" y="12" width="8" height="18" rx="2" fill="url(#ironGrad)" stroke="#090d16" stroke-width="1"/>
+  <circle cx="12" cy="15" r="1.2" fill="#94a3b8"/>
+  <circle cx="12" cy="27" r="1.2" fill="#94a3b8"/>
+  <!-- Curved Sconce Arm -->
+  <path d="M 12 24 C 12 30, 6 32, 6 22 L 6 12 C 6 10, 10 9, 12 11" fill="none" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Torch Wooden Shaft -->
+  <polygon points="9,14 15,14 14,32 10,32" fill="#5c2e14" stroke="#271207" stroke-width="0.8"/>
+  <!-- Pitch/Cloth Wrap at the top -->
+  <rect x="8" y="9" width="8" height="7" rx="1.5" fill="#292524" stroke="#1c1917" stroke-width="0.8"/>
+  <line x1="8" y1="11" x2="16" y2="12" stroke="#78350f" stroke-width="0.9"/>
+  <line x1="8" y1="14" x2="16" y2="13" stroke="#78350f" stroke-width="0.9"/>
+  <!-- Iron Basket Ring -->
+  <ellipse cx="12" cy="9" rx="5" ry="2" fill="#475569" stroke="#0f172a" stroke-width="1"/>
+</svg>

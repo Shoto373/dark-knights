@@ -3,6 +3,8 @@ extends CharacterBody2D
 
 ## Базовый класс врагов с конечным автоматом состояний (AI) и механиками Спринтов 4, 6, 7
 
+signal permanently_died(enemy: EnemyBase)
+
 const PROJECTILE_SCENE = preload("res://entities/player/Projectile.tscn")
 
 @onready var health_component: HealthComponent = %HealthComponent
@@ -263,6 +265,7 @@ func _reassemble_skeleton() -> void:
 	EventBus.screen_shake_requested.emit(4.0, 0.2)
 
 func _permanent_death() -> void:
+	permanently_died.emit(self)
 	remove_from_group("enemies")
 	attack_shape.disabled = true
 	hurtbox_component.set_deferred("monitoring", false)

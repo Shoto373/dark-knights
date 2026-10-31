@@ -93,7 +93,10 @@ func apply_hero_data(data: HeroData) -> void:
 	hero_data = data
 	
 	health_component.max_health = hero_data.max_hp
-	health_component.reset(hero_data.max_hp)
+	if GameState.is_run_active and GameState.current_hp > 0:
+		health_component.current_health = mini(GameState.current_hp, health_component.max_health)
+	else:
+		health_component.reset(hero_data.max_hp)
 	movement_component.max_speed = hero_data.speed
 	hurtbox_component.armor = hero_data.armor
 	
@@ -118,6 +121,22 @@ func apply_hero_data(data: HeroData) -> void:
 			body_rect.visible = false
 		if visuals.has_node("EyeRect"):
 			visuals.get_node("EyeRect").visible = false
+
+	# Установка детализированного оружия героя
+	var weapon_tex: Texture2D = SpriteGenerator.get_weapon_texture(hero_id)
+	if weapon_pivot != null and weapon_tex != null:
+		var weapon_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
+		if weapon_sprite == null:
+			weapon_sprite = Sprite2D.new()
+			weapon_sprite.name = "WeaponSprite"
+			weapon_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			weapon_pivot.add_child(weapon_sprite)
+		weapon_sprite.texture = weapon_tex
+		weapon_sprite.position = Vector2(18, 0)
+		weapon_sprite.visible = true
+		var old_w_visual: Node = weapon_pivot.get_node_or_null("WeaponVisual")
+		if old_w_visual is CanvasItem:
+			old_w_visual.visible = false
 	
 	if hero_data.ability_1 != null:
 		ability_1_timer.wait_time = hero_data.ability_1.cooldown
@@ -310,6 +329,13 @@ func _swing_melee_weapon() -> void:
 	var base_angle: float = aim_direction.angle()
 	weapon_pivot.rotation = base_angle - deg_to_rad(65.0)
 	
+	var slash_color: Color = Color(0.9, 0.95, 1.0, 0.85)
+	if weapon_hitbox.damage_type == "fire" or weapon_hitbox.tags.has("fire"):
+		slash_color = Color(1.0, 0.5, 0.1, 0.9)
+	elif weapon_hitbox.damage_type == "freeze" or weapon_hitbox.tags.has("frost"):
+		slash_color = Color(0.3, 0.85, 1.0, 0.9)
+	EffectsHelper.spawn_slash_arc(get_parent(), global_position + aim_direction * 22.0, base_angle, 28.0, slash_color)
+
 	var tween: Tween = create_tween()
 	tween.tween_property(weapon_pivot, "rotation", base_angle + deg_to_rad(65.0), 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func(): attack_collision.disabled = true)
@@ -327,6 +353,13 @@ func _shoot_basic_projectile() -> void:
 	var recoil_tween: Tween = visuals.create_tween()
 	recoil_tween.tween_property(visuals, "position", -aim_direction * 4.0, 0.06)
 	recoil_tween.tween_property(visuals, "position", Vector2.ZERO, 0.1)
+
+	var p_type: String = "magic" if hero_data and hero_data.id == "mage" else "arrow"
+	if weapon_hitbox.damage_type == "fire" or weapon_hitbox.tags.has("fire"):
+		p_type = "fireball"
+	elif weapon_hitbox.damage_type == "freeze" or weapon_hitbox.tags.has("frost"):
+		p_type = "frost"
+
 	proj.setup(
 		aim_direction,
 		hero_data.projectile_speed if hero_data else 500.0,
@@ -334,11 +367,11 @@ func _shoot_basic_projectile() -> void:
 		true,
 		hero_data.attack_range if hero_data else 500.0,
 		180.0,
-		hero_data.color if hero_data else Color.WHITE
+		hero_data.color if hero_data else Color.WHITE,
+		weapon_hitbox.damage_type,
+		weapon_hitbox.tags,
+		p_type
 	)
-	if weapon_hitbox.damage_type == "fire" or weapon_hitbox.tags.has("fire"):
-		proj.hitbox.damage_type = "fire"
-		proj.hitbox.tags = ["fire"]
 
 func _trigger_ability(ability: AbilityData, timer: Timer) -> void:
 	if not timer.is_stopped() or is_dashing:
@@ -383,7 +416,7 @@ func _apply_dash_ability(ability: AbilityData) -> void:
 	tween.tween_callback(func():
 		is_dashing = false
 		attack_collision.disabled = true
-		weapon_hitbox.base_damage = hero_data.attack_damage if hero_data else 25
+		recalculate_stats()
 		health_component.set_invulnerable(false)
 		visuals.modulate = Color.WHITE
 	)
@@ -446,6 +479,7 @@ func _on_attack_cooldown_finished() -> void:
 func _on_health_damaged(amount: int, current_hp: int, max_hp: int) -> void:
 	GameState.current_hp = current_hp
 	GameState.max_hp = max_hp
+	GameState.run_stats["damage_taken"] = GameState.run_stats.get("damage_taken", 0) + amount
 	EventBus.player_health_changed.emit(current_hp, max_hp)
 	EventBus.screen_shake_requested.emit(5.0, 0.2)
 	EventBus.hit_stop_requested.emit(40.0)

@@ -31,6 +31,20 @@ var run_stats: Dictionary = {
 
 func _ready() -> void:
 	world_graph = WorldGraph.new()
+	EventBus.room_cleared.connect(_on_room_cleared)
+	EventBus.damage_dealt.connect(_on_damage_dealt)
+
+func _process(delta: float) -> void:
+	if is_run_active:
+		run_stats["time_elapsed"] = run_stats.get("time_elapsed", 0.0) + delta
+
+func _on_room_cleared() -> void:
+	if is_run_active:
+		run_stats["rooms_cleared"] = run_stats.get("rooms_cleared", 0) + 1
+
+func _on_damage_dealt(_target: Node2D, amount: int, _is_crit: bool) -> void:
+	if is_run_active:
+		run_stats["damage_dealt"] = run_stats.get("damage_dealt", 0) + amount
 
 func start_new_run(hero_id: String = "warrior", custom_seed: int = 0) -> void:
 	if world_graph == null:
@@ -68,6 +82,9 @@ func end_run(is_victory: bool) -> void:
 	current_world_node_id = "hub"
 	current_world_node = null
 	visited_world_nodes.clear()
+	if MetaProgress != null and MetaProgress.has_method("save_meta"):
+		MetaProgress.lifetime_stats["total_runs"] = MetaProgress.lifetime_stats.get("total_runs", 0) + 1
+		SaveManager.save_meta()
 	EventBus.run_ended.emit(is_victory, run_stats)
 	if SaveManager.has_method("delete_run_save"):
 		SaveManager.delete_run_save()
@@ -102,8 +119,5 @@ func advance_to_world_node(node: WorldNodeData) -> void:
 	
 	# Обновляем сид для детерминированности следующего этажа
 	current_seed = rng.randi()
-	
-	if node.is_final:
-		end_run(true)
-	else:
-		SceneRouter.change_scene("res://levels/DungeonFloor.tscn", 0.4)
+	SaveManager.save_run()
+	SceneRouter.change_scene("res://levels/DungeonFloor.tscn", 0.4)

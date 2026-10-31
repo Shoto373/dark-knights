@@ -195,3 +195,65 @@ func test_world_map_closes_on_escape() -> void:
 	
 	assert_true(map.is_queued_for_deletion(), "Карта мира должна закрываться по нажатию ESC")
 
+func test_weapon_visual_distinct_textures_per_hero() -> void:
+	var sword_tex: Texture2D = SpriteGenerator.get_weapon_texture("warrior")
+	var staff_tex: Texture2D = SpriteGenerator.get_weapon_texture("mage")
+	var bow_tex: Texture2D = SpriteGenerator.get_weapon_texture("ranger")
+	
+	assert_not_null(sword_tex, "Текстура меча должна загружаться")
+	assert_not_null(staff_tex, "Текстура посоха должна загружаться")
+	assert_not_null(bow_tex, "Текстура лука должна загружаться")
+	
+	assert_ne(sword_tex, staff_tex, "Меч и посох должны иметь разные текстуры")
+	assert_ne(sword_tex, bow_tex, "Меч и лук должны иметь разные текстуры")
+	assert_ne(staff_tex, bow_tex, "Посох и лук должны иметь разные текстуры")
+
+func test_projectile_visual_distinct_textures() -> void:
+	var arrow_tex: Texture2D = SpriteGenerator.get_projectile_texture("arrow")
+	var magic_tex: Texture2D = SpriteGenerator.get_projectile_texture("magic")
+	var fire_tex: Texture2D = SpriteGenerator.get_projectile_texture("fire")
+	var frost_tex: Texture2D = SpriteGenerator.get_projectile_texture("frost")
+	
+	assert_not_null(arrow_tex, "Текстура стрелы должна загружаться")
+	assert_not_null(magic_tex, "Текстура магического снаряда должна загружаться")
+	assert_not_null(fire_tex, "Текстура огненного шара должна загружаться")
+	assert_not_null(frost_tex, "Текстура ледяного осколка должна загружаться")
+	
+	assert_ne(arrow_tex, magic_tex)
+	assert_ne(fire_tex, frost_tex)
+
+func test_dungeon_architectural_assets_load() -> void:
+	var tile_tex: Texture2D = SpriteGenerator.get_dungeon_tile_texture()
+	var brick_tex: Texture2D = SpriteGenerator.get_wall_brick_texture()
+	var pillar_tex: Texture2D = SpriteGenerator.get_pillar_texture()
+	var crest_tex: Texture2D = SpriteGenerator.get_floor_crest_texture()
+	var portal_tex: Texture2D = SpriteGenerator.get_portal_texture()
+	var torch_tex: Texture2D = SpriteGenerator.get_torch_texture()
+	
+	assert_not_null(tile_tex, "Текстура плитки пола должна загружаться")
+	assert_not_null(brick_tex, "Текстура кирпичной кладки должна загружаться")
+	assert_not_null(pillar_tex, "Текстура колонны должна загружаться")
+	assert_not_null(crest_tex, "Текстура напольного герба должна загружаться")
+	assert_not_null(portal_tex, "Текстура портала должна загружаться")
+	assert_not_null(torch_tex, "Текстура факела должна загружаться")
+
+func test_target_dummy_and_trap_textures_and_states() -> void:
+	var dummy_tex: Texture2D = SpriteGenerator.get_target_dummy_texture()
+	var trap_ext: Texture2D = SpriteGenerator.get_trap_texture(true)
+	var trap_ret: Texture2D = SpriteGenerator.get_trap_texture(false)
+	
+	assert_not_null(dummy_tex, "Текстура манекена должна загружаться")
+	assert_not_null(trap_ext, "Текстура выдвинутых шипов должна загружаться")
+	assert_not_null(trap_ret, "Текстура скрытых шипов должна загружаться")
+	assert_ne(trap_ext, trap_ret, "Выдвинутые и скрытые шипы должны различаться")
+
+func test_hub_and_room_decorations_instantiation() -> void:
+	var hub_scene: PackedScene = load("res://levels/Hub.tscn")
+	assert_not_null(hub_scene)
+	var hub = hub_scene.instantiate()
+	add_child_autofree(hub)
+	
+	assert_not_null(hub.get_node_or_null("Torches"), "Хаб должен содержать узел факелов")
+	assert_not_null(hub.get_node_or_null("Pillars"), "Хаб должен содержать узел колонн")
+	assert_not_null(hub.get_node_or_null("CentralFloorCrest"), "Хаб должен содержать напольный герб")
+

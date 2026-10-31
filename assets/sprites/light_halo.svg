@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="lightGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1.0" />
+      <stop offset="25%" stop-color="#ffedd5" stop-opacity="0.85" />
+      <stop offset="55%" stop-color="#fdba74" stop-opacity="0.45" />
+      <stop offset="80%" stop-color="#ea580c" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#9a3412" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="64" cy="64" r="64" fill="url(#lightGlow)"/>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <linearGradient id="keyGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#713f12" />
+    </linearGradient>
+  </defs>
+  <!-- Bow / Head of Key -->
+  <circle cx="6" cy="6" r="4.5" fill="none" stroke="url(#keyGold)" stroke-width="1.8"/>
+  <circle cx="6" cy="6" r="1.5" fill="#ca8a04"/>
+  <!-- Stem / Shaft -->
+  <line x1="9" y1="9" x2="17" y2="17" stroke="url(#keyGold)" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Bits / Teeth -->
+  <line x1="14" y1="16" x2="16" y2="14" stroke="url(#keyGold)" stroke-width="2" stroke-linecap="round"/>
+  <line x1="16" y1="18" x2="18" y2="16" stroke="url(#keyGold)" stroke-width="2" stroke-linecap="round"/>
+</svg>

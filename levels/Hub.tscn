@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://hub_scene_001"]
+[gd_scene load_steps=17 format=3 uid="uid://hub_scene_001"]
 
 [ext_resource type="Script" path="res://levels/Hub.gd" id="1_hub"]
 [ext_resource type="PackedScene" uid="uid://player_scene_001" path="res://entities/player/Player.tscn" id="2_player"]
@@ -11,6 +11,11 @@
 [ext_resource type="Resource" uid="uid://hero_mage_001" path="res://data/heroes/mage.tres" id="9_mage"]
 [ext_resource type="Resource" uid="uid://hero_ranger_001" path="res://data/heroes/ranger.tres" id="10_ranger"]
 [ext_resource type="PackedScene" uid="uid://portal_scene_001" path="res://levels/Portal.tscn" id="11_portal"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dungeon_stone_tile.svg" id="12_tile"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dungeon_floor_crest.svg" id="13_crest"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dungeon_wall_brick.svg" id="14_brick"]
+[ext_resource type="PackedScene" path="res://levels/Pillar.tscn" id="15_pillar"]
+[ext_resource type="PackedScene" path="res://levels/Torch.tscn" id="16_torch"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
 size = Vector2(1360, 40)
@@ -28,14 +33,38 @@ offset_left = -40.0
 offset_top = -40.0
 offset_right = 1320.0
 offset_bottom = 760.0
-color = Color(0.08, 0.1, 0.14, 1)
+color = Color(0.05, 0.06, 0.09, 1)
 
 [node name="ArenaFloor" type="ColorRect" parent="."]
 offset_left = 60.0
 offset_top = 60.0
 offset_right = 1220.0
 offset_bottom = 660.0
-color = Color(0.12, 0.15, 0.2, 1)
+color = Color(0.09, 0.11, 0.15, 1)
+
+[node name="FloorTiles" type="TextureRect" parent="ArenaFloor"]
+texture_repeat = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(0.7, 0.75, 0.85, 0.55)
+texture = ExtResource("12_tile")
+stretch_mode = 1
+
+[node name="CentralFloorCrest" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+scale = Vector2(1.8, 1.8)
+texture = ExtResource("13_crest")
+
+[node name="WallShadowTop" type="ColorRect" parent="."]
+offset_left = 60.0
+offset_top = 60.0
+offset_right = 1220.0
+offset_bottom = 80.0
+color = Color(0, 0, 0, 0.5)
 
 [node name="Borders" type="StaticBody2D" parent="."]
 collision_layer = 1
@@ -62,28 +91,78 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = 1260.0
 offset_bottom = 60.0
-color = Color(0.05, 0.07, 0.09, 1)
+color = Color(0.04, 0.05, 0.07, 1)
+
+[node name="WallBrickTop" type="TextureRect" parent="Borders/WallColorTop"]
+texture_repeat = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_brick")
+stretch_mode = 1
 
 [node name="WallColorBottom" type="ColorRect" parent="Borders"]
 offset_left = 20.0
 offset_top = 660.0
 offset_right = 1260.0
 offset_bottom = 700.0
-color = Color(0.05, 0.07, 0.09, 1)
+color = Color(0.04, 0.05, 0.07, 1)
+
+[node name="WallBrickBottom" type="TextureRect" parent="Borders/WallColorBottom"]
+texture_repeat = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("14_brick")
+stretch_mode = 1
 
 [node name="WallColorLeft" type="ColorRect" parent="Borders"]
 offset_left = 20.0
 offset_top = 60.0
 offset_right = 60.0
 offset_bottom = 660.0
-color = Color(0.05, 0.07, 0.09, 1)
+color = Color(0.04, 0.05, 0.07, 1)
 
 [node name="WallColorRight" type="ColorRect" parent="Borders"]
 offset_left = 1220.0
 offset_top = 60.0
 offset_right = 1260.0
 offset_bottom = 660.0
-color = Color(0.05, 0.07, 0.09, 1)
+color = Color(0.04, 0.05, 0.07, 1)
+
+[node name="Torches" type="Node2D" parent="."]
+
+[node name="Torch1" parent="Torches" instance=ExtResource("16_torch")]
+position = Vector2(280, 52)
+
+[node name="Torch2" parent="Torches" instance=ExtResource("16_torch")]
+position = Vector2(500, 52)
+
+[node name="Torch3" parent="Torches" instance=ExtResource("16_torch")]
+position = Vector2(780, 52)
+
+[node name="Torch4" parent="Torches" instance=ExtResource("16_torch")]
+position = Vector2(1000, 52)
+
+[node name="Pillars" type="Node2D" parent="."]
+
+[node name="PillarTL" parent="Pillars" instance=ExtResource("15_pillar")]
+position = Vector2(80, 80)
+
+[node name="PillarTR" parent="Pillars" instance=ExtResource("15_pillar")]
+position = Vector2(1200, 80)
+
+[node name="PillarBL" parent="Pillars" instance=ExtResource("15_pillar")]
+position = Vector2(80, 640)
+
+[node name="PillarBR" parent="Pillars" instance=ExtResource("15_pillar")]
+position = Vector2(1200, 640)
 
 [node name="PedestalsSection" type="Node2D" parent="."]
 
@@ -92,7 +171,7 @@ offset_left = 140.0
 offset_top = 130.0
 offset_right = 440.0
 offset_bottom = 150.0
-theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 1)
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 14
 text = "ВЫБОР ГЕРОЯ"
 horizontal_alignment = 1

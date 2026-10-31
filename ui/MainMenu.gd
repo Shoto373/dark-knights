@@ -25,7 +25,10 @@ func _on_new_game_pressed() -> void:
 func _on_continue_pressed() -> void:
 	if SaveManager.has_saved_run():
 		if SaveManager.load_run():
-			SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
+			if GameState.current_world_node_id == "hub" or not GameState.is_run_active:
+				SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
+			else:
+				SceneRouter.change_scene("res://levels/DungeonFloor.tscn", 0.3)
 
 func _on_settings_pressed() -> void:
 	var dialog: SettingsDialog = SETTINGS_DIALOG_SCENE.instantiate() as SettingsDialog

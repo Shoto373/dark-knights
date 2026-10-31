@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="14" viewBox="0 0 32 14">
+  <defs>
+    <linearGradient id="iceGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="60%" stop-color="#7dd3fc" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+  </defs>
+  <!-- Main Icicle -->
+  <polygon points="4,7 18,2 30,7 18,12" fill="url(#iceGrad)" stroke="#0369a1" stroke-width="1"/>
+  <!-- Facet ridges -->
+  <line x1="4" y1="7" x2="30" y2="7" stroke="#ffffff" stroke-width="1.2"/>
+  <polygon points="12,5 24,7 12,7" fill="#e0f2fe" opacity="0.8"/>
+  <!-- Trailing ice flecks -->
+  <polygon points="2,7 0,5 1,7 0,9" fill="#38bdf8"/>
+  <circle cx="8" cy="3" r="1" fill="#bae6fd"/>
+  <circle cx="8" cy="11" r="1" fill="#bae6fd"/>
+</svg>

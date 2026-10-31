@@ -17,3 +17,4 @@ min_rooms = 7
 max_rooms = 10
 enemy_pool = [ExtResource("2_wraith"), ExtResource("3_golem"), ExtResource("4_spider")]
 elite_enemy = ExtResource("3_golem")
+boss_scene_path = "res://entities/bosses/LichKingBoss.tscn"

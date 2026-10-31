@@ -50,7 +50,7 @@ func _process(_delta: float) -> void:
 		dash_bar.value = player_ref.get_dash_cooldown_ratio() * 100.0
 		ability_1_bar.value = player_ref.get_ability_cooldown_ratio(1) * 100.0
 		ability_2_bar.value = player_ref.get_ability_cooldown_ratio(2) * 100.0
-	keys_label.text = "Ключи: %d" % GameState.keys
+	keys_label.text = "%d" % GameState.keys
 
 func _on_player_spawned(player: Node2D) -> void:
 	player_ref = player as Player
@@ -98,9 +98,9 @@ func _on_player_health_changed(current_hp: int, max_hp: int) -> void:
 	hp_label.text = "%d / %d HP" % [current_hp, max_hp]
 
 func _on_currency_changed(gold: int, souls: int) -> void:
-	gold_label.text = "Золото: %d" % gold
-	souls_label.text = "Души: %d" % souls
-	keys_label.text = "Ключи: %d" % GameState.keys
+	gold_label.text = "%d" % gold
+	souls_label.text = "%d" % souls
+	keys_label.text = "%d" % GameState.keys
 
 func _on_boss_spawned(boss_name: String, max_hp: int) -> void:
 	boss_name_label.text = boss_name.to_upper()
@@ -127,6 +127,7 @@ func _on_player_died() -> void:
 
 func _on_respawn_pressed() -> void:
 	death_screen.visible = false
+	GameState.end_run(false)
 	SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
 
 func _on_damage_dealt(target: Node2D, amount: int, is_crit: bool) -> void:

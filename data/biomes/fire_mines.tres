@@ -17,3 +17,4 @@ min_rooms = 7
 max_rooms = 10
 enemy_pool = [ExtResource("2_slime"), ExtResource("3_elem"), ExtResource("4_worm")]
 elite_enemy = ExtResource("4_worm")
+boss_scene_path = "res://entities/bosses/DragonBoss.tscn"

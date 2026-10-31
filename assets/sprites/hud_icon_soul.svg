@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <defs>
+    <radialGradient id="soulGrad" cx="50%" cy="60%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#67e8f9" />
+      <stop offset="80%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Soul Flame Wisp -->
+  <path d="M 10 1 C 13 5, 17 9, 16 14 C 15 17, 13 19, 10 19 C 7 19, 5 17, 4 14 C 3 9, 7 5, 10 1 Z" fill="url(#soulGrad)"/>
+  <!-- Soul Eyes -->
+  <ellipse cx="8.5" cy="13" rx="1.2" ry="1.5" fill="#082f49"/>
+  <ellipse cx="11.5" cy="13" rx="1.2" ry="1.5" fill="#082f49"/>
+  <circle cx="8.2" cy="12.5" r="0.4" fill="#ffffff"/>
+  <circle cx="11.2" cy="12.5" r="0.4" fill="#ffffff"/>
+</svg>

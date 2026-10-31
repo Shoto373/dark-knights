@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="24" viewBox="0 0 48 24">
+  <defs>
+    <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#718096" />
+      <stop offset="50%" stop-color="#e2e8f0" />
+      <stop offset="100%" stop-color="#ffffff" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#713f12" />
+    </linearGradient>
+  </defs>
+  <!-- Handle / Grip -->
+  <rect x="2" y="10.5" width="8" height="3" rx="1.5" fill="#451a03" stroke="#1c1917" stroke-width="1"/>
+  <line x1="4" y1="10.5" x2="4" y2="13.5" stroke="#78350f" stroke-width="0.8"/>
+  <line x1="6" y1="10.5" x2="6" y2="13.5" stroke="#78350f" stroke-width="0.8"/>
+  <line x1="8" y1="10.5" x2="8" y2="13.5" stroke="#78350f" stroke-width="0.8"/>
+  <!-- Pommel -->
+  <circle cx="2" cy="12" r="2.5" fill="url(#goldGrad)" stroke="#1c1917" stroke-width="1"/>
+  <circle cx="2" cy="12" r="1.2" fill="#dc2626"/>
+  <!-- Crossguard -->
+  <path d="M 10 5 C 10.5 7, 11 9, 11 12 C 11 15, 10.5 17, 10 19 L 13 18 C 13.5 14, 13.5 10, 13 6 Z" fill="url(#goldGrad)" stroke="#1c1917" stroke-width="1"/>
+  <circle cx="12" cy="12" r="1.5" fill="#3b82f6"/>
+  <!-- Blade -->
+  <path d="M 13 8.5 L 42 9.5 L 47 12 L 42 14.5 L 13 15.5 Z" fill="url(#bladeGrad)" stroke="#0f172a" stroke-width="1.2"/>
+  <!-- Fuller & Rune etching -->
+  <line x1="14" y1="12" x2="38" y2="12" stroke="#475569" stroke-width="1.4"/>
+  <line x1="16" y1="12" x2="34" y2="12" stroke="#38bdf8" stroke-width="0.8" opacity="0.9"/>
+  <!-- Tip gleam -->
+  <polygon points="41,10.5 45,12 41,13.5 43,12" fill="#ffffff"/>
+</svg>

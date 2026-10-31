@@ -37,7 +37,6 @@ func _physics_process(delta: float) -> void:
 			if body is CharacterBody2D:
 				var cb: CharacterBody2D = body as CharacterBody2D
 				cb.velocity += pull_step * 10.0
-				cb.move_and_slide()
 	
 	# Периодический урон в эпицентре (в пределах 40 пикселей)
 	damage_timer += delta

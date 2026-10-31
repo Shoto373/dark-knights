@@ -186,3 +186,62 @@ func test_full_world_progression_1_to_3_biomes() -> void:
 	assert_eq(next_branches.size(), 2, "Castle must branch into 2 paths")
 	var branch_ids: Array[String] = [next_branches[0].id, next_branches[1].id]
 	assert_true(branch_ids.has("frost_world") and branch_ids.has("fire_world"))
+
+func test_room_combat_skeleton_swordsman_does_not_clear_during_bone_pile() -> void:
+	var room_scene: PackedScene = load("res://levels/Room.tscn")
+	var room: DungeonRoom = room_scene.instantiate() as DungeonRoom
+	add_child_autofree(room)
+	
+	var rdata: RoomData = RoomData.new()
+	rdata.room_type = RoomData.RoomType.COMBAT
+	room.setup(rdata)
+	
+	# Создаем скелета-мечника вручную и регистрируем в комнате
+	var enemy: EnemyBase = ENEMY_BASE_SCENE.instantiate() as EnemyBase
+	room.enemies_container.add_child(enemy)
+	var skel_data: EnemyData = load("res://data/enemies/skeleton_swordsman.tres") as EnemyData
+	enemy.setup_from_data(skel_data)
+	
+	room.active_enemies.clear()
+	room._register_enemy(enemy)
+	assert_eq(room.active_enemies.size(), 1)
+	assert_false(room.room_data.is_cleared)
+	
+	# Первый урон - превращение в кости
+	enemy.health_component.take_damage(50)
+	assert_true(enemy.is_collapsed)
+	# Комната НЕ должна считаться зачищенной!
+	assert_false(room.room_data.is_cleared, "Room must NOT be cleared when skeleton is in bone pile form")
+	assert_eq(room.active_enemies.size(), 1, "Skeleton must remain in active_enemies while in bone pile")
+	
+	# Второй урон - окончательное уничтожение кучи костей
+	enemy.health_component.take_damage(100)
+	assert_true(room.room_data.is_cleared, "Room must be cleared after skeleton permanently dies")
+	assert_eq(room.active_enemies.size(), 0)
+
+func test_save_manager_run_save_and_load_preserves_visited_nodes() -> void:
+	GameState.start_new_run("warrior", 4242)
+	GameState.visited_world_nodes = ["goblin_dungeon", "troll_gorge"]
+	GameState.current_world_node_id = "troll_gorge"
+	GameState.current_floor_index = 2
+	GameState.current_hp = 88
+	
+	var saved: bool = SaveManager.save_run()
+	assert_true(saved, "save_run must succeed")
+	assert_true(SaveManager.has_saved_run(), "has_saved_run must be true")
+	
+	# Сбрасываем GameState
+	GameState.visited_world_nodes = []
+	GameState.current_world_node_id = "hub"
+	GameState.current_hp = 100
+	
+	# Загружаем
+	var loaded: bool = SaveManager.load_run()
+	assert_true(loaded, "load_run must succeed")
+	assert_eq(GameState.current_world_node_id, "troll_gorge")
+	assert_true(GameState.visited_world_nodes.has("goblin_dungeon"))
+	assert_true(GameState.visited_world_nodes.has("troll_gorge"))
+	assert_eq(GameState.current_hp, 88)
+	
+	SaveManager.delete_run_save()
+	assert_false(SaveManager.has_saved_run())

@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://components/HitboxComponent.gd" id="2_hitbox"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_aoe"]
+resource_local_to_scene = true
 radius = 80.0
 
 [node name="AreaOfEffect" type="Node2D"]

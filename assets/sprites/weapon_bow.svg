@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="24" viewBox="0 0 48 24">
+  <defs>
+    <linearGradient id="bowWood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#15803d" />
+      <stop offset="50%" stop-color="#713f12" />
+      <stop offset="100%" stop-color="#15803d" />
+    </linearGradient>
+  </defs>
+  <!-- Bow Limbs (Recurve) -->
+  <path d="M 28 2 C 22 5, 18 8, 20 12 C 18 16, 22 19, 28 22" fill="none" stroke="url(#bowWood)" stroke-width="3" stroke-linecap="round"/>
+  <!-- Gold limb tips -->
+  <path d="M 27 1.5 L 30 3 M 27 22.5 L 30 21" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Bowstring -->
+  <line x1="29" y1="2.5" x2="16" y2="12" stroke="#f1f5f9" stroke-width="0.9"/>
+  <line x1="16" y1="12" x2="29" y2="21.5" stroke="#f1f5f9" stroke-width="0.9"/>
+  <!-- Leather Grip Wrap -->
+  <rect x="18.5" y="10" width="3" height="4" rx="0.5" fill="#451a03" stroke="#1c1917" stroke-width="0.6"/>
+  <!-- Nocked Arrow -->
+  <line x1="16" y1="12" x2="43" y2="12" stroke="#78350f" stroke-width="1.4"/>
+  <!-- Arrowhead -->
+  <polygon points="41,9.5 47,12 41,14.5 43,12" fill="#cbd5e1" stroke="#334155" stroke-width="0.8"/>
+  <!-- Arrow Fletching -->
+  <polygon points="17,12 14,9.5 19,12" fill="#22c55e"/>
+  <polygon points="17,12 14,14.5 19,12" fill="#22c55e"/>
+</svg>

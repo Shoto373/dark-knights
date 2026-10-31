@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 64 32">
+  <!-- Mortar Dark Base -->
+  <rect width="64" height="32" fill="#080a0e"/>
+  <!-- Row 1 Bricks -->
+  <rect x="1" y="1" width="30" height="14" rx="1.5" fill="#1e2530" stroke="#0a0d13" stroke-width="1"/>
+  <line x1="2" y1="2" x2="30" y2="2" stroke="#334155" stroke-width="0.8"/>
+  <rect x="33" y="1" width="30" height="14" rx="1.5" fill="#18202a" stroke="#0a0d13" stroke-width="1"/>
+  <line x1="34" y1="2" x2="62" y2="2" stroke="#334155" stroke-width="0.8"/>
+  
+  <!-- Row 2 Bricks (Interlocking Offset) -->
+  <rect x="1" y="17" width="14" height="14" rx="1.5" fill="#18202a" stroke="#0a0d13" stroke-width="1"/>
+  <line x1="2" y1="18" x2="14" y2="18" stroke="#334155" stroke-width="0.8"/>
+  
+  <rect x="17" y="17" width="30" height="14" rx="1.5" fill="#202936" stroke="#0a0d13" stroke-width="1"/>
+  <line x1="18" y1="18" x2="46" y2="18" stroke="#334155" stroke-width="0.8"/>
+  <path d="M 28 19 L 26 24 L 29 28" fill="none" stroke="#0a0d13" stroke-width="0.7"/>
+
+  <rect x="49" y="17" width="14" height="14" rx="1.5" fill="#1a222c" stroke="#0a0d13" stroke-width="1"/>
+  <line x1="50" y1="18" x2="62" y2="18" stroke="#334155" stroke-width="0.8"/>
+</svg>

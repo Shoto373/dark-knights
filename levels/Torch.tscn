@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://torch_sconce_001"]
+
+[ext_resource type="Script" path="res://levels/Torch.gd" id="1_torch"]
+[ext_resource type="Texture2D" path="res://assets/sprites/wall_torch.svg" id="2_sconce"]
+[ext_resource type="Texture2D" path="res://assets/sprites/torch_flame.svg" id="3_flame"]
+[ext_resource type="Texture2D" path="res://assets/sprites/light_halo.svg" id="4_glow"]
+
+[node name="Torch" type="Node2D"]
+script = ExtResource("1_torch")
+
+[node name="LightGlow" type="Sprite2D" parent="."]
+modulate = Color(1, 0.72, 0.3, 0.35)
+position = Vector2(0, -12)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("4_glow")
+
+[node name="SconceSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_sconce")
+
+[node name="FlameSprite" type="Sprite2D" parent="."]
+position = Vector2(0, -14)
+texture = ExtResource("3_flame")

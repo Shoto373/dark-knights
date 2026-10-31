@@ -80,4 +80,5 @@ func _update_display() -> void:
 		souls_earned_label.text = "+%d Душ передано в Хаб" % run_souls_awarded
 
 func _on_return_pressed() -> void:
+	queue_free()
 	SceneRouter.change_scene("res://levels/Hub.tscn", 0.5)

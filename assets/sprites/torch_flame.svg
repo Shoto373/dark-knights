@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="24" viewBox="0 0 16 24">
+  <defs>
+    <radialGradient id="flameInner" cx="50%" cy="75%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#fef08a" />
+      <stop offset="75%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#dc2626" />
+    </radialGradient>
+  </defs>
+  <!-- Outer Flame Body -->
+  <path d="M 8 1 C 11 6, 15 11, 14 18 C 13 22, 11 23, 8 23 C 5 23, 3 22, 2 18 C 1 11, 5 6, 8 1 Z" fill="url(#flameInner)"/>
+  <!-- Middle Flame Tongue -->
+  <path d="M 8 5 C 10 9, 12 13, 11 19 C 10 21, 9 22, 8 22 C 7 22, 6 21, 5 19 C 4 13, 6 9, 8 5 Z" fill="#facc15"/>
+  <!-- Core Hot Flame -->
+  <path d="M 8 10 C 9.5 13, 10 16, 9.5 20 C 9 21, 8.5 21.5, 8 21.5 C 7.5 21.5, 7 21, 6.5 20 C 6 16, 6.5 13, 8 10 Z" fill="#ffffff"/>
+  <!-- Rising Embers -->
+  <circle cx="8" cy="2" r="0.8" fill="#fef08a"/>
+  <circle cx="10" cy="0.5" r="0.6" fill="#f97316"/>
+  <circle cx="5" cy="1" r="0.6" fill="#f97316"/>
+</svg>

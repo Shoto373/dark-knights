@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="56" viewBox="0 0 40 56">
+  <defs>
+    <linearGradient id="stoneLight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="50%" stop-color="#64748b" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="stoneDark" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <!-- Pillar Base Plinth -->
+  <rect x="2" y="46" width="36" height="8" rx="2" fill="url(#stoneDark)" stroke="#090d16" stroke-width="1.2"/>
+  <rect x="6" y="42" width="28" height="5" fill="url(#stoneLight)" stroke="#090d16" stroke-width="1"/>
+  <!-- Pillar Shaft -->
+  <rect x="8" y="14" width="24" height="28" fill="url(#stoneDark)" stroke="#090d16" stroke-width="1.2"/>
+  <!-- Fluting / Vertical Carvings -->
+  <line x1="13" y1="15" x2="13" y2="41" stroke="#475569" stroke-width="1.5"/>
+  <line x1="17" y1="15" x2="17" y2="41" stroke="#1e293b" stroke-width="1.5"/>
+  <line x1="23" y1="15" x2="23" y2="41" stroke="#475569" stroke-width="1.5"/>
+  <line x1="27" y1="15" x2="27" y2="41" stroke="#1e293b" stroke-width="1.5"/>
+  <!-- Runic carving in center of shaft -->
+  <path d="M 20 20 L 20 36 M 16 24 L 24 32 M 16 32 L 24 24" stroke="#38bdf8" stroke-width="1" opacity="0.8"/>
+  <!-- Capital / Top Head -->
+  <rect x="6" y="9" width="28" height="6" fill="url(#stoneLight)" stroke="#090d16" stroke-width="1"/>
+  <rect x="2" y="2" width="36" height="8" rx="2" fill="url(#stoneDark)" stroke="#090d16" stroke-width="1.2"/>
+  <!-- Carved Skull / Gargoyle motif in Capital -->
+  <ellipse cx="20" cy="6" rx="3.5" ry="3" fill="#e2e8f0" stroke="#0f172a" stroke-width="0.8"/>
+  <circle cx="18.5" cy="5.5" r="0.8" fill="#0f172a"/>
+  <circle cx="21.5" cy="5.5" r="0.8" fill="#0f172a"/>
+  <line x1="19" y1="8" x2="21" y2="8" stroke="#0f172a" stroke-width="0.6"/>
+  <!-- Chipped Stone Details -->
+  <polygon points="36,46 38,48 35,49" fill="#090d16"/>
+  <polygon points="3,3 5,2 4,5" fill="#090d16"/>
+</svg>

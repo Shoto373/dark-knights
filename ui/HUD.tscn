@@ -1,52 +1,75 @@
-[gd_scene load_steps=8 format=3 uid="uid://hud_scene_001"]
+[gd_scene load_steps=14 format=3 uid="uid://hud_scene_001"]
 
 [ext_resource type="Script" path="res://ui/HUD.gd" id="1_hud"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_hero_badge.svg" id="2_badge"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_health_flask.svg" id="3_flask"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_icon_gold.svg" id="4_gold"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_icon_key.svg" id="5_key"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_icon_soul.svg" id="6_soul"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_boss_crest.svg" id="7_crest"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hp_bar"]
-bg_color = Color(0.85, 0.18, 0.18, 1)
+bg_color = Color(0.85, 0.16, 0.18, 1)
+border_width_top = 1
+border_color = Color(1, 0.55, 0.55, 0.75)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dash_bar"]
-bg_color = Color(0.2, 0.7, 0.9, 1)
+bg_color = Color(0.15, 0.65, 0.88, 1)
+border_width_top = 1
+border_color = Color(0.65, 0.9, 1, 0.75)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ability_bar"]
-bg_color = Color(0.8, 0.5, 0.9, 1)
+bg_color = Color(0.7, 0.3, 0.9, 1)
+border_width_top = 1
+border_color = Color(0.88, 0.65, 1, 0.75)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.1, 0.1, 0.12, 0.75)
+bg_color = Color(0.08, 0.08, 0.12, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.38, 0.22, 0.9)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boss_bg"]
-bg_color = Color(0.08, 0.08, 0.1, 0.85)
+bg_color = Color(0.06, 0.04, 0.06, 0.95)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.6, 0.15, 0.15, 1)
+border_color = Color(0.85, 0.68, 0.22, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_boss_fill"]
-bg_color = Color(0.9, 0.2, 0.15, 1)
+bg_color = Color(0.88, 0.12, 0.15, 1)
+border_width_top = 2
+border_color = Color(1, 0.45, 0.4, 0.85)
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
 
 [node name="TopLeftUI" type="MarginContainer" parent="."]
-offset_right = 340.0
-offset_bottom = 150.0
+offset_right = 420.0
+offset_bottom = 180.0
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 
@@ -58,47 +81,128 @@ theme_override_constants/separation = 6
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="HeroPortrait" type="TextureRect" parent="TopLeftUI/VBoxContainer/HeroHeader"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(30, 30)
+[node name="BadgeContainer" type="Control" parent="TopLeftUI/VBoxContainer/HeroHeader"]
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
+
+[node name="BadgeFrame" type="TextureRect" parent="TopLeftUI/VBoxContainer/HeroHeader/BadgeContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_badge")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeroPortrait" type="TextureRect" parent="TopLeftUI/VBoxContainer/HeroHeader/BadgeContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -14.0
+offset_right = 14.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
 expand_mode = 1
 stretch_mode = 5
 
 [node name="HeroNameLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 14
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(1, 0.9, 0.55, 1)
+theme_override_font_sizes/font_size = 15
 text = "Воин"
 
-[node name="GoldLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader"]
+[node name="CurrenciesHBox" type="HBoxContainer" parent="TopLeftUI/VBoxContainer/HeroHeader"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 12
+
+[node name="GoldBox" type="HBoxContainer" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="IconGold" type="TextureRect" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox/GoldBox"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_gold")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GoldLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox/GoldBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_colors/font_color = Color(1, 0.88, 0.25, 1)
 theme_override_font_sizes/font_size = 13
-text = "Золото: 0"
+text = "0"
 
-[node name="KeysLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader"]
+[node name="KeysBox" type="HBoxContainer" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="IconKey" type="TextureRect" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox/KeysBox"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_key")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="KeysLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox/KeysBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.3, 1)
+theme_override_colors/font_color = Color(0.95, 0.95, 0.4, 1)
 theme_override_font_sizes/font_size = 13
-text = "Ключи: 0"
+text = "0"
 
-[node name="SoulsLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader"]
+[node name="SoulsBox" type="HBoxContainer" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="IconSoul" type="TextureRect" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox/SoulsBox"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("6_soul")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SoulsLabel" type="Label" parent="TopLeftUI/VBoxContainer/HeroHeader/CurrenciesHBox/SoulsBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_colors/font_color = Color(0.55, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 13
-text = "Души: 0"
+text = "0"
 
-[node name="HpContainer" type="VBoxContainer" parent="TopLeftUI/VBoxContainer"]
+[node name="HpRow" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
-[node name="PlayerHpBar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/HpContainer"]
+[node name="FlaskIcon" type="TextureRect" parent="TopLeftUI/VBoxContainer/HpRow"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_flask")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HpContainer" type="VBoxContainer" parent="TopLeftUI/VBoxContainer/HpRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PlayerHpBar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/HpRow/HpContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 18)
+custom_minimum_size = Vector2(230, 16)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hp_bar")
@@ -106,9 +210,10 @@ max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="PlayerHpLabel" type="Label" parent="TopLeftUI/VBoxContainer/HpContainer"]
+[node name="PlayerHpLabel" type="Label" parent="TopLeftUI/VBoxContainer/HpRow/HpContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.92, 0.95, 1)
 theme_override_font_sizes/font_size = 11
 text = "100 / 100 HP"
 
@@ -117,14 +222,15 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="DashLabel" type="Label" parent="TopLeftUI/VBoxContainer/DashContainer"]
-custom_minimum_size = Vector2(80, 0)
+custom_minimum_size = Vector2(85, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 0.95, 1)
 theme_override_font_sizes/font_size = 11
 text = "Рывок [Shift]:"
 
 [node name="DashBar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/DashContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 10)
+custom_minimum_size = Vector2(130, 9)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
@@ -139,14 +245,15 @@ theme_override_constants/separation = 8
 
 [node name="Ability1Label" type="Label" parent="TopLeftUI/VBoxContainer/Ability1Container"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(105, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.95, 1)
 theme_override_font_sizes/font_size = 11
 text = "Q: Навык 1"
 
 [node name="Ability1Bar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/Ability1Container"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 10)
+custom_minimum_size = Vector2(110, 9)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
@@ -161,14 +268,15 @@ theme_override_constants/separation = 8
 
 [node name="Ability2Label" type="Label" parent="TopLeftUI/VBoxContainer/Ability2Container"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(105, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.95, 1)
 theme_override_font_sizes/font_size = 11
 text = "E: Навык 2"
 
 [node name="Ability2Bar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/Ability2Container"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 10)
+custom_minimum_size = Vector2(110, 9)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
@@ -185,9 +293,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -260.0
-offset_top = 24.0
+offset_top = 18.0
 offset_right = 260.0
-offset_bottom = 74.0
+offset_bottom = 80.0
 grow_horizontal = 2
 
 [node name="VBox" type="VBoxContainer" parent="BossBarContainer"]
@@ -197,9 +305,20 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
-[node name="BossNameLabel" type="Label" parent="BossBarContainer/VBox"]
+[node name="BossCrestHeader" type="HBoxContainer" parent="BossBarContainer/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="BossCrest" type="TextureRect" parent="BossBarContainer/VBox/BossCrestHeader"]
+custom_minimum_size = Vector2(36, 20)
+layout_mode = 2
+texture = ExtResource("7_crest")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BossNameLabel" type="Label" parent="BossBarContainer/VBox/BossCrestHeader"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.3, 1)

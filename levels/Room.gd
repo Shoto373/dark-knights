@@ -67,11 +67,36 @@ func _apply_biome_theme() -> void:
 	var arena_floor: ColorRect = get_node_or_null("ArenaFloor") as ColorRect
 	if arena_floor != null:
 		arena_floor.color = current_biome.floor_theme_color.lightened(0.06)
+	var floor_tiles: TextureRect = get_node_or_null("%FloorTiles") as TextureRect
+	if floor_tiles != null:
+		floor_tiles.modulate = current_biome.floor_theme_color.lightened(0.35)
 	var walls_node: Node2D = get_node_or_null("VisualWalls") as Node2D
 	if walls_node != null:
 		for wall in walls_node.get_children():
 			if wall is ColorRect:
 				wall.color = current_biome.wall_theme_color
+	
+	# Биомный оттенок настенных факелов
+	var torches_node: Node2D = get_node_or_null("%Torches") as Node2D
+	if torches_node != null:
+		var flame_tint: Color = Color(1.0, 0.72, 0.3, 0.35)
+		match current_biome.id:
+			"frost_world", "frost_caves":
+				flame_tint = Color(0.3, 0.85, 1.0, 0.45)
+			"fire_world", "fire_mines":
+				flame_tint = Color(1.0, 0.38, 0.1, 0.45)
+			"skeleton_castle":
+				flame_tint = Color(0.4, 0.95, 0.6, 0.4)
+			"purgatory":
+				flame_tint = Color(0.85, 0.35, 1.0, 0.45)
+			_:
+				flame_tint = Color(1.0, 0.72, 0.3, 0.35)
+		for t in torches_node.get_children():
+			if "torch_color" in t:
+				t.set("torch_color", flame_tint)
+				var glow = t.get_node_or_null("LightGlow")
+				if glow is Sprite2D:
+					glow.modulate = flame_tint
 
 func _setup_biome_hazards() -> void:
 	if current_biome == null:
@@ -204,24 +229,56 @@ func on_player_entered() -> void:
 
 func _start_combat() -> void:
 	_lock_all_doors()
-	active_enemies = wave_spawner.spawn_room_enemies(self, room_data, current_biome)
+	active_enemies.clear()
+	if not enemies_container.child_entered_tree.is_connected(_on_enemy_child_entered):
+		enemies_container.child_entered_tree.connect(_on_enemy_child_entered)
+	var spawned: Array[Node2D] = wave_spawner.spawn_room_enemies(self, room_data, current_biome)
+	for enemy in spawned:
+		_register_enemy(enemy)
+
+func _on_enemy_child_entered(node: Node) -> void:
+	if node is Node2D:
+		call_deferred("_check_and_register_child", node)
+
+func _check_and_register_child(node: Node) -> void:
+	if not is_instance_valid(node):
+		return
+	if node is CharacterBody2D or node.is_in_group("enemies") or node.is_in_group("bosses"):
+		_register_enemy(node as Node2D)
+
+func _register_enemy(enemy: Node2D) -> void:
+	if enemy == null or not is_instance_valid(enemy):
+		return
+	if enemy in active_enemies:
+		return
+	active_enemies.append(enemy)
 	
-	for enemy in active_enemies:
+	if enemy is EnemyBase:
+		var eb: EnemyBase = enemy as EnemyBase
+		if not eb.permanently_died.is_connected(_on_enemy_died):
+			eb.permanently_died.connect(func(_e): _on_enemy_died(enemy))
+	else:
 		var hc: HealthComponent = enemy.get_node_or_null("HealthComponent") as HealthComponent
 		if hc != null:
 			hc.died.connect(func(): _on_enemy_died(enemy))
+		else:
+			enemy.tree_exited.connect(func(): _on_enemy_died(enemy))
 
 func _on_enemy_died(enemy: Node2D) -> void:
-	active_enemies.erase(enemy)
+	if enemy in active_enemies:
+		active_enemies.erase(enemy)
 	if active_enemies.is_empty():
 		_finish_combat()
 
 func _finish_combat() -> void:
+	if enemies_container.child_entered_tree.is_connected(_on_enemy_child_entered):
+		enemies_container.child_entered_tree.disconnect(_on_enemy_child_entered)
 	room_data.is_cleared = true
 	_unlock_all_doors()
 	_spawn_room_clear_reward()
 	EventBus.room_cleared.emit()
 	room_cleared.emit()
+	SaveManager.save_run()
 
 func _spawn_room_clear_reward() -> void:
 	var rng: RandomNumberGenerator = GameState.rng

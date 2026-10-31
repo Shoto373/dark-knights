@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="24" viewBox="0 0 48 24">
+  <defs>
+    <linearGradient id="woodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="50%" stop-color="#451a03" />
+      <stop offset="100%" stop-color="#291102" />
+    </linearGradient>
+    <radialGradient id="orbGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#c084fc" />
+      <stop offset="75%" stop-color="#7e22ce" />
+      <stop offset="100%" stop-color="#3b0764" />
+    </radialGradient>
+  </defs>
+  <!-- Wooden staff shaft -->
+  <path d="M 2 11 L 36 10 L 36 14 L 2 13 Z" fill="url(#woodGrad)" stroke="#1c1917" stroke-width="1"/>
+  <!-- Gold spiral wraps -->
+  <path d="M 8 10.5 L 11 13.5 M 16 10.5 L 19 13.5 M 24 10.5 L 27 13.5 M 32 10.5 L 35 13.5" stroke="#facc15" stroke-width="1.2"/>
+  <!-- Headpiece prongs / crescent claw -->
+  <path d="M 34 8 C 38 6, 42 7, 44 9 C 41 10, 38 9, 36 10 Z" fill="#eab308" stroke="#713f12" stroke-width="0.8"/>
+  <path d="M 34 16 C 38 18, 42 17, 44 15 C 41 14, 38 15, 36 14 Z" fill="#eab308" stroke="#713f12" stroke-width="0.8"/>
+  <path d="M 35 5 C 39 4, 45 7, 46 12 C 45 17, 39 20, 35 19 C 38 16, 38 8, 35 5 Z" fill="none" stroke="#ca8a04" stroke-width="1.2"/>
+  <!-- Crystal Orb -->
+  <circle cx="41" cy="12" r="5.5" fill="url(#orbGlow)"/>
+  <!-- Arcane ring around orb -->
+  <ellipse cx="41" cy="12" rx="7.5" ry="3" fill="none" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2,2"/>
+  <!-- Magic sparkle core -->
+  <circle cx="40" cy="11" r="1.5" fill="#ffffff"/>
+  <line x1="41" y1="5" x2="41" y2="7" stroke="#67e8f9" stroke-width="1"/>
+  <line x1="41" y1="17" x2="41" y2="19" stroke="#67e8f9" stroke-width="1"/>
+</svg>

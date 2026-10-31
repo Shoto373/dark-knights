@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+  <defs>
+    <radialGradient id="liquidGrad" cx="45%" cy="60%" r="55%">
+      <stop offset="0%" stop-color="#f87171" />
+      <stop offset="40%" stop-color="#dc2626" />
+      <stop offset="85%" stop-color="#7f1d1d" />
+      <stop offset="100%" stop-color="#450a0a" />
+    </radialGradient>
+    <linearGradient id="metalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="45%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#713f12" />
+    </linearGradient>
+  </defs>
+  <!-- Flask Body (Heart / Bulbous Shape) -->
+  <path d="M 20 10 C 23 10, 34 16, 34 26 C 34 33, 27 38, 20 38 C 13 38, 6 33, 6 26 C 6 16, 17 10, 20 10 Z" fill="url(#liquidGrad)" stroke="#1c1917" stroke-width="1.5"/>
+  <!-- Liquid Wave Line -->
+  <path d="M 8 22 Q 14 19 20 22 Q 26 25 32 22 L 34 26 C 34 33, 27 38, 20 38 C 13 38, 6 33, 6 26 Z" fill="#b91c1c" opacity="0.6"/>
+  <!-- Glass Curved Specular Highlight -->
+  <path d="M 10 24 C 9 18, 14 14, 18 13" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity="0.75"/>
+  <!-- Metal Filigree Cage Bands -->
+  <path d="M 8 26 C 14 29, 26 29, 32 26" fill="none" stroke="url(#metalGrad)" stroke-width="1.4"/>
+  <line x1="20" y1="13" x2="20" y2="38" stroke="url(#metalGrad)" stroke-width="1.2"/>
+  <!-- Metal Flask Neck & Rim -->
+  <rect x="16" y="6" width="8" height="5" rx="1" fill="url(#metalGrad)" stroke="#1c1917" stroke-width="1"/>
+  <ellipse cx="20" cy="5" rx="5" ry="2" fill="url(#metalGrad)" stroke="#1c1917" stroke-width="1"/>
+  <!-- Stopper / Gem -->
+  <circle cx="20" cy="3" r="2.2" fill="#ef4444" stroke="#7f1d1d" stroke-width="0.8"/>
+  <circle cx="19" cy="2" r="0.8" fill="#ffffff"/>
+</svg>

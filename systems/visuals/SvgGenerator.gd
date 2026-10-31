@@ -20,7 +20,7 @@ static func generate_all_svgs() -> void:
 			content = content.replace('width="96" height="96"', 'width="48" height="48"')
 		elif file_name.begins_with("icon_"):
 			content = content.replace('width="64" height="64"', 'width="40" height="40"')
-		else:
+		elif file_name.begins_with("hero_") or file_name.begins_with("enemy_"):
 			content = content.replace('width="64" height="64"', 'width="32" height="32"')
 		
 		var f: FileAccess = FileAccess.open(path, FileAccess.WRITE)
@@ -396,5 +396,45 @@ static func _get_svg_definitions() -> Dictionary:
   <circle cx="41" cy="28" r="4.5" fill="#f97316"/>
   <circle cx="55" cy="28" r="4.5" fill="#38bdf8"/>
 </svg>"""
+
+	# =====================
+	# ОРУЖИЕ
+	# =====================
+	d["weapon_sword.svg"] = FileAccess.get_file_as_string("res://assets/sprites/weapon_sword.svg")
+	d["weapon_staff.svg"] = FileAccess.get_file_as_string("res://assets/sprites/weapon_staff.svg")
+	d["weapon_bow.svg"] = FileAccess.get_file_as_string("res://assets/sprites/weapon_bow.svg")
+
+	# =====================
+	# СНАРЯДЫ
+	# =====================
+	d["projectile_arrow.svg"] = FileAccess.get_file_as_string("res://assets/sprites/projectile_arrow.svg")
+	d["projectile_magic_bolt.svg"] = FileAccess.get_file_as_string("res://assets/sprites/projectile_magic_bolt.svg")
+	d["projectile_fireball.svg"] = FileAccess.get_file_as_string("res://assets/sprites/projectile_fireball.svg")
+	d["projectile_frost_shard.svg"] = FileAccess.get_file_as_string("res://assets/sprites/projectile_frost_shard.svg")
+
+	# =====================
+	# ДЕКОРАЦИИ И ОКРУЖЕНИЕ
+	# =====================
+	d["portal_rift.svg"] = FileAccess.get_file_as_string("res://assets/sprites/portal_rift.svg")
+	d["wall_torch.svg"] = FileAccess.get_file_as_string("res://assets/sprites/wall_torch.svg")
+	d["torch_flame.svg"] = FileAccess.get_file_as_string("res://assets/sprites/torch_flame.svg")
+	d["light_halo.svg"] = FileAccess.get_file_as_string("res://assets/sprites/light_halo.svg")
+	d["target_dummy.svg"] = FileAccess.get_file_as_string("res://assets/sprites/target_dummy.svg")
+	d["trap_spikes_retracted.svg"] = FileAccess.get_file_as_string("res://assets/sprites/trap_spikes_retracted.svg")
+	d["trap_spikes_extended.svg"] = FileAccess.get_file_as_string("res://assets/sprites/trap_spikes_extended.svg")
+	d["pillar_corner.svg"] = FileAccess.get_file_as_string("res://assets/sprites/pillar_corner.svg")
+	d["dungeon_stone_tile.svg"] = FileAccess.get_file_as_string("res://assets/sprites/dungeon_stone_tile.svg")
+	d["dungeon_wall_brick.svg"] = FileAccess.get_file_as_string("res://assets/sprites/dungeon_wall_brick.svg")
+	d["dungeon_floor_crest.svg"] = FileAccess.get_file_as_string("res://assets/sprites/dungeon_floor_crest.svg")
+
+	# =====================
+	# ИКОНКИ И ЭЛЕМЕНТЫ HUD
+	# =====================
+	d["hud_health_flask.svg"] = FileAccess.get_file_as_string("res://assets/sprites/hud_health_flask.svg")
+	d["hud_hero_badge.svg"] = FileAccess.get_file_as_string("res://assets/sprites/hud_hero_badge.svg")
+	d["hud_icon_gold.svg"] = FileAccess.get_file_as_string("res://assets/sprites/hud_icon_gold.svg")
+	d["hud_icon_key.svg"] = FileAccess.get_file_as_string("res://assets/sprites/hud_icon_key.svg")
+	d["hud_icon_soul.svg"] = FileAccess.get_file_as_string("res://assets/sprites/hud_icon_soul.svg")
+	d["hud_boss_crest.svg"] = FileAccess.get_file_as_string("res://assets/sprites/hud_boss_crest.svg")
 
 	return d

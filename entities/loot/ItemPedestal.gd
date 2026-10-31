@@ -16,6 +16,7 @@ signal item_picked(item: ItemData)
 @onready var cost_label: Label = %CostLabel
 
 var is_player_inside: bool = false
+var is_collected: bool = false
 var player_ref: Player = null
 
 func _ready() -> void:
@@ -34,6 +35,7 @@ func setup(item: ItemData, price: int = 0, is_blessing: bool = false) -> void:
 	item_data = item
 	cost_gold = price
 	is_blessing_choice = is_blessing
+	is_collected = false
 	if is_blessing_choice:
 		add_to_group("blessing_pedestals")
 	_update_display()
@@ -55,11 +57,11 @@ func _update_display() -> void:
 		cost_label.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5))
 
 func _process(_delta: float) -> void:
-	if is_player_inside and Input.is_action_just_pressed("interact"):
+	if is_player_inside and not is_collected and Input.is_action_just_pressed("interact"):
 		_try_collect()
 
 func _try_collect() -> void:
-	if item_data == null or not is_instance_valid(player_ref):
+	if is_collected or item_data == null or not is_instance_valid(player_ref):
 		return
 	
 	if cost_gold > 0:
@@ -68,13 +70,16 @@ func _try_collect() -> void:
 			return
 		GameState.add_gold(-cost_gold)
 	
-	# Добавляем предмет игроку
-	GameState.inventory_items.append({
-		"id": item_data.id,
-		"name": item_data.name,
-		"rarity": item_data.rarity,
-		"item_ref": item_data
-	})
+	is_collected = true
+	
+	# Добавляем предмет игроку (только если это не расходный ключ из магазина)
+	if item_data.id != "shop_key":
+		GameState.inventory_items.append({
+			"id": item_data.id,
+			"name": item_data.name,
+			"rarity": item_data.rarity,
+			"item_ref": item_data
+		})
 	
 	player_ref.recalculate_stats()
 	EventBus.item_collected.emit(item_data.id)
