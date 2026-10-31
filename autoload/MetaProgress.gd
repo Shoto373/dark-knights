@@ -47,3 +47,4 @@ func load_from_dict(data: Dictionary) -> void:
 	unlocked_items = Array(data.get("unlocked_items", []), TYPE_STRING, &"", null)
 	meta_upgrades = data.get("meta_upgrades", meta_upgrades)
 	lifetime_stats = data.get("lifetime_stats", lifetime_stats)
+

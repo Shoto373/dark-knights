@@ -14,6 +14,17 @@ func _ready() -> void:
 	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	color_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(color_rect)
+	
+	EventBus.hit_stop_requested.connect(_on_hit_stop_requested)
+
+func _on_hit_stop_requested(duration_ms: float) -> void:
+	if duration_ms <= 0.0 or Engine.time_scale < 1.0:
+		return
+	Engine.time_scale = 0.05
+	# Используем ignore_time_scale = true, чтобы таймер работал в реальном времени
+	var duration_sec: float = (duration_ms / 1000.0)
+	await get_tree().create_timer(duration_sec, true, false, true).timeout
+	Engine.time_scale = 1.0
 
 func change_scene(target_path: String, fade_duration: float = 0.3) -> void:
 	if is_transitioning:
@@ -39,3 +50,4 @@ func change_scene(target_path: String, fade_duration: float = 0.3) -> void:
 	color_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	is_transitioning = false
 	transition_finished.emit()
+

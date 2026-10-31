@@ -61,3 +61,4 @@ func set_bus_volume(bus_name: StringName, linear_volume: float) -> void:
 		var db_volume: float = linear_to_db(clampf(linear_volume, 0.0001, 1.0))
 		AudioServer.set_bus_volume_db(bus_index, db_volume)
 		AudioServer.set_bus_mute(bus_index, linear_volume <= 0.0001)
+

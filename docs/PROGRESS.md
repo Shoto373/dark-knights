@@ -7,15 +7,26 @@
 - [x] Конфигурация project.godot (разрешение 1280x720, nearest filter, слои коллизий, input map, autoload)
 - [x] Autoload-синглтоны: EventBus, GameState, MetaProgress, SaveManager, AudioManager, SceneRouter
 - [x] Базовые сцены: Main.tscn, MainMenu.tscn, Hub.tscn с плавным fade-переходом
-- [x] Подключение GUT и первый smoke-тест (6 тестов, 17 проверок — все пройдены успешно)
+- [x] Подключение GUT и первый smoke-тест (6 тестов, 17 проверок)
 - [x] Пресеты экспорта Windows и Linux (export_presets.cfg)
 
-## Спринт 1: Игрок и базовый бой [СЛЕДУЮЩИЙ]
-- [ ] Компоненты: HealthComponent, HurtboxComponent, HitboxComponent, MovementComponent
-- [ ] Сцена Player (CharacterBody2D, dash, i-frames, ближняя атака дугой, knockback)
-- [ ] systems/combat/DamageCalculator.gd: damage = max(1, round(B * (1 + M) * C - A))
-- [ ] Камера с плавным следованием и screen shake
-- [ ] Тестовый манекен с HP и полоской здоровья
-- [ ] HUD (HP, перезарядка dash)
-- [ ] Hit-stop (~50 мс)
-- [ ] GUT-тесты на урон и компоненты
+## Спринт 1: Игрок и базовый бой [ВЫПОЛНЕН]
+- [x] Компоненты:
+  - `HealthComponent` (урон, лечение, неуязвимость, смерть)
+  - `HurtboxComponent` (приём урона, фильтрация слоев, связь с Health и Movement)
+  - `HitboxComponent` (нанесение урона, отталкивание, учёт уже поражённых целей)
+  - `MovementComponent` (ускорение, трение, knockback)
+- [x] Сцена `Player` (`CharacterBody2D`, движение, прицеливание мышь/стик, атака ближнего боя с дугой, dash с i-frames и перезарядкой, мигание неуязвимости)
+- [x] `systems/combat/DamageCalculator.gd` (формула `max(1, round(B * (1 + M) * C - A))`, проверка крита)
+- [x] Камера `PlayerCamera` (плавное следование, screen shake по сигналу `EventBus.screen_shake_requested`)
+- [x] Тестовый манекен `Dummy` (HP над головой, реакция на урон, вспышка, отталкивание, автореспавн)
+- [x] Ловушка `TrapSpikes` (для проверки получения урона игроком и гибели)
+- [x] `HUD` (полоска HP игрока, индикатор перезарядки рывка, всплывающие цифры урона, экран «ВЫ ПОГИБЛИ» с кнопкой возврата в Хаб)
+- [x] Hit-stop эффект (~50 мс) при ударе через `EventBus.hit_stop_requested` в `SceneRouter`
+- [x] GUT-тесты: 19 тестов, 50 проверок (DamageCalculator, HealthComponent, Player, Dummy, Scene Smoke)
+
+## Спринт 2: Герои и хаб [СЛЕДУЮЩИЙ]
+- [ ] Ресурсы `HeroData` и `AbilityData`
+- [ ] 3 героя: Воин (щит, рывок-удар), Маг (огненный шар, телепорт), Следопыт (ловушка, залп)
+- [ ] Хаб со статуями героев для выбора и порталом «Начать путь»
+- [ ] Спавн игрока на основе выбранного `HeroData`

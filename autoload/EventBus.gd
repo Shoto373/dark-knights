@@ -28,3 +28,4 @@ signal run_ended(is_victory: bool, stats: Dictionary)
 # Сигналы интерфейса и инвентаря
 signal item_collected(item_id: String)
 signal currency_changed(gold: int, souls: int)
+

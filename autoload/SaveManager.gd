@@ -122,3 +122,4 @@ func _migrate_meta(data: Dictionary, version: int) -> Dictionary:
 	if version < 1:
 		pass
 	return data
+

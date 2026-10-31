@@ -61,3 +61,4 @@ func add_gold(amount: int) -> void:
 
 func add_keys(amount: int) -> void:
 	keys = max(0, keys + amount)
+
