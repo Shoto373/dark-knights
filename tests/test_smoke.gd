@@ -34,3 +34,16 @@ func test_hub_scene_instantiation() -> void:
 	assert_not_null(instance, "Hub instance should be created.")
 	add_child_autofree(instance)
 	assert_true(instance.is_inside_tree(), "Hub is added to tree.")
+
+func test_audio_procedural_wav_creation() -> void:
+	var wav: AudioStreamWAV = AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_8_BITS
+	wav.mix_rate = 22050
+	wav.stereo = false
+	var samples: PackedByteArray = PackedByteArray()
+	samples.resize(500)
+	for i in range(500):
+		samples[i] = 128
+	wav.data = samples
+	assert_not_null(wav, "WAV created successfully")
+	assert_eq(wav.data.size(), 500, "WAV has expected sample count")

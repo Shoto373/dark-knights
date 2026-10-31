@@ -56,20 +56,20 @@ func spawn_room_enemies(room: DungeonRoom, room_data: RoomData, biome: BiomeData
 				
 			var support: EnemyBase = ENEMY_BASE_SCENE.instantiate() as EnemyBase
 			room.enemies_container.add_child(support)
-			support.position = Vector2(480, 260)
+			support.position = Vector2(540, 260)
 			support.setup_from_data(support_data)
 			spawned.append(support)
 			
 		RoomData.RoomType.COMBAT:
 			var budget: int = clampi(3 + int(room_data.distance_from_start / 2), 3, 7)
 			var spawn_points: Array[Vector2] = [
-				Vector2(400, 260),
-				Vector2(880, 260),
-				Vector2(400, 460),
-				Vector2(880, 460),
+				Vector2(500, 240),
+				Vector2(780, 240),
+				Vector2(500, 480),
+				Vector2(780, 480),
 				Vector2(640, 360),
-				Vector2(320, 360),
-				Vector2(960, 360)
+				Vector2(320, 420),
+				Vector2(960, 300)
 			]
 			var pt_idx: int = 0
 			var pool: Array[EnemyData] = biome.enemy_pool if (biome != null and not biome.enemy_pool.is_empty()) else [default_slasher, default_archer, default_shaman, default_brute]

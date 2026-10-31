@@ -12,12 +12,21 @@ var speed: float = 400.0
 var max_distance: float = 600.0
 var distance_traveled: float = 0.0
 var proj_type: String = "magic"
+var pierce_count: int = 0
 var _trail_timer: float = 0.0
 
 func _ready() -> void:
 	# Снаряд врезается в стены (слой 1: world)
 	collision_mask = 1
 	body_entered.connect(_on_body_entered)
+	if hitbox != null:
+		hitbox.hit_landed.connect(_on_hit_landed)
+
+func _on_hit_landed(_target: Node) -> void:
+	if pierce_count <= 0:
+		_destroy()
+	else:
+		pierce_count -= 1
 
 func setup(
 	dir: Vector2,
@@ -29,11 +38,13 @@ func setup(
 	color: Color = Color.WHITE,
 	p_damage_type: String = "physical",
 	p_tags: Array[String] = [],
-	p_proj_type: String = ""
+	p_proj_type: String = "",
+	p_pierce_count: int = 0
 ) -> void:
 	direction = dir.normalized()
 	speed = proj_speed
 	max_distance = max_range
+	pierce_count = p_pierce_count
 	rotation = direction.angle()
 	
 	hitbox.base_damage = damage

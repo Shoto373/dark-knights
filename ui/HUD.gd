@@ -27,6 +27,7 @@ extends CanvasLayer
 var player_ref: Player = null
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	death_screen.visible = false
 	boss_bar_container.visible = false
 	btn_respawn.pressed.connect(_on_respawn_pressed)
@@ -121,11 +122,22 @@ func _on_boss_defeated(_boss_name: String) -> void:
 
 func _on_player_died() -> void:
 	death_screen.visible = true
-	var tween: Tween = create_tween()
+	var subtitle: Label = death_screen.get_node_or_null("CenterContainer/VBoxContainer/SubtitleLabel") as Label
+	if subtitle != null:
+		var s: Dictionary = GameState.run_stats
+		subtitle.text = "Врагов сражено: %d  |  Очищено комнат: %d\nУрона нанесено: %d  |  Время: %.1f с" % [
+			s.get("kills", 0),
+			s.get("rooms_cleared", 0),
+			s.get("damage_dealt", 0),
+			s.get("time_elapsed", 0.0)
+		]
+	var tween: Tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	death_screen.modulate.a = 0.0
 	tween.tween_property(death_screen, "modulate:a", 1.0, 0.4)
+	get_tree().paused = true
 
 func _on_respawn_pressed() -> void:
+	get_tree().paused = false
 	death_screen.visible = false
 	GameState.end_run(false)
 	SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)

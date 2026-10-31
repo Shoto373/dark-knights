@@ -32,6 +32,17 @@ func _populate_options() -> void:
 	res_option.clear()
 	for res_name in SettingsManager.RESOLUTION_NAMES:
 		res_option.add_item(res_name)
+	
+	_style_popup(mode_option.get_popup())
+	_style_popup(res_option.get_popup())
+
+func _style_popup(popup: PopupMenu) -> void:
+	if popup == null:
+		return
+	popup.add_theme_font_size_override("font_size", 14)
+	popup.add_theme_color_override("font_color", Color(0.95, 0.95, 1.0, 1.0))
+	popup.add_theme_color_override("font_hover_color", Color(1.0, 0.88, 0.4, 1.0))
+	popup.add_theme_color_override("font_separator_color", Color(0.4, 0.45, 0.55, 1.0))
 
 func _load_current_values() -> void:
 	mode_option.selected = SettingsManager.current_window_mode_index

@@ -28,6 +28,7 @@ const AOE_SCENE = preload("res://entities/player/AreaOfEffect.tscn")
 
 var is_dashing: bool = false
 var can_attack: bool = true
+var is_swinging: bool = false
 var dash_direction: Vector2 = Vector2.RIGHT
 var aim_direction: Vector2 = Vector2.RIGHT
 
@@ -266,17 +267,29 @@ func _physics_process(delta: float) -> void:
 		movement_component.move(self, input_vector * spd_mult, delta)
 
 func _update_aim() -> void:
-	var mouse_pos: Vector2 = get_global_mouse_position()
-	var to_mouse: Vector2 = (mouse_pos - global_position)
-	if to_mouse.length_squared() > 100.0:
-		aim_direction = to_mouse.normalized()
+	var joy_aim: Vector2 = Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_RIGHT_X),
+		Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)
+	)
+	if joy_aim.length_squared() > 0.25:
+		aim_direction = joy_aim.normalized()
+	else:
+		var mouse_pos: Vector2 = get_global_mouse_position()
+		var to_mouse: Vector2 = (mouse_pos - global_position)
+		if to_mouse.length_squared() > 100.0:
+			aim_direction = to_mouse.normalized()
 	
-	weapon_pivot.rotation = aim_direction.angle()
+	if not is_swinging:
+		weapon_pivot.rotation = aim_direction.angle()
 	
-	if aim_direction.x < 0:
-		visuals.scale.x = -1.0
-	elif aim_direction.x > 0:
-		visuals.scale.x = 1.0
+	var is_aiming_left: bool = (aim_direction.x < 0.0)
+	visuals.scale.x = -1.0 if is_aiming_left else 1.0
+	
+	var w_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
+	if w_sprite != null:
+		w_sprite.flip_v = is_aiming_left
+	
+	weapon_pivot.z_index = -1 if aim_direction.y < -0.3 else 0
 
 func _handle_input() -> void:
 	if status_effect_manager != null and (status_effect_manager.is_frozen() or status_effect_manager.is_stunned()):
@@ -304,6 +317,7 @@ func _start_dash() -> void:
 	health_component.set_invulnerable(true)
 	visuals.modulate.a = 0.5
 	EffectsHelper.spawn_dust_puff(get_parent(), global_position)
+	AudioManager.play_sfx_named("dash")
 	dash_timer.start()
 	dash_cooldown_timer.start()
 
@@ -325,9 +339,16 @@ func _perform_attack() -> void:
 func _swing_melee_weapon() -> void:
 	weapon_hitbox.reset_hits()
 	attack_collision.disabled = false
+	is_swinging = true
+	AudioManager.play_sfx_named("swing")
 	
 	var base_angle: float = aim_direction.angle()
-	weapon_pivot.rotation = base_angle - deg_to_rad(65.0)
+	var is_aiming_left: bool = (aim_direction.x < 0.0)
+	
+	var start_angle: float = base_angle + (deg_to_rad(65.0) if is_aiming_left else -deg_to_rad(65.0))
+	var end_angle: float = base_angle + (-deg_to_rad(65.0) if is_aiming_left else deg_to_rad(65.0))
+	
+	weapon_pivot.rotation = start_angle
 	
 	var slash_color: Color = Color(0.9, 0.95, 1.0, 0.85)
 	if weapon_hitbox.damage_type == "fire" or weapon_hitbox.tags.has("fire"):
@@ -337,8 +358,11 @@ func _swing_melee_weapon() -> void:
 	EffectsHelper.spawn_slash_arc(get_parent(), global_position + aim_direction * 22.0, base_angle, 28.0, slash_color)
 
 	var tween: Tween = create_tween()
-	tween.tween_property(weapon_pivot, "rotation", base_angle + deg_to_rad(65.0), 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_callback(func(): attack_collision.disabled = true)
+	tween.tween_property(weapon_pivot, "rotation", end_angle, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		attack_collision.disabled = true
+		is_swinging = false
+	)
 	tween.tween_property(weapon_pivot, "rotation", base_angle, 0.08)
 
 	var thrust_tween: Tween = visuals.create_tween()
@@ -346,6 +370,7 @@ func _swing_melee_weapon() -> void:
 	thrust_tween.tween_property(visuals, "position", Vector2.ZERO, 0.1)
 
 func _shoot_basic_projectile() -> void:
+	AudioManager.play_sfx_named("shoot")
 	var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
 	get_parent().add_child(proj)
 	proj.global_position = global_position + aim_direction * 20.0
@@ -377,6 +402,7 @@ func _trigger_ability(ability: AbilityData, timer: Timer) -> void:
 	if not timer.is_stopped() or is_dashing:
 		return
 	
+	AudioManager.play_sfx_named("cast")
 	timer.start()
 	match ability.effect_type:
 		"buff":

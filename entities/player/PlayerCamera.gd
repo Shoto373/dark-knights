@@ -10,6 +10,7 @@ extends Camera2D
 
 var shake_intensity: float = 0.0
 var shake_timer: float = 0.0
+var total_shake_duration: float = 0.0
 var pan_tween: Tween
 
 func _ready() -> void:
@@ -26,11 +27,17 @@ func _process(delta: float) -> void:
 	
 	if shake_timer > 0.0:
 		shake_timer -= delta
-		var current_power: float = shake_intensity * (shake_timer / maxf(0.001, shake_timer + delta))
-		offset = Vector2(
-			randf_range(-current_power, current_power),
-			randf_range(-current_power, current_power)
-		)
+		if shake_timer > 0.0:
+			var current_power: float = shake_intensity * clampf(shake_timer / maxf(0.001, total_shake_duration), 0.0, 1.0)
+			offset = Vector2(
+				randf_range(-current_power, current_power),
+				randf_range(-current_power, current_power)
+			)
+		else:
+			shake_timer = 0.0
+			shake_intensity = 0.0
+			total_shake_duration = 0.0
+			offset = Vector2.ZERO
 	else:
 		offset = Vector2.ZERO
 
@@ -48,3 +55,4 @@ func lock_to_room(new_center: Vector2, smooth: bool = false, duration: float = 0
 func add_shake(intensity: float, duration: float) -> void:
 	shake_intensity = maxf(shake_intensity, intensity)
 	shake_timer = maxf(shake_timer, duration)
+	total_shake_duration = maxf(total_shake_duration, duration)

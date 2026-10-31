@@ -125,6 +125,8 @@ func _on_room_door_entered(direction: Vector2i) -> void:
 	
 	player.global_position = room_base_pos + spawn_offset
 	player.velocity = Vector2.ZERO
+	player.set_physics_process(false)
+	player.set_process(false)
 	
 	# Плавный сдвиг камеры между комнатами (Pan в стиле Isaac / Gungeon)
 	if camera is PlayerCamera:
@@ -135,6 +137,9 @@ func _on_room_door_entered(direction: Vector2i) -> void:
 	
 	var trans_timer: SceneTreeTimer = get_tree().create_timer(0.25)
 	trans_timer.timeout.connect(func():
+		if is_instance_valid(player):
+			player.set_physics_process(true)
+			player.set_process(true)
 		is_room_transitioning = false
 		target_room.on_player_entered()
 	)

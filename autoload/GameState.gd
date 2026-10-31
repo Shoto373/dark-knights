@@ -82,11 +82,12 @@ func end_run(is_victory: bool) -> void:
 	current_world_node_id = "hub"
 	current_world_node = null
 	visited_world_nodes.clear()
-	if MetaProgress != null and MetaProgress.has_method("save_meta"):
+	if not is_victory and MetaProgress != null:
 		MetaProgress.lifetime_stats["total_runs"] = MetaProgress.lifetime_stats.get("total_runs", 0) + 1
-		SaveManager.save_meta()
+		if SaveManager != null and SaveManager.has_method("save_meta"):
+			SaveManager.save_meta()
 	EventBus.run_ended.emit(is_victory, run_stats)
-	if SaveManager.has_method("delete_run_save"):
+	if SaveManager != null and SaveManager.has_method("delete_run_save"):
 		SaveManager.delete_run_save()
 
 func add_gold(amount: int) -> void:

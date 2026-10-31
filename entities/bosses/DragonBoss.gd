@@ -457,5 +457,4 @@ func _spawn_portal_exit() -> void:
 	get_parent().add_child(portal)
 	portal.global_position = global_position + Vector2(0, -90.0)
 	if portal.get_node_or_null("%PromptLabel") != null:
-		portal.prompt_label.text = "[F] Войти в Чистилище"
-	portal.next_world_node_id = "purgatory"
+		portal.prompt_label.text = "[F] Вперед"

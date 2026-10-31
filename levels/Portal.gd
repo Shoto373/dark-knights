@@ -11,6 +11,7 @@ extends Area2D
 @export var target_scene: String = "res://levels/DungeonFloor.tscn"
 @export var next_world_node_id: String = ""
 
+var on_enter_callback: Callable = Callable()
 var is_player_inside: bool = false
 var _anim_time: float = 0.0
 var _particle_timer: float = 0.0
@@ -58,6 +59,10 @@ func _spawn_portal_particle() -> void:
 	EffectsHelper.spawn_portal_mote(get_parent(), spawn_pos, global_position, mote_color)
 
 func _enter_portal() -> void:
+	if on_enter_callback.is_valid():
+		on_enter_callback.call()
+		return
+	
 	if not GameState.is_run_active:
 		GameState.start_new_run(GameState.selected_hero_id)
 		SceneRouter.change_scene(target_scene, 0.4)
@@ -69,6 +74,10 @@ func _enter_portal() -> void:
 				GameState.advance_to_world_node(target_node)
 				return
 		var current_node: WorldNodeData = GameState.current_world_node
+		if current_node == null and not GameState.current_world_node_id.is_empty():
+			var world_graph: WorldGraph = WorldGraph.new()
+			current_node = world_graph.get_node(GameState.current_world_node_id)
+		
 		if current_node != null:
 			if current_node.next_nodes.size() > 1:
 				var map_scene: PackedScene = load("res://ui/WorldMap.tscn")

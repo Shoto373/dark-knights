@@ -3,6 +3,8 @@ extends Area2D
 
 ## Компонент нанесения урона (Атакующий хитбокс)
 
+signal hit_landed(target: Node)
+
 @export var base_damage: int = 20
 @export var damage_multiplier: float = 0.0
 @export var crit_chance: float = 0.1
@@ -40,6 +42,7 @@ func can_hit(target: Node) -> bool:
 func register_hit(target: Node) -> void:
 	if not hit_targets.has(target):
 		hit_targets.append(target)
+		hit_landed.emit(target)
 
 func reset_hits() -> void:
 	hit_targets.clear()

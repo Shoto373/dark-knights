@@ -119,14 +119,30 @@ func _open_settings() -> void:
 	var dialog: SettingsDialog = SETTINGS_DIALOG_SCENE.instantiate() as SettingsDialog
 	add_child(dialog)
 
+var _confirm_hub_exit: bool = false
+
 func _back_to_hub() -> void:
-	_resume()
 	var is_in_hub: bool = (not GameState.is_run_active or GameState.current_world_node_id == "hub")
 	if is_in_hub:
+		_resume()
 		SceneRouter.change_scene("res://ui/MainMenu.tscn", 0.3)
-	else:
-		GameState.end_run(false)
-		SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
+		return
+	
+	if not _confirm_hub_exit:
+		_confirm_hub_exit = true
+		btn_back_hub.text = "Точно выйти? Кликните еще раз"
+		btn_back_hub.modulate = Color(1.0, 0.4, 0.4)
+		get_tree().create_timer(3.0).timeout.connect(func():
+			if is_instance_valid(btn_back_hub):
+				_confirm_hub_exit = false
+				btn_back_hub.text = "Завершить забег (В Хаб)"
+				btn_back_hub.modulate = Color.WHITE
+		)
+		return
+	
+	_resume()
+	GameState.end_run(false)
+	SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
 
 func _quit_game() -> void:
 	if GameState.is_run_active:

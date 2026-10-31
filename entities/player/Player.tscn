@@ -72,10 +72,10 @@ offset_right = 7.0
 offset_bottom = -4.0
 color = Color(1, 1, 1, 1)
 
-[node name="WeaponPivot" type="Node2D" parent="Visuals"]
+[node name="WeaponPivot" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="WeaponHitbox" type="Area2D" parent="Visuals/WeaponPivot"]
+[node name="WeaponHitbox" type="Area2D" parent="WeaponPivot"]
 unique_name_in_owner = true
 collision_layer = 8
 collision_mask = 0
@@ -83,13 +83,13 @@ script = ExtResource("5_hitbox")
 base_damage = 25
 knockback_force = 300.0
 
-[node name="AttackCollision" type="CollisionShape2D" parent="Visuals/WeaponPivot/WeaponHitbox"]
+[node name="AttackCollision" type="CollisionShape2D" parent="WeaponPivot/WeaponHitbox"]
 unique_name_in_owner = true
 position = Vector2(24, 0)
 shape = SubResource("CircleShape2D_attack")
 disabled = true
 
-[node name="WeaponVisual" type="ColorRect" parent="Visuals/WeaponPivot"]
+[node name="WeaponVisual" type="ColorRect" parent="WeaponPivot"]
 visible = false
 offset_left = 6.0
 offset_top = -3.0
@@ -97,7 +97,7 @@ offset_right = 26.0
 offset_bottom = 3.0
 color = Color(0.8, 0.85, 0.9, 1)
 
-[node name="WeaponSprite" type="Sprite2D" parent="Visuals/WeaponPivot"]
+[node name="WeaponSprite" type="Sprite2D" parent="WeaponPivot"]
 unique_name_in_owner = true
 position = Vector2(18, 0)
 
