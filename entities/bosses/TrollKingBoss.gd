@@ -305,3 +305,4 @@ func _spawn_exit_portal() -> void:
 	get_parent().add_child(portal)
 	portal.global_position = global_position + Vector2(0, -90.0)
 	portal.prompt_label.text = "[F] Перейти в Замок скелетов"
+

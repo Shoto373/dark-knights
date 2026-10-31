@@ -20,3 +20,4 @@ enemy_pool = [ExtResource("2_brute"), ExtResource("3_thrower"), ExtResource("4_r
 elite_enemy = ExtResource("2_brute")
 boss_data = ExtResource("5_boss")
 boss_scene_path = "res://entities/bosses/TrollKingBoss.tscn"
+

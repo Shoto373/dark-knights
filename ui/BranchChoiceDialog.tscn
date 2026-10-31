@@ -1,0 +1,133 @@
+[gd_scene load_steps=2 format=3 uid="uid://branch_choice_dialog_001"]
+
+[ext_resource type="Script" path="res://ui/BranchChoiceDialog.gd" id="1_branch"]
+
+[node name="BranchChoiceDialog" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_branch")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.06, 0.08, 0.95)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(880, 0)
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="HeaderTitle" type="Label" parent="Center/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 24
+text = "ВЕЛИКАЯ РАЗВИЛКА: ВЫБЕРИТЕ СВОЙ ПУТЬ"
+horizontal_alignment = 1
+
+[node name="CardsHBox" type="HBoxContainer" parent="Center/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="FrostCard" type="PanelContainer" parent="Center/VBox/CardsHBox"]
+custom_minimum_size = Vector2(400, 320)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/VBox/CardsHBox/FrostCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="Center/VBox/CardsHBox/FrostCard/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Icon" type="Label" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "❄"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "МИР ХОЛОДА"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 13
+text = "Царство вечной мерзлоты, метелей и ледяных штормов. Скользкий лёд уменьшает трение, а в цитадели правит бессмертный Король-лич."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="BtnFrost" type="Button" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Войти в Мир холода"
+
+[node name="FireCard" type="PanelContainer" parent="Center/VBox/CardsHBox"]
+custom_minimum_size = Vector2(400, 320)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="Center/VBox/CardsHBox/FireCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="Center/VBox/CardsHBox/FireCard/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Icon" type="Label" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "🔥"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.45, 0.15, 1)
+theme_override_font_sizes/font_size = 20
+text = "МИР ОГНЯ"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.95, 0.88, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "Раскалённые пустоши, реки кипящей лавы и вулканические шахты. Невыносимый жар и свирепый Древний Дракон ждут бросивших вызов."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="BtnFire" type="Button" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+text = "Войти в Мир огня"

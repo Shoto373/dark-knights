@@ -1,5 +1,11 @@
 extends GutTest
 
+func before_each() -> void:
+	GameState.start_new_run("warrior", 1000)
+
+func after_each() -> void:
+	GameState.end_run(false)
+
 func test_load_all_enemy_and_boss_resources() -> void:
 	var slasher: EnemyData = load("res://data/enemies/goblin_slasher.tres") as EnemyData
 	var archer: EnemyData = load("res://data/enemies/goblin_archer.tres") as EnemyData

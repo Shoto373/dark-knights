@@ -13,3 +13,4 @@ extends Resource
 @export var is_final: bool = false
 @export var map_position: Vector2 = Vector2.ZERO # Координаты на экране карты мира (0..1280, 0..720)
 @export var icon_symbol: String = "⚔"
+

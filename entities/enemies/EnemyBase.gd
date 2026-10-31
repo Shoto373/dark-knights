@@ -1,7 +1,7 @@
 class_name EnemyBase
 extends CharacterBody2D
 
-## Базовый класс врагов с конечным автоматом состояний (AI)
+## Базовый класс врагов с конечным автоматом состояний (AI) и механиками Спринтов 4, 6, 7
 
 const PROJECTILE_SCENE = preload("res://entities/player/Projectile.tscn")
 
@@ -20,12 +20,18 @@ const PROJECTILE_SCENE = preload("res://entities/player/Projectile.tscn")
 var player_target: Node2D = null
 var attack_timer: float = 0.0
 var heal_cooldown_timer: float = 0.0
+var summon_timer: float = 4.0
 
 # Механики регенерации и горения (тролли и др.)
 var time_since_damage: float = 3.0
 var regen_tick_timer: float = 0.0
 var is_burning: bool = false
 var burn_timer: float = 0.0
+
+# Механики скелетов и стражей (Спринт 7)
+var is_collapsed: bool = false
+var has_reassembled: bool = false
+var reassemble_timer: float = 0.0
 
 func _ready() -> void:
 	add_to_group("enemies")
@@ -65,10 +71,21 @@ func _physics_process(delta: float) -> void:
 	if health_component.is_dead:
 		return
 	
+	# Если скелет рассыпался в груду костей — лежит и ждёт пересборки
+	if is_collapsed:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		reassemble_timer -= delta
+		if reassemble_timer <= 0.0:
+			_reassemble_skeleton()
+		return
+	
 	if attack_timer > 0.0:
 		attack_timer -= delta
 	if heal_cooldown_timer > 0.0:
 		heal_cooldown_timer -= delta
+	if summon_timer > 0.0:
+		summon_timer -= delta
 	
 	# Статус горения (сбивает регенерацию)
 	if is_burning:
@@ -76,7 +93,7 @@ func _physics_process(delta: float) -> void:
 		if burn_timer <= 0.0:
 			is_burning = false
 	
-	# Пассивная регенерация (если не получал урон N секунд и не горит)
+	# Пассивная регенерация (тролли)
 	time_since_damage += delta
 	if enemy_data != null and enemy_data.can_regenerate and not is_burning:
 		if time_since_damage >= enemy_data.regen_delay_seconds:
@@ -99,11 +116,31 @@ func _physics_process(delta: float) -> void:
 				break
 
 func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
+	# Проверка щита рыцаря-стража: блок спереди, уязвим со спины
+	if enemy_data != null and enemy_data.has_front_shield and is_instance_valid(hitbox):
+		var hit_dir: Vector2 = (hitbox.global_position - global_position).normalized()
+		var facing_dir: Vector2 = Vector2.RIGHT
+		if is_instance_valid(player_target):
+			facing_dir = (player_target.global_position - global_position).normalized()
+		
+		# Если удар нанесён спереди (угол меньше 80 градусов к направлению взгляда)
+		if hit_dir.dot(facing_dir) > 0.15:
+			health_component.heal(_dmg) # Поглощаем урон щитом
+			hp_bar.value = health_component.current_health
+			_flash_shield_block()
+			return
+	
 	time_since_damage = 0.0
 	if hitbox != null and (hitbox.damage_type == "fire" or hitbox.tags.has("fire")):
 		is_burning = true
 		burn_timer = 4.0
 		visuals.modulate = Color(2.5, 0.8, 0.2, 1.0)
+
+func _flash_shield_block() -> void:
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(1.5, 2.0, 3.0, 1.0) # Голубая металлическая искра
+	tween.tween_property(visuals, "modulate", Color.WHITE, 0.15)
+	EventBus.screen_shake_requested.emit(3.0, 0.1)
 
 func _on_damaged(_amount: int, current_hp: int, _max_hp: int) -> void:
 	time_since_damage = 0.0
@@ -116,6 +153,49 @@ func _flash_red() -> void:
 	tween.tween_property(visuals, "modulate", Color.WHITE, 0.12)
 
 func _on_died() -> void:
+	# Скелет-мечник: рассыпается в кости и восстанавливается, если не разбить кучу костей
+	if enemy_data != null and enemy_data.can_reassemble and not has_reassembled and not is_collapsed:
+		_collapse_into_bones()
+		return
+	
+	_permanent_death()
+
+func _collapse_into_bones() -> void:
+	is_collapsed = true
+	has_reassembled = true
+	attack_shape.disabled = true
+	
+	# Формируем кучу костей на полу
+	body_rect.scale = Vector2(1.4, 0.35)
+	body_rect.color = Color(0.8, 0.8, 0.75, 1.0)
+	
+	health_component.reset(enemy_data.bone_pile_hp)
+	hp_bar.max_value = enemy_data.bone_pile_hp
+	hp_bar.value = enemy_data.bone_pile_hp
+	
+	reassemble_timer = enemy_data.reassemble_time
+	
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(1.5, 1.5, 1.5, 1.0)
+	tween.tween_property(visuals, "modulate", Color.WHITE, 0.2)
+
+func _reassemble_skeleton() -> void:
+	is_collapsed = false
+	body_rect.scale = Vector2.ONE
+	body_rect.color = enemy_data.color
+	
+	var revive_hp: int = int(round(enemy_data.max_hp * 0.55))
+	health_component.reset(revive_hp)
+	hp_bar.max_value = enemy_data.max_hp
+	hp_bar.value = revive_hp
+	
+	# Зелёная некромантическая вспышка оживления
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(0.2, 2.5, 0.5, 1.0)
+	tween.tween_property(visuals, "modulate", Color.WHITE, 0.35)
+	EventBus.screen_shake_requested.emit(4.0, 0.2)
+
+func _permanent_death() -> void:
 	remove_from_group("enemies")
 	attack_shape.disabled = true
 	hurtbox_component.set_deferred("monitoring", false)
@@ -132,21 +212,26 @@ func _on_died() -> void:
 	tween.chain().tween_callback(queue_free)
 
 func perform_attack() -> void:
-	if not is_instance_valid(player_target) or attack_timer > 0.0:
+	if not is_instance_valid(player_target) or attack_timer > 0.0 or is_collapsed:
 		return
 	
 	attack_timer = enemy_data.attack_cooldown if enemy_data else 1.2
 	
-	if enemy_data != null and enemy_data.enemy_type == "ranged":
-		_shoot_arrow()
-	elif enemy_data != null and enemy_data.enemy_type == "boulder_thrower":
-		_throw_boulder()
-	elif enemy_data != null and enemy_data.enemy_type == "support":
-		_try_heal_or_attack()
-	elif enemy_data != null and enemy_data.enemy_type == "heavy":
-		_heavy_attack()
-	else:
-		_melee_attack()
+	match enemy_data.enemy_type if enemy_data else "melee":
+		"ranged":
+			_shoot_arrow()
+		"crossbowman":
+			_shoot_crossbow()
+		"boulder_thrower":
+			_throw_boulder()
+		"necromancer":
+			_cast_necromancy()
+		"support":
+			_try_heal_or_attack()
+		"heavy":
+			_heavy_attack()
+		_:
+			_melee_attack()
 
 func _melee_attack() -> void:
 	var dir: Vector2 = (player_target.global_position - global_position).normalized()
@@ -165,7 +250,6 @@ func _heavy_attack() -> void:
 	attack_hitbox.knockback_force = 420.0
 	attack_hitbox.reset_hits()
 	
-	# Замах тяжелого оружия
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(2.0, 1.2, 0.4, 1.0)
 	tween.tween_property(self, "position", position - dir * 10.0, 0.2)
@@ -186,13 +270,71 @@ func _throw_boulder() -> void:
 	proj.scale = Vector2(1.7, 1.7)
 	proj.setup(
 		dir,
-		290.0, # Тяжелый и мощный валун
+		290.0,
 		enemy_data.damage if enemy_data else 16,
 		false,
 		460.0,
 		280.0,
 		Color(0.6, 0.52, 0.42, 1.0)
 	)
+
+func _shoot_crossbow() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	# Краткий прицел перед выстрелом арбалета
+	var tween: Tween = create_tween()
+	visuals.modulate = Color(2.2, 0.5, 0.5, 1.0)
+	tween.tween_interval(0.2)
+	tween.tween_callback(func():
+		visuals.modulate = Color.WHITE
+		var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+		get_parent().add_child(proj)
+		proj.global_position = global_position + dir * 22.0
+		proj.scale = Vector2(1.4, 0.8) # Узкий быстрый арбалетный болт
+		proj.setup(
+			dir,
+			520.0,
+			enemy_data.damage if enemy_data else 18,
+			false,
+			550.0,
+			220.0,
+			Color(0.9, 0.8, 0.4, 1.0)
+		)
+	)
+
+func _cast_necromancy() -> void:
+	var dir: Vector2 = (player_target.global_position - global_position).normalized()
+	if summon_timer <= 0.0:
+		summon_timer = 5.0
+		_summon_skeleton_minion()
+		return
+	
+	# Тёмный магический снаряд
+	var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+	get_parent().add_child(proj)
+	proj.global_position = global_position + dir * 20.0
+	proj.setup(
+		dir,
+		320.0,
+		enemy_data.damage if enemy_data else 15,
+		false,
+		420.0,
+		200.0,
+		Color(0.6, 0.2, 0.85, 1.0)
+	)
+
+func _summon_skeleton_minion() -> void:
+	var count: int = get_tree().get_nodes_in_group("enemies").size()
+	if count >= 6:
+		return
+		
+	var skel_data: EnemyData = load("res://data/enemies/skeleton_swordsman.tres") as EnemyData
+	var minion_scene: PackedScene = load("res://entities/enemies/EnemyBase.tscn")
+	var minion: EnemyBase = minion_scene.instantiate() as EnemyBase
+	get_parent().add_child(minion)
+	minion.global_position = global_position + Vector2(randf_range(-40, 40), randf_range(-40, 40))
+	if skel_data != null:
+		minion.setup_from_data(skel_data)
+	_flash_heal_effect(minion)
 
 func _shoot_arrow() -> void:
 	var dir: Vector2 = (player_target.global_position - global_position).normalized()
@@ -222,7 +364,7 @@ func _try_heal_or_attack() -> void:
 
 func _find_wounded_ally() -> EnemyBase:
 	for enemy in get_tree().get_nodes_in_group("enemies"):
-		if enemy is EnemyBase and enemy != self:
+		if enemy is EnemyBase and enemy != self and not enemy.is_collapsed:
 			var hc: HealthComponent = enemy.health_component
 			if hc.current_health < hc.max_health:
 				return enemy

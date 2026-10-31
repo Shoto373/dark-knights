@@ -13,3 +13,4 @@ bridge_color = Color(0.42, 0.22, 0.12, 1)
 min_rooms = 7
 max_rooms = 10
 enemy_pool = []
+

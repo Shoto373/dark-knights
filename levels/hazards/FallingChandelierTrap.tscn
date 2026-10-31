@@ -1,0 +1,69 @@
+[gd_scene load_steps=6 format=3 uid="uid://falling_chandelier_trap_001"]
+
+[ext_resource type="Script" path="res://levels/hazards/FallingChandelierTrap.gd" id="1_chand"]
+[ext_resource type="Script" path="res://components/HitboxComponent.gd" id="2_hitbox"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
+radius = 110.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_impact"]
+radius = 48.0
+
+[node name="FallingChandelierTrap" type="Node2D"]
+script = ExtResource("1_chand")
+
+[node name="TelegraphShadow" type="ColorRect" parent="."]
+unique_name_in_owner = true
+offset_left = -36.0
+offset_top = -36.0
+offset_right = 36.0
+offset_bottom = 36.0
+pivot_offset = Vector2(36, 36)
+color = Color(0.1, 0.1, 0.12, 0.5)
+
+[node name="TriggerArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 2
+
+[node name="TriggerShape" type="CollisionShape2D" parent="TriggerArea"]
+shape = SubResource("CircleShape2D_trigger")
+
+[node name="ChandelierVisual" type="Node2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -180)
+
+[node name="Frame" type="ColorRect" parent="ChandelierVisual"]
+offset_left = -30.0
+offset_top = -12.0
+offset_right = 30.0
+offset_bottom = 12.0
+color = Color(0.25, 0.22, 0.18, 1)
+
+[node name="Candle1" type="ColorRect" parent="ChandelierVisual"]
+offset_left = -26.0
+offset_top = -22.0
+offset_right = -18.0
+offset_bottom = -12.0
+color = Color(1, 0.85, 0.3, 1)
+
+[node name="Candle2" type="ColorRect" parent="ChandelierVisual"]
+offset_left = 18.0
+offset_top = -22.0
+offset_right = 26.0
+offset_bottom = -12.0
+color = Color(1, 0.85, 0.3, 1)
+
+[node name="HitboxComponent" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("2_hitbox")
+base_damage = 30
+knockback_force = 350.0
+is_player_hitbox = false
+
+[node name="ImpactShape" type="CollisionShape2D" parent="HitboxComponent"]
+unique_name_in_owner = true
+shape = SubResource("CircleShape2D_impact")
+disabled = true

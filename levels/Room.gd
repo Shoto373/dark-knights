@@ -11,6 +11,9 @@ const TREASURE_CHEST_SCENE = preload("res://entities/loot/TreasureChest.tscn")
 const PICKUP_SCENE = preload("res://entities/pickups/PickupBase.tscn")
 const CHASM_HAZARD_SCENE = preload("res://levels/hazards/ChasmHazard.tscn")
 const BRIDGE_AREA_SCENE = preload("res://levels/hazards/BridgeArea.tscn")
+const FIRE_GRATE_SCENE = preload("res://levels/hazards/FireGrateTrap.tscn")
+const CHANDELIER_SCENE = preload("res://levels/hazards/FallingChandelierTrap.tscn")
+const SECRET_LEVER_SCENE = preload("res://levels/hazards/SecretLever.tscn")
 
 @onready var door_up: DungeonDoor = %DoorUp
 @onready var door_down: DungeonDoor = %DoorDown
@@ -67,9 +70,31 @@ func _apply_biome_theme() -> void:
 				wall.color = current_biome.wall_theme_color
 
 func _setup_biome_hazards() -> void:
-	if current_biome != null and current_biome.id == "troll_gorge":
+	if current_biome == null:
+		return
+	if current_biome.id == "troll_gorge":
 		if abs(room_data.grid_pos.x + room_data.grid_pos.y) % 2 == 1:
 			_create_gorge_chasm_and_bridge()
+	elif current_biome.id == "skeleton_castle":
+		_create_castle_traps()
+
+func _create_castle_traps() -> void:
+	var grate1: FireGrateTrap = FIRE_GRATE_SCENE.instantiate() as FireGrateTrap
+	objects_container.add_child(grate1)
+	grate1.position = Vector2(480, 360)
+	
+	var grate2: FireGrateTrap = FIRE_GRATE_SCENE.instantiate() as FireGrateTrap
+	objects_container.add_child(grate2)
+	grate2.position = Vector2(800, 360)
+	
+	var chandelier: FallingChandelierTrap = CHANDELIER_SCENE.instantiate() as FallingChandelierTrap
+	objects_container.add_child(chandelier)
+	chandelier.position = Vector2(640, 300)
+	
+	if abs(room_data.grid_pos.x + room_data.grid_pos.y) % 2 == 0:
+		var lever: SecretLever = SECRET_LEVER_SCENE.instantiate() as SecretLever
+		objects_container.add_child(lever)
+		lever.position = Vector2(200, 180)
 
 func _create_gorge_chasm_and_bridge() -> void:
 	var top_chasm: ChasmHazard = CHASM_HAZARD_SCENE.instantiate() as ChasmHazard

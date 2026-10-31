@@ -1,0 +1,96 @@
+[gd_scene load_steps=2 format=3 uid="uid://cutscene_screen_001"]
+
+[ext_resource type="Script" path="res://ui/CutsceneScreen.gd" id="1_cutscene"]
+
+[node name="CutsceneScreen" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cutscene")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.05, 0.07, 0.96)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Center"]
+custom_minimum_size = Vector2(720, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleLabel" type="Label" parent="Center/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 22
+text = "ЗАГОЛОВОК СЮЖЕТА"
+horizontal_alignment = 1
+
+[node name="IllustrationRect" type="ColorRect" parent="Center/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 220)
+layout_mode = 2
+color = Color(0.18, 0.15, 0.25, 1)
+
+[node name="FrameBorder" type="ReferenceRect" parent="Center/VBox/IllustrationRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+border_color = Color(0.65, 0.55, 0.4, 1)
+border_width = 2.0
+editor_only = false
+
+[node name="SilhouetteLabel" type="Label" parent="Center/VBox/IllustrationRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -20.0
+offset_right = 100.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.6, 0.65, 0.75, 0.6)
+theme_override_font_sizes/font_size = 28
+text = "[ ⚔ 🏰 💀 ]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NarrativeLabel" type="Label" parent="Center/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.92, 1)
+theme_override_font_sizes/font_size = 14
+text = "Текст повествования..."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="ContinueBtn" type="Button" parent="Center/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 42)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 14
+text = "Продолжить [Пробел]"

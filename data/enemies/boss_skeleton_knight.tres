@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BossData" load_steps=2 format=3 uid="uid://boss_skel_knight_001"]
+
+[ext_resource type="Script" path="res://data/enemies/BossData.gd" id="1_boss"]
+
+[resource]
+script = ExtResource("1_boss")
+id = "boss_skeleton_knight"
+name = "Рыцарь-скелет"
+color = Color(0.3, 0.35, 0.45, 1)
+max_hp = 600
+armor = 3
+speed = 115.0
+damage = 24
+souls_reward = 50
+gold_reward = 100

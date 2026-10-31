@@ -28,6 +28,14 @@ func _ready() -> void:
 		GameState.current_seed = randi()
 	
 	_build_floor()
+	
+	if GameState.current_world_node_id == "skeleton_castle" and not GameState.has_seen_castle_cutscene:
+		GameState.has_seen_castle_cutscene = true
+		var cutscene_scene: PackedScene = load("res://ui/CutsceneScreen.tscn")
+		if cutscene_scene != null:
+			var cutscene: CutsceneScreen = cutscene_scene.instantiate() as CutsceneScreen
+			add_child(cutscene)
+			cutscene.show_entry_cutscene()
 
 func _build_floor() -> void:
 	var current_biome: BiomeData = GameState.get_current_biome()

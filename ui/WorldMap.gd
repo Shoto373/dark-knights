@@ -143,3 +143,4 @@ func _on_close_pressed() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_just_pressed("ui_cancel") and not is_choice_mode:
 		_on_close_pressed()
+

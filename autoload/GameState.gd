@@ -11,6 +11,7 @@ var current_world_node_id: String = "hub"
 var current_world_node: WorldNodeData = null
 var visited_world_nodes: Array[String] = []
 var current_floor_index: int = 0
+var has_seen_castle_cutscene: bool = false
 
 var world_graph: WorldGraph = null
 
@@ -47,6 +48,7 @@ func start_new_run(hero_id: String = "warrior", custom_seed: int = 0) -> void:
 	current_world_node = world_graph.get_node("goblin_dungeon")
 	visited_world_nodes = ["goblin_dungeon"]
 	current_floor_index = 1
+	has_seen_castle_cutscene = false
 	gold = 0
 	keys = 0
 	inventory_items.clear()
@@ -63,6 +65,9 @@ func end_run(is_victory: bool) -> void:
 	if not is_run_active:
 		return
 	is_run_active = false
+	current_world_node_id = "hub"
+	current_world_node = null
+	visited_world_nodes.clear()
 	EventBus.run_ended.emit(is_victory, run_stats)
 	if SaveManager.has_method("delete_run_save"):
 		SaveManager.delete_run_save()

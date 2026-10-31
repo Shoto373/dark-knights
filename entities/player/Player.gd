@@ -34,6 +34,7 @@ var ability_1_timer: Timer
 var ability_2_timer: Timer
 
 func _ready() -> void:
+	add_to_group("player")
 	collision_layer = 2 # Слой 2: player
 	collision_mask = 1  # Слой 1: world
 	

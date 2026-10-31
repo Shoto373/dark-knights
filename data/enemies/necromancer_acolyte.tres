@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3 uid="uid://enemy_necro_acolyte_001"]
+
+[ext_resource type="Script" path="res://data/enemies/EnemyData.gd" id="1_enemy"]
+
+[resource]
+script = ExtResource("1_enemy")
+id = "necromancer_acolyte"
+name = "Некромант-послушник"
+color = Color(0.45, 0.25, 0.65, 1)
+max_hp = 65
+speed = 110.0
+armor = 0
+damage = 15
+enemy_type = "necromancer"
+attack_range = 380.0
+attack_cooldown = 2.0
+preferred_distance = 280.0
+knockback_resistance = 0.2
+can_regenerate = false
+regen_amount = 0
+regen_delay_seconds = 3.0
+can_reassemble = false
+reassemble_time = 4.0
+bone_pile_hp = 20
+has_front_shield = false
+gold_reward = 10
+souls_reward = 3
+difficulty_cost = 3

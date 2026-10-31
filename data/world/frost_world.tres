@@ -17,3 +17,4 @@ access_condition = ""
 is_final = false
 map_position = Vector2(800, 240)
 icon_symbol = "❄"
+
