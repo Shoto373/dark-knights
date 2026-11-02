@@ -822,12 +822,23 @@ func _on_iframes_finished() -> void:
 		visuals.modulate.a = 1.0
 
 func get_dash_cooldown_ratio() -> float:
-	if dash_cooldown_timer.is_stopped():
+	if dash_cooldown_timer == null or dash_cooldown_timer.is_stopped() or dash_cooldown_timer.wait_time <= 0.0:
 		return 1.0
-	return 1.0 - (dash_cooldown_timer.time_left / dash_cooldown_timer.wait_time)
+	return clampf(1.0 - (dash_cooldown_timer.time_left / dash_cooldown_timer.wait_time), 0.0, 1.0)
+
+func get_dash_cooldown_time_left() -> float:
+	if dash_cooldown_timer == null or dash_cooldown_timer.is_stopped():
+		return 0.0
+	return dash_cooldown_timer.time_left
 
 func get_ability_cooldown_ratio(slot: int) -> float:
 	var t: Timer = ability_1_timer if slot == 1 else ability_2_timer
 	if t == null or t.is_stopped() or t.wait_time <= 0.0:
 		return 1.0
-	return 1.0 - (t.time_left / t.wait_time)
+	return clampf(1.0 - (t.time_left / t.wait_time), 0.0, 1.0)
+
+func get_ability_cooldown_time_left(slot: int) -> float:
+	var t: Timer = ability_1_timer if slot == 1 else ability_2_timer
+	if t == null or t.is_stopped():
+		return 0.0
+	return t.time_left

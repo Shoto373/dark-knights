@@ -18,30 +18,30 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dash_bar"]
-bg_color = Color(0.15, 0.65, 0.88, 1)
+bg_color = Color(0.12, 0.72, 0.98, 1)
 border_width_top = 1
-border_color = Color(0.65, 0.9, 1, 0.75)
+border_color = Color(0.75, 0.95, 1, 0.9)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ability_bar"]
-bg_color = Color(0.7, 0.3, 0.9, 1)
+bg_color = Color(0.74, 0.3, 0.98, 1)
 border_width_top = 1
-border_color = Color(0.88, 0.65, 1, 0.75)
+border_color = Color(0.92, 0.72, 1, 0.9)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.08, 0.08, 0.12, 0.9)
+bg_color = Color(0.06, 0.08, 0.13, 0.96)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.45, 0.38, 0.22, 0.9)
+border_color = Color(0.35, 0.42, 0.55, 0.9)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -218,11 +218,13 @@ theme_override_font_sizes/font_size = 11
 text = "100 / 100 HP"
 
 [node name="DashContainer" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="DashLabel" type="Label" parent="TopLeftUI/VBoxContainer/DashContainer"]
-custom_minimum_size = Vector2(85, 0)
+unique_name_in_owner = true
+custom_minimum_size = Vector2(105, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.85, 0.95, 1)
 theme_override_font_sizes/font_size = 11
@@ -230,7 +232,7 @@ text = "Рывок [Shift]:"
 
 [node name="DashBar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/DashContainer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(130, 9)
+custom_minimum_size = Vector2(110, 11)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
@@ -239,7 +241,18 @@ max_value = 100.0
 value = 100.0
 show_percentage = false
 
+[node name="DashTimerLabel" type="Label" parent="TopLeftUI/VBoxContainer/DashContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.95, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "ГОТОВ"
+
 [node name="Ability1Container" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -253,7 +266,7 @@ text = "Q: Навык 1"
 
 [node name="Ability1Bar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/Ability1Container"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(110, 9)
+custom_minimum_size = Vector2(110, 11)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
@@ -262,7 +275,18 @@ max_value = 100.0
 value = 100.0
 show_percentage = false
 
+[node name="Ability1TimerLabel" type="Label" parent="TopLeftUI/VBoxContainer/Ability1Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.95, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "ГОТОВ"
+
 [node name="Ability2Container" type="HBoxContainer" parent="TopLeftUI/VBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
@@ -276,7 +300,7 @@ text = "E: Навык 2"
 
 [node name="Ability2Bar" type="ProgressBar" parent="TopLeftUI/VBoxContainer/Ability2Container"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(110, 9)
+custom_minimum_size = Vector2(110, 11)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_bg")
@@ -284,6 +308,16 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_ability_bar")
 max_value = 100.0
 value = 100.0
 show_percentage = false
+
+[node name="Ability2TimerLabel" type="Label" parent="TopLeftUI/VBoxContainer/Ability2Container"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(46, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.95, 0.55, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 10
+text = "ГОТОВ"
 
 [node name="BossBarContainer" type="Control" parent="."]
 unique_name_in_owner = true

@@ -293,7 +293,7 @@ func test_pedestal_radial_aura_and_high_res_items() -> void:
 	# 1. Проверяем мягкую радиальную ауру и отсутствие старого ColorRect
 	assert_not_null(ped.rarity_aura_sprite, "Создан мягкий радиальный спрайт ауры")
 	assert_true(ped.rarity_aura_sprite is Sprite2D, "Аура является Sprite2D, а не ColorRect")
-	assert_false(ped.rarity_glow.visible, "Старый прямоугольный ColorRect скрыт")
+	assert_true(ped.rarity_glow == null or not ped.rarity_glow.visible, "Старый прямоугольный ColorRect удален или скрыт")
 	
 	# 2. Проверяем режим floating_only (для сундуков)
 	ped.set_floating_only(true)
@@ -472,3 +472,32 @@ func test_torch_dynamic_lighting() -> void:
 	assert_not_null(point_light, "Факел имеет динамический источник света TorchPointLight")
 	if point_light is PointLight2D:
 		assert_gt(point_light.energy, 0.0, "Энергия света факела больше нуля")
+
+func test_cooldown_bars_and_live_countdown_timers() -> void:
+	var player_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var player: Player = player_scene.instantiate() as Player
+	add_child_autofree(player)
+	
+	var hud_scene: PackedScene = load("res://ui/HUD.tscn")
+	var hud: HUD = hud_scene.instantiate() as HUD
+	add_child_autofree(hud)
+	
+	# Проверяем, что HUD автоматически нашел игрока в сцене
+	assert_not_null(hud.player_ref, "HUD автоматически привязался к игроку")
+	assert_not_null(hud.dash_timer_label, "Метка таймера рывка существует")
+	assert_not_null(hud.ability_1_timer_label, "Метка таймера способности 1 существует")
+	assert_not_null(hud.ability_2_timer_label, "Метка таймера способности 2 существует")
+	
+	# В состоянии готовности таймер показывает "ГОТОВ"
+	hud._process(0.01)
+	assert_eq(hud.dash_timer_label.text, "ГОТОВ", "Рывок изначально готов")
+	assert_eq(hud.dash_bar.value, 100.0, "Шкала рывка изначально полная")
+	
+	# Запускаем рывок
+	player.dash_cooldown_timer.start(0.8)
+	hud._process(0.01)
+	
+	# Проверяем, что перезарядка видна сразу и визуально
+	assert_lt(hud.dash_bar.value, 100.0, "Шкала рывка опустошилась при перезарядке")
+	assert_true(hud.dash_timer_label.text.ends_with("с"), "Таймер показывает секунды до готовности (например, 0.8с)")
+	assert_lt(hud.dash_label.modulate.a, 1.0, "Текст названия приглушается во время перезарядки")

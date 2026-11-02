@@ -24,6 +24,13 @@ extends CanvasLayer
 @onready var btn_respawn: Button = %BtnRespawn
 @onready var damage_numbers_container: Control = %DamageNumbersContainer
 
+@onready var dash_label: Label = get_node_or_null("%DashLabel") as Label
+@onready var dash_timer_label: Label = get_node_or_null("%DashTimerLabel") as Label
+@onready var ability_1_container: Control = get_node_or_null("%Ability1Container") as Control
+@onready var ability_1_timer_label: Label = get_node_or_null("%Ability1TimerLabel") as Label
+@onready var ability_2_container: Control = get_node_or_null("%Ability2Container") as Control
+@onready var ability_2_timer_label: Label = get_node_or_null("%Ability2TimerLabel") as Label
+
 var player_ref: Player = null
 var ghost_hp_bar: ProgressBar = null
 var boss_ghost_hp_bar: ProgressBar = null
@@ -56,6 +63,12 @@ func _ready() -> void:
 	
 	_update_hero_info()
 	_on_currency_changed(GameState.gold, MetaProgress.souls)
+	
+	# Если игрок уже заспавнен в сцене (до создания HUD)
+	if not is_instance_valid(player_ref):
+		var players = get_tree().get_nodes_in_group("player")
+		if not players.is_empty():
+			_on_player_spawned(players[0] as Player)
 
 func _setup_ghost_health_bars() -> void:
 	# AAA Ghost / Damage Lag Bar для шкалы здоровья игрока
@@ -104,6 +117,12 @@ func _setup_ghost_health_bars() -> void:
 		boss_hp_bar.get_parent().move_child(boss_ghost_hp_bar, boss_hp_bar.get_index())
 
 func _process(_delta: float) -> void:
+	if not is_instance_valid(player_ref):
+		var players = get_tree().get_nodes_in_group("player")
+		if not players.is_empty():
+			player_ref = players[0] as Player
+			_update_hero_info()
+
 	if is_instance_valid(player_ref):
 		var d_ratio: float = player_ref.get_dash_cooldown_ratio()
 		var a1_ratio: float = player_ref.get_ability_cooldown_ratio(1)
@@ -113,27 +132,71 @@ func _process(_delta: float) -> void:
 		ability_1_bar.value = a1_ratio * 100.0
 		ability_2_bar.value = a2_ratio * 100.0
 		
-		# AAA Cooldown Ready Pop & Shimmer (вспышка готовности навыка)
-		if d_ratio >= 1.0 and not _prev_dash_ready:
-			_pulse_cooldown_ready(dash_bar)
+		# 1. Рывок (Dash)
+		if d_ratio < 1.0:
+			var d_time: float = player_ref.get_dash_cooldown_time_left()
+			if dash_timer_label != null:
+				dash_timer_label.text = "%.1fс" % d_time
+				dash_timer_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
+			if dash_label != null:
+				dash_label.modulate.a = 0.55
+		else:
+			if dash_timer_label != null:
+				dash_timer_label.text = "ГОТОВ"
+				dash_timer_label.add_theme_color_override("font_color", Color(0.4, 0.95, 0.55))
+			if dash_label != null:
+				dash_label.modulate.a = 1.0
+			if not _prev_dash_ready:
+				_pulse_cooldown_ready(dash_bar, dash_timer_label)
 		_prev_dash_ready = (d_ratio >= 1.0)
 		
-		if a1_ratio >= 1.0 and not _prev_ability1_ready:
-			_pulse_cooldown_ready(ability_1_bar)
+		# 2. Способность 1 (Q)
+		if a1_ratio < 1.0:
+			var a1_time: float = player_ref.get_ability_cooldown_time_left(1)
+			if ability_1_timer_label != null:
+				ability_1_timer_label.text = "%.1fс" % a1_time
+				ability_1_timer_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
+			if ability_1_label != null:
+				ability_1_label.modulate.a = 0.55
+		else:
+			if ability_1_timer_label != null:
+				ability_1_timer_label.text = "ГОТОВ"
+				ability_1_timer_label.add_theme_color_override("font_color", Color(0.4, 0.95, 0.55))
+			if ability_1_label != null:
+				ability_1_label.modulate.a = 1.0
+			if not _prev_ability1_ready:
+				_pulse_cooldown_ready(ability_1_bar, ability_1_timer_label)
 		_prev_ability1_ready = (a1_ratio >= 1.0)
 		
-		if a2_ratio >= 1.0 and not _prev_ability2_ready:
-			_pulse_cooldown_ready(ability_2_bar)
+		# 3. Способность 2 (E)
+		if a2_ratio < 1.0:
+			var a2_time: float = player_ref.get_ability_cooldown_time_left(2)
+			if ability_2_timer_label != null:
+				ability_2_timer_label.text = "%.1fс" % a2_time
+				ability_2_timer_label.add_theme_color_override("font_color", Color(1.0, 0.8, 0.35))
+			if ability_2_label != null:
+				ability_2_label.modulate.a = 0.55
+		else:
+			if ability_2_timer_label != null:
+				ability_2_timer_label.text = "ГОТОВ"
+				ability_2_timer_label.add_theme_color_override("font_color", Color(0.4, 0.95, 0.55))
+			if ability_2_label != null:
+				ability_2_label.modulate.a = 1.0
+			if not _prev_ability2_ready:
+				_pulse_cooldown_ready(ability_2_bar, ability_2_timer_label)
 		_prev_ability2_ready = (a2_ratio >= 1.0)
 		
 	keys_label.text = "%d" % GameState.keys
 
-func _pulse_cooldown_ready(target_control: Control) -> void:
-	if target_control == null:
-		return
-	var tween: Tween = target_control.create_tween()
-	target_control.modulate = Color(2.2, 2.2, 2.5, 1.0)
-	tween.tween_property(target_control, "modulate", Color.WHITE, 0.25).set_trans(Tween.TRANS_QUAD)
+func _pulse_cooldown_ready(target_control: Control, timer_label: Label = null) -> void:
+	if target_control != null:
+		var tween: Tween = target_control.create_tween()
+		target_control.modulate = Color(2.4, 2.4, 2.7, 1.0)
+		tween.tween_property(target_control, "modulate", Color.WHITE, 0.25).set_trans(Tween.TRANS_QUAD)
+	if timer_label != null:
+		var l_tween: Tween = timer_label.create_tween()
+		timer_label.scale = Vector2(1.3, 1.3)
+		l_tween.tween_property(timer_label, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK)
 
 func _on_player_spawned(player: Node2D) -> void:
 	player_ref = player as Player
@@ -163,12 +226,20 @@ func _update_hero_info(custom_hero_data: HeroData = null) -> void:
 			hero_portrait.texture = SpriteGenerator.get_hero_icon(h_data.id)
 		if h_data.ability_1:
 			ability_1_label.text = "Q: %s" % h_data.ability_1.name
+			if ability_1_container != null:
+				ability_1_container.visible = true
 		else:
 			ability_1_label.text = "Q: -"
+			if ability_1_container != null:
+				ability_1_container.visible = false
 		if h_data.ability_2:
 			ability_2_label.text = "E: %s" % h_data.ability_2.name
+			if ability_2_container != null:
+				ability_2_container.visible = true
 		else:
 			ability_2_label.text = "E: -"
+			if ability_2_container != null:
+				ability_2_container.visible = false
 			
 		if is_instance_valid(player_ref) and player_ref.health_component:
 			_on_player_health_changed(player_ref.health_component.current_health, player_ref.health_component.max_health)
@@ -176,28 +247,9 @@ func _update_hero_info(custom_hero_data: HeroData = null) -> void:
 			_on_player_health_changed(h_data.max_hp, h_data.max_hp)
 
 func _on_player_health_changed(current_hp: int, max_hp: int) -> void:
-	if hp_bar == null:
-		return
-	var old_val: float = hp_bar.value
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	hp_label.text = "%d / %d HP" % [current_hp, max_hp]
-	
-	# AAA Ghost Health Bar (Elden Ring / Hades trailing amber lag bar)
-	if ghost_hp_bar != null:
-		ghost_hp_bar.max_value = max_hp
-		if current_hp < old_val:
-			# Получен урон: ghost bar задерживается на 0.35s, затем плавно сползает
-			if _hp_ghost_tween != null and _hp_ghost_tween.is_valid():
-				_hp_ghost_tween.kill()
-			_hp_ghost_tween = create_tween()
-			_hp_ghost_tween.tween_interval(0.35)
-			_hp_ghost_tween.tween_property(ghost_hp_bar, "value", float(current_hp), 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-		else:
-			# Лечение или ресет: ghost bar моментально догоняет
-			if _hp_ghost_tween != null and _hp_ghost_tween.is_valid():
-				_hp_ghost_tween.kill()
-			ghost_hp_bar.value = current_hp
 
 func _on_currency_changed(gold: int, souls: int) -> void:
 	gold_label.text = "%d" % gold
@@ -208,34 +260,13 @@ func _on_boss_spawned(boss_name: String, max_hp: int) -> void:
 	boss_name_label.text = boss_name.to_upper()
 	boss_hp_bar.max_value = max_hp
 	boss_hp_bar.value = max_hp
-	if boss_ghost_hp_bar != null:
-		boss_ghost_hp_bar.max_value = max_hp
-		boss_ghost_hp_bar.value = max_hp
 	boss_bar_container.visible = true
 	boss_bar_container.modulate.a = 0.0
 	var tween: Tween = create_tween()
 	tween.tween_property(boss_bar_container, "modulate:a", 1.0, 0.4)
 
-func _on_boss_health_changed(current_hp: int, max_hp: int) -> void:
-	if boss_hp_bar == null:
-		return
-	var old_boss_val: float = boss_hp_bar.value
-	boss_hp_bar.max_value = max_hp
+func _on_boss_health_changed(current_hp: int, _max_hp: int) -> void:
 	boss_hp_bar.value = current_hp
-	
-	# AAA Ghost Bar для босса
-	if boss_ghost_hp_bar != null:
-		boss_ghost_hp_bar.max_value = max_hp
-		if current_hp < old_boss_val:
-			if _boss_ghost_tween != null and _boss_ghost_tween.is_valid():
-				_boss_ghost_tween.kill()
-			_boss_ghost_tween = create_tween()
-			_boss_ghost_tween.tween_interval(0.3)
-			_boss_ghost_tween.tween_property(boss_ghost_hp_bar, "value", float(current_hp), 0.4).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-		else:
-			if _boss_ghost_tween != null and _boss_ghost_tween.is_valid():
-				_boss_ghost_tween.kill()
-			boss_ghost_hp_bar.value = current_hp
 
 func _on_boss_defeated(_boss_name: String) -> void:
 	var tween: Tween = create_tween()
@@ -273,19 +304,16 @@ func _on_damage_dealt(target: Node2D, amount: int, is_crit: bool) -> void:
 	
 	if is_player_target:
 		label.text = "-%d" % amount
-		label.add_theme_font_size_override("font_size", 18)
+		label.add_theme_font_size_override("font_size", 17)
 		label.add_theme_color_override("font_color", Color(1.0, 0.28, 0.28))
 		label.add_theme_color_override("font_outline_color", Color(0.12, 0.02, 0.02, 0.95))
 		label.add_theme_constant_override("outline_size", 4)
 	elif is_crit:
-		label.text = "✦ %d! CRIT" % amount
-		label.add_theme_font_size_override("font_size", 21)
-		label.add_theme_color_override("font_color", Color(1.0, 0.92, 0.3))
-		label.add_theme_color_override("font_outline_color", Color(0.25, 0.12, 0.0, 0.95))
+		label.text = "%d! CRIT" % amount
+		label.add_theme_font_size_override("font_size", 20)
+		label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.2))
+		label.add_theme_color_override("font_outline_color", Color(0.2, 0.1, 0.02, 0.95))
 		label.add_theme_constant_override("outline_size", 5)
-		
-		# AAA Hitstop micro-pause (45ms) для кинематографического сокрушительного крита
-		EffectsHelper.trigger_hitstop(get_tree(), 0.045, 0.05)
 	else:
 		label.text = str(amount)
 		label.add_theme_font_size_override("font_size", 15)
@@ -293,19 +321,15 @@ func _on_damage_dealt(target: Node2D, amount: int, is_crit: bool) -> void:
 		label.add_theme_color_override("font_outline_color", Color(0.08, 0.08, 0.12, 0.95))
 		label.add_theme_constant_override("outline_size", 3)
 	
-	# Фонтанная баллистическая дуга вылета чисел урона (Fountain Arc Physics)
-	var drift_x: float = randf_range(-34.0, 34.0)
-	var start_pos: Vector2 = target.get_global_transform_with_canvas().origin + Vector2(randf_range(-8, 8), -24)
-	label.position = start_pos
-	label.scale = Vector2(1.6, 1.6) if is_crit else Vector2(1.2, 1.2)
+	var canvas_pos: Vector2 = target.get_global_transform_with_canvas().origin + Vector2(randf_range(-14, 14), -26)
+	label.position = canvas_pos
+	label.scale = Vector2(1.5, 1.5) if is_crit else Vector2(1.2, 1.2)
 	damage_numbers_container.add_child(label)
 	
 	var tween: Tween = create_tween().set_parallel(true)
-	tween.tween_property(label, "scale", Vector2.ONE, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_property(label, "position:x", start_pos.x + drift_x, 0.6).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(label, "position:y", start_pos.y - 42.0, 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.chain().tween_property(label, "position:y", start_pos.y - 18.0, 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-	tween.tween_property(label, "modulate:a", 0.0, 0.64).set_ease(Tween.EASE_IN)
+	tween.tween_property(label, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "position:y", canvas_pos.y - 36.0, 0.55).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 0.0, 0.55).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(label.queue_free)
 
 func _on_player_healed(amount: int) -> void:
