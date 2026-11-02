@@ -145,3 +145,22 @@ func test_area_of_effect_circular_properties() -> void:
 	aoe.setup(Vector2.ZERO, 90.0, 50, true, 400.0)
 	assert_eq(aoe.radius, 90.0, "AOE radius is 90")
 	assert_eq(aoe.circle_shape.radius, 90.0, "AOE CircleShape2D radius matches")
+
+func test_knockback_impulse_and_decay() -> void:
+	var body: CharacterBody2D = CharacterBody2D.new()
+	var mc: MovementComponent = MovementComponent.new()
+	body.add_child(mc)
+	add_child_autofree(body)
+	
+	mc.apply_knockback(Vector2(250.0, 0.0))
+	assert_eq(mc.knockback_velocity.x, 250.0, "Initial knockback is 250")
+	
+	# Simulate 1 frame of movement
+	var vel: Vector2 = mc.move(body, Vector2.ZERO, 0.016)
+	assert_almost_eq(vel.x, 250.0, 25.0, "Initial velocity matches knockback")
+	
+	# Simulate 0.3 seconds: knockback must completely decay to zero
+	for i in range(20):
+		mc.move(body, Vector2.ZERO, 0.016)
+	assert_eq(mc.knockback_velocity, Vector2.ZERO, "Knockback velocity fully decayed to zero")
+	assert_eq(body.velocity, Vector2.ZERO, "Body velocity returned to zero")

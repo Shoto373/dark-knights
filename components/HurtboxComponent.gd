@@ -58,7 +58,15 @@ func _on_area_entered(area: Area2D) -> void:
 	
 	if movement_component != null and hitbox.knockback_force > 0:
 		var knock_dir: Vector2 = hitbox.get_knockback_direction(global_position)
-		movement_component.apply_knockback(knock_dir * hitbox.knockback_force)
+		var resistance: float = 0.0
+		if "enemy_data" in parent_node and parent_node.enemy_data != null:
+			resistance = clampf(parent_node.enemy_data.knockback_resistance, 0.0, 1.0)
+		elif parent_node.is_in_group("bosses") or parent_node.name.ends_with("Boss"):
+			resistance = 0.85
+		
+		var effective_force: float = hitbox.knockback_force * (1.0 - resistance)
+		if effective_force > 1.0:
+			movement_component.apply_knockback(knock_dir * effective_force)
 	
 	# Наложение статус-эффектов
 	var effect_mgr: StatusEffectManager = parent_node.get_node_or_null("StatusEffectManager") as StatusEffectManager

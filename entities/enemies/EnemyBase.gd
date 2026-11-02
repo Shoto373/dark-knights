@@ -145,6 +145,11 @@ func _physics_process(delta: float) -> void:
 				player_target = child as Node2D
 				break
 	
+	# Если враг не в состоянии погони, но получил отталкивание — обрабатываем движение и затухание
+	if state_machine != null and state_machine.current_state_name != "chase" and movement_component != null:
+		if movement_component.knockback_velocity.length_squared() > 1.0:
+			movement_component.move(self, Vector2.ZERO, delta)
+	
 	if velocity.x < -5.0:
 		visuals.scale.x = -1.0
 	elif velocity.x > 5.0:
