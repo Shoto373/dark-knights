@@ -9,6 +9,8 @@ signal closed
 @onready var res_option: OptionButton = %ResOption
 @onready var volume_slider: HSlider = %VolumeSlider
 @onready var volume_label: Label = %VolumeLabel
+@onready var check_glow: CheckBox = get_node_or_null("%CheckGlow") as CheckBox
+@onready var check_post_process: CheckBox = get_node_or_null("%CheckPostProcess") as CheckBox
 @onready var btn_apply: Button = %BtnApply
 @onready var btn_close: Button = %BtnClose
 
@@ -52,6 +54,11 @@ func _load_current_values() -> void:
 	var vol: float = SettingsManager.master_volume
 	volume_slider.value = vol * 100.0
 	volume_label.text = "%d%%" % int(vol * 100.0)
+	
+	if check_glow != null:
+		check_glow.button_pressed = SettingsManager.glow_enabled
+	if check_post_process != null:
+		check_post_process.button_pressed = SettingsManager.postprocessing_enabled
 
 func _on_mode_selected(index: int) -> void:
 	res_option.disabled = (index == 0)
@@ -67,6 +74,10 @@ func _on_apply_and_close() -> void:
 	SettingsManager.set_window_mode(mode_option.selected)
 	SettingsManager.set_resolution(res_option.selected)
 	SettingsManager.set_master_volume(volume_slider.value / 100.0)
+	if check_glow != null:
+		SettingsManager.set_glow_enabled(check_glow.button_pressed)
+	if check_post_process != null:
+		SettingsManager.set_postprocessing_enabled(check_post_process.button_pressed)
 	SettingsManager.save_settings()
 	closed.emit()
 	queue_free()

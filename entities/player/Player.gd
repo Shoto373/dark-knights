@@ -87,6 +87,12 @@ func _ready() -> void:
 			hero_data = load("res://data/heroes/warrior.tres") as HeroData
 	
 	apply_hero_data(hero_data)
+	
+	# Мягкий динамический фонарь героя (Forward+ Vulkan 2D Lighting)
+	var lantern_light: PointLight2D = LightTextureGenerator.create_point_light(Color(1.0, 0.92, 0.8), 0.82, 2.8)
+	lantern_light.name = "LanternLight"
+	add_child(lantern_light)
+	
 	EventBus.player_spawned.emit(self)
 
 func apply_hero_data(data: HeroData) -> void:
@@ -323,6 +329,7 @@ func _start_dash() -> void:
 	health_component.set_invulnerable(true)
 	visuals.modulate.a = 0.5
 	EffectsHelper.spawn_dust_puff(get_parent(), global_position)
+	EffectsHelper.spawn_shockwave(get_parent(), global_position, 110.0, 0.28, 0.035)
 	AudioManager.play_sfx_named("dash")
 	dash_timer.start()
 	dash_cooldown_timer.start()

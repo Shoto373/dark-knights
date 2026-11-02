@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://post_process_layer_scene_001"]
+
+[ext_resource type="Script" path="res://ui/PostProcessLayer.gd" id="1_pp"]
+[ext_resource type="Shader" path="res://shaders/cinematic_atmosphere.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pp"]
+shader = ExtResource("2_shader")
+shader_parameter/vignette_intensity = 0.38
+shader_parameter/vignette_radius = 0.85
+shader_parameter/vignette_roundness = 1.0
+shader_parameter/biome_tint = Color(1, 1, 1, 1)
+shader_parameter/biome_tint_strength = 0.1
+shader_parameter/grain_amount = 0.016
+shader_parameter/ca_offset = 0.0
+shader_parameter/low_hp_pulse = 0.0
+
+[node name="PostProcessLayer" type="CanvasLayer"]
+layer = 95
+script = ExtResource("1_pp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_pp")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

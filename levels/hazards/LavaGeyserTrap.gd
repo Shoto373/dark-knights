@@ -65,7 +65,9 @@ func _set_state(new_state: GeyserState) -> void:
 			eruption_visual.visible = true
 			collision_shape.disabled = false
 			hitbox.reset_hits()
-			EventBus.screen_shake_requested.emit(5.0, 0.2)
+			EventBus.screen_shake_requested.emit(6.0, 0.25)
+			EffectsHelper.spawn_shockwave(get_parent(), global_position, 130.0, 0.32, 0.045)
+			EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.0, 0.65, 0.15), 10)
 			
 			eruption_visual.scale = Vector2(0.6, 0.2)
 			var erupt_tween: Tween = create_tween()

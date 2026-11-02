@@ -18,6 +18,10 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	
+	var light: PointLight2D = LightTextureGenerator.create_point_light(Color(1.0, 0.45, 0.12), 0.95, 2.6)
+	light.name = "MagmaLight"
+	add_child(light)
+	
 	if lifetime > 0.0:
 		var tween: Tween = create_tween()
 		tween.tween_interval(lifetime)

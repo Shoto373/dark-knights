@@ -112,6 +112,10 @@ func _apply_biome_theme() -> void:
 				var glow = t.get_node_or_null("LightGlow")
 				if glow is Sprite2D:
 					glow.modulate = flame_tint
+			if not t.has_node("TorchLight"):
+				var t_light: PointLight2D = LightTextureGenerator.create_point_light(flame_tint.lightened(0.3), 0.75, 1.8)
+				t_light.name = "TorchLight"
+				t.add_child(t_light)
 
 func _setup_biome_hazards() -> void:
 	if current_biome == null:

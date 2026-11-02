@@ -28,6 +28,13 @@ var current_window_mode_index: int = 1 # 0: Fullscreen, 1: Windowed, 2: Borderle
 var current_resolution_index: int = 0 # 1280x720
 var master_volume: float = 1.0
 
+# Vulkan Forward+ визуальные настройки
+signal graphics_settings_changed
+
+var glow_enabled: bool = true
+var postprocessing_enabled: bool = true
+var dynamic_lighting_enabled: bool = true
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	load_settings()
@@ -81,15 +88,34 @@ func set_master_volume(vol: float) -> void:
 			AudioServer.set_bus_mute(bus_idx, false)
 			AudioServer.set_bus_volume_db(bus_idx, linear_to_db(master_volume))
 
+func set_glow_enabled(val: bool) -> void:
+	glow_enabled = val
+	graphics_settings_changed.emit()
+	save_settings()
+
+func set_postprocessing_enabled(val: bool) -> void:
+	postprocessing_enabled = val
+	graphics_settings_changed.emit()
+	save_settings()
+
+func set_dynamic_lighting_enabled(val: bool) -> void:
+	dynamic_lighting_enabled = val
+	graphics_settings_changed.emit()
+	save_settings()
+
 func apply_settings() -> void:
 	set_window_mode(current_window_mode_index)
 	set_master_volume(master_volume)
+	graphics_settings_changed.emit()
 
 func save_settings() -> void:
 	var data: Dictionary = {
 		"window_mode": current_window_mode_index,
 		"resolution_index": current_resolution_index,
-		"master_volume": master_volume
+		"master_volume": master_volume,
+		"glow_enabled": glow_enabled,
+		"postprocessing_enabled": postprocessing_enabled,
+		"dynamic_lighting_enabled": dynamic_lighting_enabled
 	}
 	var file = FileAccess.open(SETTINGS_FILE_PATH, FileAccess.WRITE)
 	if file != null:
@@ -109,4 +135,7 @@ func load_settings() -> void:
 		current_window_mode_index = int(parsed.get("window_mode", 1))
 		current_resolution_index = int(parsed.get("resolution_index", 0))
 		master_volume = float(parsed.get("master_volume", 1.0))
+		glow_enabled = bool(parsed.get("glow_enabled", true))
+		postprocessing_enabled = bool(parsed.get("postprocessing_enabled", true))
+		dynamic_lighting_enabled = bool(parsed.get("dynamic_lighting_enabled", true))
 

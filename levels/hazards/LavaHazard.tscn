@@ -1,9 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://lava_hazard_scene_001"]
+[gd_scene load_steps=5 format=3 uid="uid://lava_hazard_scene_001"]
 
 [ext_resource type="Script" path="res://levels/hazards/LavaHazard.gd" id="1_lava"]
+[ext_resource type="Shader" path="res://shaders/magma_flow.gdshader" id="2_magma"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lava"]
 size = Vector2(160, 160)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_magma"]
+shader = ExtResource("2_magma")
+shader_parameter/speed = 0.35
+shader_parameter/noise_scale = 7.5
+shader_parameter/crust_color = Color(0.1, 0.04, 0.03, 1)
+shader_parameter/lava_dark_color = Color(0.92, 0.25, 0.05, 1)
+shader_parameter/lava_hot_color = Color(2.6, 1.4, 0.35, 1)
+shader_parameter/pulse_speed = 1.8
+shader_parameter/crack_threshold = 0.48
 
 [node name="LavaHazard" type="Area2D"]
 collision_layer = 0
@@ -14,16 +25,22 @@ script = ExtResource("1_lava")
 shape = SubResource("RectangleShape2D_lava")
 
 [node name="VisualLava" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_magma")
 offset_left = -80.0
 offset_top = -80.0
 offset_right = 80.0
 offset_bottom = 80.0
-color = Color(0.92, 0.32, 0.06, 0.85)
 
-[node name="VisualInner" type="ColorRect" parent="."]
-offset_left = -50.0
-offset_top = -50.0
-offset_right = 50.0
-offset_bottom = 50.0
-color = Color(1, 0.68, 0.15, 0.75)
-
+[node name="EmberParticles" type="CPUParticles2D" parent="."]
+amount = 14
+lifetime = 1.6
+emission_shape = 3
+emission_rect_extents = Vector2(70, 70)
+direction = Vector2(0, -1)
+spread = 25.0
+gravity = Vector2(0, -35)
+initial_velocity_min = 25.0
+initial_velocity_max = 60.0
+scale_amount_min = 1.8
+scale_amount_max = 3.6
+color = Color(1, 0.72, 0.25, 0.85)

@@ -284,9 +284,18 @@ func _permanent_death() -> void:
 	
 	EffectsHelper.spawn_death_burst(get_parent(), global_position, enemy_data.color if enemy_data else Color(0.85, 0.2, 0.2))
 	
+	var dissolve_color: Color = Color(2.8, 0.95, 0.15, 1.0)
+	if enemy_data != null:
+		if enemy_data.id.begins_with("frost_") or enemy_data.enemy_type.begins_with("frost_"):
+			dissolve_color = Color(0.4, 1.8, 2.8, 1.0)
+		elif enemy_data.id.begins_with("void_") or enemy_data.enemy_type.begins_with("void_"):
+			dissolve_color = Color(2.2, 0.4, 2.6, 1.0)
+	
+	EffectsHelper.apply_burn_dissolve(visuals, 0.32, dissolve_color)
+	
 	var tween: Tween = create_tween().set_parallel(true)
-	tween.tween_property(self, "modulate:a", 0.0, 0.25)
-	tween.tween_property(self, "scale", Vector2.ZERO, 0.25)
+	tween.tween_property(self, "modulate:a", 0.0, 0.32)
+	tween.tween_property(self, "scale", scale * 1.1, 0.32).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.chain().tween_callback(queue_free)
 
 func perform_attack() -> void:

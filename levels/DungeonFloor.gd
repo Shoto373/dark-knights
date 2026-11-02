@@ -71,6 +71,19 @@ func _build_floor() -> void:
 	var pause_menu: PauseMenu = PAUSE_MENU_SCENE.instantiate() as PauseMenu
 	add_child(pause_menu)
 	
+	# Vulkan Forward+ WorldEnvironment (HDR Glow, Bloom, ACES Tonemapping)
+	var dungeon_env: DungeonEnvironment = DungeonEnvironment.new()
+	dungeon_env.name = "DungeonEnvironment"
+	add_child(dungeon_env)
+	
+	# Vulkan Forward+ Screen Post-Processing Layer (Vignette, Biome Color Grading, FX)
+	var pp_scene: PackedScene = load("res://ui/PostProcessLayer.tscn")
+	if pp_scene != null:
+		var pp = pp_scene.instantiate()
+		add_child(pp)
+		if pp.has_method("setup_biome") and current_biome != null:
+			pp.setup_biome(current_biome.id)
+	
 	if current_biome != null and (current_biome.id == "frost_world" or current_biome.id == "frost_caves"):
 		var blizzard_scene: PackedScene = load("res://ui/BlizzardOverlay.tscn")
 		if blizzard_scene != null:

@@ -13,6 +13,16 @@ func test_settings_manager_resolutions_and_modes() -> void:
 	
 	SettingsManager.set_master_volume(2.5)
 	assert_almost_eq(SettingsManager.master_volume, 1.0, 0.01, "Громкость ограничена 1.0")
+	
+	SettingsManager.set_glow_enabled(false)
+	assert_false(SettingsManager.glow_enabled, "Glow можно отключить")
+	SettingsManager.set_glow_enabled(true)
+	assert_true(SettingsManager.glow_enabled, "Glow можно включить")
+	
+	SettingsManager.set_postprocessing_enabled(false)
+	assert_false(SettingsManager.postprocessing_enabled, "Пост-обработку можно отключить")
+	SettingsManager.set_postprocessing_enabled(true)
+	assert_true(SettingsManager.postprocessing_enabled, "Пост-обработку можно включить")
 
 func test_sprite_generator_heroes_textures() -> void:
 	var warrior_tex: Texture2D = SpriteGenerator.get_hero_texture("warrior")

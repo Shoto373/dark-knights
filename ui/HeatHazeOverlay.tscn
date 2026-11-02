@@ -1,8 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://heat_haze_overlay_001"]
+[gd_scene load_steps=4 format=3 uid="uid://heat_haze_overlay_001"]
 
 [ext_resource type="Script" path="res://ui/HeatHazeOverlay.gd" id="1_haze"]
+[ext_resource type="Shader" path="res://shaders/heat_haze.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_heat"]
+shader = ExtResource("2_shader")
+shader_parameter/speed = 2.4
+shader_parameter/distortion_strength = 0.009
+shader_parameter/frequency = 24.0
+shader_parameter/heat_tint = Color(1, 0.42, 0.08, 1)
+shader_parameter/heat_tint_strength = 0.06
 
 [node name="HeatHazeOverlay" type="CanvasLayer"]
+layer = 92
 script = ExtResource("1_haze")
 
 [node name="Control" type="Control" parent="."]
@@ -16,6 +26,7 @@ mouse_filter = 2
 
 [node name="VignetteRect" type="ColorRect" parent="Control"]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_heat")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,7 +34,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(1, 0.35, 0.08, 0.12)
 
 [node name="EmberParticles" type="CPUParticles2D" parent="Control"]
 unique_name_in_owner = true
@@ -40,4 +50,3 @@ initial_velocity_max = 180.0
 scale_amount_min = 2.0
 scale_amount_max = 4.5
 color = Color(1, 0.65, 0.15, 0.85)
-

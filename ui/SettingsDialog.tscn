@@ -144,6 +144,36 @@ theme_override_font_sizes/font_size = 14
 text = "100%"
 horizontal_alignment = 2
 
+[node name="GlowTitle" type="Label" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Свечение (HDR Glow):"
+
+[node name="CheckGlow" type="CheckBox" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+button_pressed = true
+text = "Включено"
+
+[node name="PPTitle" type="Label" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Vulkan Шейдеры:"
+
+[node name="CheckPostProcess" type="CheckBox" parent="CenterContainer/Panel/Margin/VBox/GridSettings"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+button_pressed = true
+text = "Включено"
+
 [node name="ControlsHeader" type="Label" parent="CenterContainer/Panel/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7, 0.85, 1, 1)
