@@ -211,6 +211,7 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_door_blocker_h")
 
 [node name="Visual" type="ColorRect" parent="WallBlockerUp"]
+visible = false
 offset_left = -48.0
 offset_top = -20.0
 offset_right = 48.0
@@ -227,6 +228,7 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_door_blocker_h")
 
 [node name="Visual" type="ColorRect" parent="WallBlockerDown"]
+visible = false
 offset_left = -48.0
 offset_top = -20.0
 offset_right = 48.0
@@ -243,6 +245,7 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_door_blocker_v")
 
 [node name="Visual" type="ColorRect" parent="WallBlockerLeft"]
+visible = false
 offset_left = -20.0
 offset_top = -48.0
 offset_right = 20.0
@@ -259,6 +262,7 @@ collision_mask = 0
 shape = SubResource("RectangleShape2D_door_blocker_v")
 
 [node name="Visual" type="ColorRect" parent="WallBlockerRight"]
+visible = false
 offset_left = -20.0
 offset_top = -48.0
 offset_right = 20.0

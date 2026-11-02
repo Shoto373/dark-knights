@@ -240,3 +240,73 @@ func test_hero_sprite_has_no_duplicate_static_weapons() -> void:
 	assert_not_null(weapon_sprite, "WeaponSprite существует в WeaponPivot")
 	assert_true(weapon_sprite.visible, "WeaponSprite виден в WeaponPivot")
 	assert_not_null(weapon_sprite.texture, "WeaponSprite имеет текстуру посоха мага")
+
+func test_seamless_solid_walls_when_no_doors() -> void:
+	var room_scene: PackedScene = load("res://levels/Room.tscn")
+	var room: Node2D = room_scene.instantiate() as Node2D
+	add_child_autofree(room)
+	
+	var r_data: RoomData = RoomData.new()
+	# Комната без дверей вверх и вниз, только влево и вправо
+	r_data.doors[Vector2i.UP] = false
+	r_data.doors[Vector2i.DOWN] = false
+	r_data.doors[Vector2i.LEFT] = true
+	r_data.doors[Vector2i.RIGHT] = true
+	room.setup(r_data)
+	
+	# 1. Верхняя стена: W1 должна стать единым монолитом 1260px, W2 скрыта
+	var w1: ColorRect = room.get_node("VisualWalls/W1") as ColorRect
+	var w2: ColorRect = room.get_node("VisualWalls/W2") as ColorRect
+	assert_eq(w1.offset_right, 1260.0, "W1 расширяется на всю длину верхней стены (1260px)")
+	assert_false(w2.visible, "W2 скрыта при отсутствии двери")
+	
+	# Тень верхней стены также монолитна
+	var shadow_l: ColorRect = room.get_node("WallShadowLeft") as ColorRect
+	var shadow_r: ColorRect = room.get_node("WallShadowRight") as ColorRect
+	assert_eq(shadow_l.offset_right, 1220.0, "Тень верхней стены продолжается монолитно на 1220px")
+	assert_false(shadow_r.visible, "Правая часть тени скрыта")
+	
+	# Факелы распределены гармонично, а не скучены вокруг несуществующей двери
+	var torch_l: Node2D = room.get_node("%Torches/TorchLeft") as Node2D
+	var torch_r: Node2D = room.get_node("%Torches/TorchRight") as Node2D
+	assert_eq(torch_l.position.x, 400.0, "Левый факел смещен для симметрии стены")
+	assert_eq(torch_r.position.x, 880.0, "Правый факел смещен для симметрии стены")
+	
+	# Нижняя стена: W3 монолитна на 1260px, W4 скрыта
+	var w3: ColorRect = room.get_node("VisualWalls/W3") as ColorRect
+	var w4: ColorRect = room.get_node("VisualWalls/W4") as ColorRect
+	assert_eq(w3.offset_right, 1260.0, "W3 расширяется на всю длину нижней стены")
+	assert_false(w4.visible, "W4 скрыта")
+	
+	# Все визуальные заглушки WallBlocker гарантированно скрыты
+	var b_up_vis: ColorRect = room.get_node("WallBlockerUp/Visual") as ColorRect
+	assert_false(b_up_vis.visible, "Заглушка WallBlockerUp/Visual скрыта, чтобы не оставлять следов двери")
+
+func test_pedestal_radial_aura_and_high_res_items() -> void:
+	var ped_scene: PackedScene = load("res://entities/loot/ItemPedestal.tscn")
+	var ped: ItemPedestal = ped_scene.instantiate() as ItemPedestal
+	add_child_autofree(ped)
+	
+	var boots_item: ItemData = load("res://data/items/leather_boots.tres") as ItemData
+	ped.setup(boots_item, 0, false)
+	
+	# 1. Проверяем мягкую радиальную ауру и отсутствие старого ColorRect
+	assert_not_null(ped.rarity_aura_sprite, "Создан мягкий радиальный спрайт ауры")
+	assert_true(ped.rarity_aura_sprite is Sprite2D, "Аура является Sprite2D, а не ColorRect")
+	assert_false(ped.rarity_glow.visible, "Старый прямоугольный ColorRect скрыт")
+	
+	# 2. Проверяем режим floating_only (для сундуков)
+	ped.set_floating_only(true)
+	assert_true(ped.floating_only, "Включен режим парящего предмета")
+	assert_false(ped.pedestal_sprite.visible, "Каменное основание скрыто, предмет парит свободно")
+	
+	# 3. Проверяем генерацию 32x32 детальных текстур предметов
+	var boots_tex: Texture2D = SpriteGenerator.get_item_texture(boots_item)
+	assert_not_null(boots_tex)
+	assert_eq(boots_tex.get_width(), 32, "Ширина текстуры сапог 32px")
+	assert_eq(boots_tex.get_height(), 32, "Высота текстуры сапог 32px")
+	
+	var apple_item: ItemData = load("res://data/items/apple.tres") as ItemData
+	var apple_tex: Texture2D = SpriteGenerator.get_item_texture(apple_item)
+	assert_not_null(apple_tex)
+	assert_eq(apple_tex.get_width(), 32, "Иконка яблока 32px")

@@ -93,8 +93,9 @@ func _spawn_reward() -> void:
 	if item != null:
 		var pedestal: ItemPedestal = PEDESTAL_SCENE.instantiate() as ItemPedestal
 		get_parent().add_child(pedestal)
-		pedestal.global_position = global_position + Vector2(0, -35)
+		pedestal.global_position = global_position + Vector2(0, -26)
 		pedestal.setup(item, 0, false)
+		pedestal.set_floating_only(true)
 	else:
 		var coin: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
 		coin.pickup_type = PickupBase.PickupType.GOLD

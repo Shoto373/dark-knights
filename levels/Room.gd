@@ -216,17 +216,84 @@ func _create_gorge_chasm_and_bridge() -> void:
 		bridge.visual_rect.color = current_biome.bridge_color
 
 func _configure_doors() -> void:
+	var has_up: bool = room_data.doors.get(Vector2i.UP, false)
+	var has_down: bool = room_data.doors.get(Vector2i.DOWN, false)
+	var has_left: bool = room_data.doors.get(Vector2i.LEFT, false)
+	var has_right: bool = room_data.doors.get(Vector2i.RIGHT, false)
+	
 	_setup_door(door_up, wall_blocker_up, Vector2i.UP)
 	_setup_door(door_down, wall_blocker_down, Vector2i.DOWN)
 	_setup_door(door_left, wall_blocker_left, Vector2i.LEFT)
 	_setup_door(door_right, wall_blocker_right, Vector2i.RIGHT)
+	
+	_update_wall_geometry(has_up, has_down, has_left, has_right)
 
 func _setup_door(door: DungeonDoor, blocker: StaticBody2D, dir: Vector2i) -> void:
 	var has_door: bool = room_data.doors.get(dir, false)
 	door.visible = has_door
 	door.monitoring = has_door
 	blocker.set_collision_layer_value(1, not has_door)
-	blocker.visible = not has_door
+	blocker.visible = false # Блокер используется только как коллизия. Стена рисуется единым монолитом!
+
+func _update_wall_geometry(has_up: bool, has_down: bool, has_left: bool, has_right: bool) -> void:
+	var w1: ColorRect = get_node_or_null("VisualWalls/W1") as ColorRect
+	var w2: ColorRect = get_node_or_null("VisualWalls/W2") as ColorRect
+	var w3: ColorRect = get_node_or_null("VisualWalls/W3") as ColorRect
+	var w4: ColorRect = get_node_or_null("VisualWalls/W4") as ColorRect
+	var w5: ColorRect = get_node_or_null("VisualWalls/W5") as ColorRect
+	var w6: ColorRect = get_node_or_null("VisualWalls/W6") as ColorRect
+	var w7: ColorRect = get_node_or_null("VisualWalls/W7") as ColorRect
+	var w8: ColorRect = get_node_or_null("VisualWalls/W8") as ColorRect
+	
+	var shadow_l: ColorRect = get_node_or_null("WallShadowLeft") as ColorRect
+	var shadow_r: ColorRect = get_node_or_null("WallShadowRight") as ColorRect
+	
+	var torch_l: Node2D = get_node_or_null("%Torches/TorchLeft") as Node2D
+	var torch_r: Node2D = get_node_or_null("%Torches/TorchRight") as Node2D
+	
+	# Верхняя стена: если двери нет — W1 бесшовно продолжается на всю ширину (1260px)
+	if w1 != null and w2 != null:
+		if has_up:
+			w1.offset_right = 592.0
+			w2.visible = true
+			if shadow_l != null: shadow_l.offset_right = 592.0
+			if shadow_r != null: shadow_r.visible = true
+			if torch_l != null: torch_l.position = Vector2(540, 52)
+			if torch_r != null: torch_r.position = Vector2(740, 52)
+		else:
+			w1.offset_right = 1260.0
+			w2.visible = false
+			if shadow_l != null: shadow_l.offset_right = 1220.0
+			if shadow_r != null: shadow_r.visible = false
+			if torch_l != null: torch_l.position = Vector2(400, 52)
+			if torch_r != null: torch_r.position = Vector2(880, 52)
+	
+	# Нижняя стена: если двери нет — W3 продолжается на всю ширину
+	if w3 != null and w4 != null:
+		if has_down:
+			w3.offset_right = 592.0
+			w4.visible = true
+		else:
+			w3.offset_right = 1260.0
+			w4.visible = false
+	
+	# Левая стена: если двери нет — W5 продолжается сверху донизу (660px)
+	if w5 != null and w6 != null:
+		if has_left:
+			w5.offset_bottom = 312.0
+			w6.visible = true
+		else:
+			w5.offset_bottom = 660.0
+			w6.visible = false
+	
+	# Правая стена: если двери нет — W7 продолжается сверху донизу (660px)
+	if w7 != null and w8 != null:
+		if has_right:
+			w7.offset_bottom = 312.0
+			w8.visible = true
+		else:
+			w7.offset_bottom = 660.0
+			w8.visible = false
 
 func on_player_entered() -> void:
 	room_data.is_visited = true

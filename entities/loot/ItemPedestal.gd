@@ -10,6 +10,7 @@ const PEDESTAL_TEX: Texture2D = preload("res://assets/sprites/item_pedestal.svg"
 @export var item_data: ItemData
 @export var cost_gold: int = 0
 @export var is_blessing_choice: bool = false
+@export var floating_only: bool = false
 
 @onready var pedestal_base: ColorRect = get_node_or_null("%PedestalBase") as ColorRect
 @onready var item_icon: ColorRect = get_node_or_null("%ItemIcon") as ColorRect
@@ -23,6 +24,7 @@ var player_ref: Player = null
 
 var pedestal_sprite: Sprite2D = null
 var item_sprite: Sprite2D = null
+var rarity_aura_sprite: Sprite2D = null
 
 func _ready() -> void:
 	collision_layer = 0
@@ -44,18 +46,52 @@ func _init_sprites() -> void:
 		pedestal_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		pedestal_sprite.texture = PEDESTAL_TEX
 		pedestal_sprite.position = Vector2(0, 0)
+		pedestal_sprite.visible = not floating_only
 		add_child(pedestal_sprite)
 		if pedestal_base != null:
 			pedestal_base.visible = false
+	
+	if rarity_aura_sprite == null:
+		rarity_aura_sprite = Sprite2D.new()
+		rarity_aura_sprite.name = "RarityAuraSprite"
+		rarity_aura_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		rarity_aura_sprite.texture = EffectsHelper.get_spark_texture()
+		rarity_aura_sprite.scale = Vector2(3.5, 3.5)
+		var base_y: float = -20.0 if floating_only else -32.0
+		rarity_aura_sprite.position = Vector2(0, base_y)
+		add_child(rarity_aura_sprite)
+		move_child(rarity_aura_sprite, 0) # Располагаем за предметом
 	
 	if item_sprite == null:
 		item_sprite = Sprite2D.new()
 		item_sprite.name = "ItemVisualSprite"
 		item_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		item_sprite.position = Vector2(0, -26)
+		var base_y: float = -20.0 if floating_only else -32.0
+		item_sprite.position = Vector2(0, base_y)
 		add_child(item_sprite)
 		if item_icon != null:
 			item_icon.visible = false
+	
+	if rarity_glow != null:
+		rarity_glow.visible = false # Старый квадратный ColorRect навсегда выключен
+
+func set_floating_only(val: bool) -> void:
+	floating_only = val
+	if pedestal_sprite != null:
+		pedestal_sprite.visible = not floating_only
+	if pedestal_base != null:
+		pedestal_base.visible = false
+	var base_y: float = -20.0 if floating_only else -32.0
+	if item_sprite != null:
+		item_sprite.position.y = base_y
+	if rarity_aura_sprite != null:
+		rarity_aura_sprite.position.y = base_y
+	var col_shape: Node2D = get_node_or_null("CollisionShape2D") as Node2D
+	if col_shape != null:
+		col_shape.position = Vector2(0, -16 if floating_only else 0)
+	var ui_node: Node2D = get_node_or_null("UI") as Node2D
+	if ui_node != null:
+		ui_node.position = Vector2(0, -38 if floating_only else -44)
 
 func setup(item: ItemData, price: int = 0, is_blessing: bool = false) -> void:
 	item_data = item
@@ -76,13 +112,16 @@ func _update_display() -> void:
 	name_label.add_theme_color_override("font_color", r_col)
 	
 	if rarity_glow != null:
-		rarity_glow.color = Color(r_col.r, r_col.g, r_col.b, 0.35)
+		rarity_glow.visible = false
+	
+	if rarity_aura_sprite != null:
+		rarity_aura_sprite.modulate = Color(r_col.r, r_col.g, r_col.b, 0.48)
 	
 	# Получаем детальный спрайт артефакта
 	var tex: Texture2D = SpriteGenerator.get_item_texture(item_data)
 	if tex != null and item_sprite != null:
 		item_sprite.texture = tex
-		item_sprite.scale = Vector2(1.1, 1.1)
+		item_sprite.scale = Vector2(1.25, 1.25)
 	
 	if cost_gold > 0:
 		cost_label.text = "[F] Купить (%d з)" % cost_gold
@@ -93,10 +132,14 @@ func _update_display() -> void:
 
 func _process(_delta: float) -> void:
 	if item_sprite != null and not is_collected:
-		var bob: float = sin(Time.get_ticks_msec() * 0.0035) * 3.5
-		item_sprite.position.y = -26.0 + bob
-		if rarity_glow != null:
-			rarity_glow.position.y = -34.0 + bob
+		var time: float = Time.get_ticks_msec() * 0.0032
+		var bob: float = sin(time) * 3.5
+		var base_y: float = -20.0 if floating_only else -32.0
+		item_sprite.position.y = base_y + bob
+		if rarity_aura_sprite != null:
+			var pulse: float = 1.0 + sin(time * 1.5) * 0.12
+			rarity_aura_sprite.scale = Vector2(3.5, 3.5) * pulse
+			rarity_aura_sprite.position.y = base_y + bob
 	
 	if is_player_inside and not is_collected and Input.is_action_just_pressed("interact"):
 		_try_collect()
