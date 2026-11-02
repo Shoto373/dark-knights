@@ -34,51 +34,302 @@ static func _get_svg_definitions() -> Dictionary:
 	# =====================
 	# ГЕРОИ И ИКОНКИ
 	# =====================
-	d["hero_warrior.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <path d="M 18 24 C 14 36, 12 50, 16 58 C 22 60, 42 60, 48 58 C 52 50, 50 36, 46 24 Z" fill="#1e3c72" stroke="#0b1320" stroke-width="2"/>
-  <rect x="22" y="44" width="8" height="15" rx="3" fill="#2c3e50" stroke="#17202a" stroke-width="2"/>
-  <rect x="34" y="44" width="8" height="15" rx="3" fill="#2c3e50" stroke="#17202a" stroke-width="2"/>
-  <path d="M 20 25 L 44 25 L 41 44 L 23 44 Z" fill="#95a5a6" stroke="#1a252f" stroke-width="2"/>
-  <rect x="30" y="28" width="4" height="12" fill="#f1c40f"/>
-  <rect x="26" y="32" width="12" height="4" fill="#f1c40f"/>
-  <circle cx="18" cy="27" r="6" fill="#bdc3c7" stroke="#b7950b" stroke-width="1.5"/>
-  <circle cx="46" cy="27" r="6" fill="#bdc3c7" stroke="#b7950b" stroke-width="1.5"/>
-  <path d="M 23 10 C 23 5, 41 5, 41 10 L 43 23 L 21 23 Z" fill="#bdc3c7" stroke="#1a252f" stroke-width="2"/>
-  <path d="M 28 8 L 32 3 L 36 8 L 32 6 Z" fill="#f1c40f"/>
-  <path d="M 25 15 L 39 15 L 34 18 L 30 18 Z" fill="#111118"/>
-  <rect x="30.5" y="15" width="3" height="8" fill="#111118"/>
-  <ellipse cx="28" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
-  <ellipse cx="36" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
-  <circle cx="18" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
-  <circle cx="46" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
+	d["hero_warrior.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="steel" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="35%" stop-color="#64748b"/>
+      <stop offset="60%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="steelDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="45%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#713f12"/>
+    </linearGradient>
+    <linearGradient id="cape" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b91c1c"/>
+      <stop offset="60%" stop-color="#7f1d1d"/>
+      <stop offset="100%" stop-color="#450a0a"/>
+    </linearGradient>
+    <radialGradient id="visorGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0891b2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Flowing Crimson Battle Cape (Hanging narrow behind back, visible between legs & below belt) -->
+  <path d="M 23 24 L 21 54 L 28 50 L 32 55 L 36 50 L 43 54 L 41 24 Z" fill="url(#cape)" stroke="#2b0505" stroke-width="1.2"/>
+
+  <!-- Left Leg (Armored Greave & Sabaton) -->
+  <g id="left_leg">
+    <!-- Thigh Armor -->
+    <rect x="20" y="42" width="9" height="7" rx="1.5" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+    <!-- Knee Poleyn -->
+    <rect x="19" y="47" width="10" height="4" rx="2" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <circle cx="24" cy="49" r="1" fill="#facc15"/>
+    <!-- Greave Shin & Boot Sabaton -->
+    <path d="M 20 50 L 29 50 L 29 59 L 18 59 L 19 55 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <line x1="20" y1="55" x2="28" y2="55" stroke="#cbd5e1" stroke-width="1"/>
+  </g>
+
+  <!-- Right Leg (Armored Greave & Sabaton) - Clear 7px gap between legs! -->
+  <g id="right_leg">
+    <!-- Thigh Armor -->
+    <rect x="35" y="42" width="9" height="7" rx="1.5" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+    <!-- Knee Poleyn -->
+    <rect x="35" y="47" width="10" height="4" rx="2" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <circle cx="40" cy="49" r="1" fill="#facc15"/>
+    <!-- Greave Shin & Boot Sabaton -->
+    <path d="M 35 50 L 44 50 L 45 55 L 46 59 L 35 59 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <line x1="36" y1="55" x2="44" y2="55" stroke="#cbd5e1" stroke-width="1"/>
+  </g>
+
+  <!-- Tassets (Thigh Plates hanging from belt) -->
+  <polygon points="19,41 27,41 25,48 19,46" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+  <polygon points="37,41 45,41 45,46 39,48" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+
+  <!-- Forged Steel Cuirass (Breastplate with athletic tapered waist) -->
+  <path d="M 18 22 L 46 22 L 42 41 L 22 41 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.6"/>
+  <!-- Gothic Inlaid Center Breastplate -->
+  <path d="M 23 24 L 41 24 L 38 39 L 26 39 Z" fill="url(#steelDark)"/>
+  <!-- Gold Heraldic Cross & Cyan Core Gem -->
+  <polygon points="32,26 36,32 32,38 28,32" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="32" cy="32" r="1.8" fill="#06b6d4"/>
+
+  <!-- Leather War Belt -->
+  <rect x="21" y="39" width="22" height="4" rx="1" fill="#3d1d07" stroke="#1c1917" stroke-width="1"/>
+  <rect x="29" y="38" width="6" height="6" rx="1.2" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/>
+
+  <!-- Spiked Left Pauldron (Layered Shoulder Armor flared out) -->
+  <path d="M 10 21 L 18 20 L 20 28 L 12 30 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.4"/>
+  <polygon points="10,21 5,19 11,18" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/> <!-- Sharp Spike -->
+  <!-- Left Arm Vambrace (Held naturally at side) -->
+  <rect x="12" y="29" width="6" height="11" rx="2" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+  <circle cx="15" cy="40" r="3" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+
+  <!-- Spiked Right Pauldron -->
+  <path d="M 54 21 L 46 20 L 44 28 L 52 30 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.4"/>
+  <polygon points="54,21 59,19 53,18" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/> <!-- Sharp Spike -->
+  <!-- Right Arm Vambrace -->
+  <rect x="46" y="29" width="6" height="11" rx="2" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+  <circle cx="49" cy="40" r="3" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+
+  <!-- Gothic Greathelm (Angular, sharp crest, menacing visor) -->
+  <path d="M 21 8 C 21 3 43 3 43 8 L 44 22 L 20 22 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.6"/>
+  <!-- Helmet Golden Brow Crest & Spire -->
+  <polygon points="32,1 35,6 29,6" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/>
+  <line x1="32" y1="6" x2="32" y2="13" stroke="url(#gold)" stroke-width="1.5"/>
+
+  <!-- Menacing Visor Slit -->
+  <path d="M 22 13 L 42 13 L 38 18 L 26 18 Z" fill="#040711" stroke="#090d16" stroke-width="1"/>
+  <rect x="24" y="14.5" width="16" height="2.5" rx="1" fill="url(#visorGlow)"/>
+  <circle cx="28" cy="15.8" r="1.1" fill="#ffffff"/>
+  <circle cx="36" cy="15.8" r="1.1" fill="#ffffff"/>
+
+  <!-- Lower Helm Bevor (Chin ventilation guard) -->
+  <polygon points="25,18 32,22 39,18 32,20" fill="url(#steelDark)" stroke="#090d16" stroke-width="0.8"/>
 </svg>"""
 
-	d["hero_mage.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <path d="M 24 22 L 40 22 L 46 58 L 18 58 Z" fill="#3b0764" stroke="#090114" stroke-width="2"/>
-  <path d="M 31 24 L 31 58" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,2"/>
-  <path d="M 32 4 C 20 8, 18 20, 20 25 C 26 26, 38 26, 44 25 C 46 20, 44 8, 32 4 Z" fill="#2c0b4d" stroke="#090114" stroke-width="2"/>
-  <path d="M 23 14 C 23 11, 41 11, 41 14 C 42 22, 22 22, 23 14 Z" fill="#08020f"/>
-  <circle cx="28" cy="17" r="2.2" fill="#38bdf8"/>
-  <circle cx="36" cy="17" r="2.2" fill="#38bdf8"/>
-  <circle cx="28" cy="17" r="1" fill="#ffffff"/>
-  <circle cx="36" cy="17" r="1" fill="#ffffff"/>
-  <circle cx="20" cy="36" r="3.5" fill="#4c1d95" stroke="#1e1b4b" stroke-width="1.5"/>
-  <circle cx="44" cy="36" r="3.5" fill="#4c1d95" stroke="#1e1b4b" stroke-width="1.5"/>
+	d["hero_mage.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="eyeSoul" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#38bdf8"/>
+      <stop offset="75%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mageViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4c1d95"/>
+      <stop offset="50%" stop-color="#3b0764"/>
+      <stop offset="100%" stop-color="#1e0538"/>
+    </linearGradient>
+    <linearGradient id="cowlMage" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6b21a8"/>
+      <stop offset="100%" stop-color="#2e1065"/>
+    </linearGradient>
+    <linearGradient id="goldMage" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#713f12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Flowing Back Robe Hem (Visible behind boots and between split folds) -->
+  <path d="M 23 28 L 20 54 L 28 52 L 32 55 L 36 52 L 44 54 L 41 28 Z" fill="#130321" stroke="#08010d" stroke-width="1.2"/>
+
+  <!-- Left Boot (Dark Arcane Leather with Gold Cuff) -->
+  <g id="mage_left_boot">
+    <rect x="21" y="47" width="8" height="12" rx="2" fill="#18181b" stroke="#09090b" stroke-width="1.2"/>
+    <line x1="21" y1="52" x2="29" y2="52" stroke="url(#goldMage)" stroke-width="1.2"/>
+    <circle cx="25" cy="56" r="0.8" fill="#38bdf8"/>
+  </g>
+
+  <!-- Right Boot (Clear gap between feet!) -->
+  <g id="mage_right_boot">
+    <rect x="35" y="47" width="8" height="12" rx="2" fill="#18181b" stroke="#09090b" stroke-width="1.2"/>
+    <line x1="35" y1="52" x2="43" y2="52" stroke="url(#goldMage)" stroke-width="1.2"/>
+    <circle cx="39" cy="56" r="0.8" fill="#38bdf8"/>
+  </g>
+
+  <!-- Main Archmage Robe with Open Split Hem -->
+  <!-- Left Robe Panel -->
+  <path d="M 21 24 L 16 48 L 27 50 L 26 26 Z" fill="url(#mageViolet)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 16 48 L 27 50" stroke="url(#goldMage)" stroke-width="1.5"/>
+  <!-- Right Robe Panel -->
+  <path d="M 43 24 L 48 48 L 37 50 L 38 26 Z" fill="url(#mageViolet)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 37 50 L 48 48" stroke="url(#goldMage)" stroke-width="1.5"/>
+
+  <!-- Center Tabard & Gold Runic Inscriptions -->
+  <path d="M 26 26 L 27 49 L 37 49 L 38 26 Z" fill="#24073d" stroke="url(#goldMage)" stroke-width="0.8"/>
+  <line x1="32" y1="27" x2="32" y2="47" stroke="url(#goldMage)" stroke-width="1.6" stroke-dasharray="3,2"/>
+
+  <!-- Leather Arcane Belt & Trinkets -->
+  <rect x="21" y="36" width="22" height="4" rx="1" fill="#451a03" stroke="#1c1917" stroke-width="1"/>
+  <!-- Gold Runic Buckle & Cyan Soul Jewel -->
+  <rect x="29" y="35" width="6" height="6" rx="1.2" fill="url(#goldMage)" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="32" cy="38" r="1.3" fill="#38bdf8"/>
+  <!-- Ruby Potion Vial -->
+  <rect x="23" y="39" width="3.5" height="5.5" rx="1" fill="#dc2626" stroke="#450a0a" stroke-width="0.8"/>
+  <circle cx="24.8" cy="40.5" r="0.8" fill="#fca5a5"/>
+  <!-- Spell Scroll with Wax Seal -->
+  <rect x="37.5" y="39" width="4" height="6" rx="1" fill="#fef08a" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="39.5" cy="42" r="1" fill="#b91c1c"/>
+
+  <!-- Draped Left Sleeve (Flared downwards naturally) -->
+  <path d="M 17 23 Q 11 31 13 41 Q 17 43 19 39 Q 18 31 20 24 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 13 39 Q 16 42 19 38" fill="none" stroke="url(#goldMage)" stroke-width="1.2"/>
+
+  <!-- Draped Right Sleeve -->
+  <path d="M 47 23 Q 53 31 51 41 Q 47 43 45 39 Q 46 31 44 24 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 45 38 Q 48 42 51 39" fill="none" stroke="url(#goldMage)" stroke-width="1.2"/>
+
+  <!-- Shoulder Cowl / Mantle (Flared over shoulders, tapering down) -->
+  <path d="M 16 21 Q 12 27 16 30 Q 24 32 32 29 Q 40 32 48 30 Q 52 27 48 21 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.6"/>
+  <path d="M 16 29 Q 24 31 32 28 Q 40 31 48 29" fill="none" stroke="url(#goldMage)" stroke-width="1.2"/>
+
+  <!-- High Gothic Arcane Collar -->
+  <path d="M 23 21 L 27 14 L 37 14 L 41 21 Z" fill="#2e1065" stroke="#09010f" stroke-width="1.2"/>
+  <circle cx="32" cy="20" r="2.2" fill="url(#eyeSoul)"/>
+  <circle cx="32" cy="20" r="1.1" fill="#ffffff"/>
+
+  <!-- Pointed Archmage Hood (Deep gothic cowl with peak fold) -->
+  <path d="M 32 2 C 23 4 17 11 18 20 C 23 23 41 23 46 20 C 47 11 41 4 32 2 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.8"/>
+  <path d="M 32 2 Q 35 6 36 12" fill="none" stroke="#a855f7" stroke-width="1.2"/>
+
+  <!-- Deep Face Void inside Hood -->
+  <path d="M 20 14 C 20 20 44 20 44 14 C 43 11 21 11 20 14 Z" fill="#04010a"/>
+
+  <!-- Piercing Glowing Soul Eyes -->
+  <ellipse cx="27" cy="15.5" rx="3.5" ry="2.2" fill="url(#eyeSoul)"/>
+  <ellipse cx="37" cy="15.5" rx="3.5" ry="2.2" fill="url(#eyeSoul)"/>
+  <ellipse cx="27" cy="15.5" rx="1.8" ry="1.1" fill="#e0f2fe"/>
+  <ellipse cx="37" cy="15.5" rx="1.8" ry="1.1" fill="#e0f2fe"/>
+  <circle cx="27" cy="15" r="0.7" fill="#ffffff"/>
+  <circle cx="37" cy="15" r="0.7" fill="#ffffff"/>
 </svg>"""
 
-	d["hero_ranger.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <path d="M 20 22 C 16 34, 14 46, 18 56 C 24 58, 40 58, 46 56 C 50 46, 48 34, 44 22 Z" fill="#1e3a1e" stroke="#0b1b09" stroke-width="2"/>
-  <rect x="24" y="24" width="16" height="18" rx="3" fill="#8b5a2b" stroke="#2b1a0a" stroke-width="1.5"/>
-  <line x1="24" y1="26" x2="38" y2="40" stroke="#4a2e12" stroke-width="2"/>
-  <circle cx="31" cy="33" r="2.5" fill="#f1c40f"/>
-  <rect x="25" y="42" width="5" height="16" rx="2" fill="#3d2b1f"/>
-  <rect x="34" y="42" width="5" height="16" rx="2" fill="#3d2b1f"/>
-  <path d="M 32 5 C 22 7, 20 18, 22 23 C 27 24, 37 24, 42 23 C 44 18, 42 7, 32 5 Z" fill="#2d5a27" stroke="#0e230b" stroke-width="2"/>
-  <rect x="25" y="16" width="14" height="6" rx="2" fill="#4a2e12"/>
-  <ellipse cx="28" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
-  <ellipse cx="36" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
-  <circle cx="18" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
-  <circle cx="46" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
+	d["hero_ranger.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="eyeAmber" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#fbbf24"/>
+      <stop offset="80%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#78350f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cloakGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#166534"/>
+      <stop offset="50%" stop-color="#14532d"/>
+      <stop offset="100%" stop-color="#052e16"/>
+    </linearGradient>
+    <linearGradient id="leatherVest" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="50%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <linearGradient id="fur" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="50%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Flowing Hunter Cloak Back Hem -->
+  <path d="M 22 26 L 19 53 L 26 50 L 32 54 L 38 50 L 45 53 L 42 26 Z" fill="#082b13" stroke="#021408" stroke-width="1.2"/>
+
+  <!-- Back Quiver with Arrows (Angled over right shoulder) -->
+  <rect x="42" y="10" width="8" height="22" rx="3" transform="rotate(22 46 21)" fill="#3d1d07" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="43" y1="16" x2="49" y2="16" stroke="#a16207" stroke-width="1" transform="rotate(22 46 21)"/>
+  <!-- Arrows -->
+  <line x1="43" y1="10" x2="47" y2="2" stroke="#78350f" stroke-width="1.6"/>
+  <polygon points="45,1 48,2 46,6" fill="#22c55e"/>
+  <line x1="46" y1="12" x2="52" y2="4" stroke="#78350f" stroke-width="1.6"/>
+  <polygon points="50,3 53,4 51,8" fill="#15803d"/>
+  <line x1="49" y1="14" x2="56" y2="7" stroke="#78350f" stroke-width="1.6"/>
+  <polygon points="54,6 57,7 55,11" fill="#4ade80"/>
+
+  <!-- Left Hunting Boot -->
+  <g id="ranger_left_boot">
+    <rect x="21" y="46" width="8" height="13" rx="2" fill="#2b1405" stroke="#0a0502" stroke-width="1.2"/>
+    <line x1="21" y1="50" x2="29" y2="50" stroke="#854d0e" stroke-width="1"/>
+    <line x1="21" y1="54" x2="29" y2="54" stroke="#854d0e" stroke-width="1"/>
+  </g>
+
+  <!-- Right Hunting Boot -->
+  <g id="ranger_right_boot">
+    <rect x="35" y="46" width="8" height="13" rx="2" fill="#2b1405" stroke="#0a0502" stroke-width="1.2"/>
+    <line x1="35" y1="50" x2="43" y2="50" stroke="#854d0e" stroke-width="1"/>
+    <line x1="35" y1="54" x2="43" y2="54" stroke="#854d0e" stroke-width="1"/>
+  </g>
+
+  <!-- Studded Leather Brigandine / Tunic -->
+  <path d="M 21 24 L 43 24 L 41 42 L 23 42 Z" fill="url(#leatherVest)" stroke="#1c1917" stroke-width="1.6"/>
+  <!-- Crossed Harness Straps -->
+  <line x1="22" y1="25" x2="42" y2="41" stroke="#291102" stroke-width="2.2"/>
+  <line x1="42" y1="25" x2="22" y2="41" stroke="#291102" stroke-width="2.2"/>
+  <circle cx="32" cy="33" r="2.5" fill="#facc15" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="27" cy="29" r="1" fill="#cbd5e1"/>
+  <circle cx="37" cy="37" r="1" fill="#cbd5e1"/>
+
+  <!-- Leather Utility Belt & Pouch -->
+  <rect x="21" y="40" width="22" height="4" rx="1" fill="#3d1d07" stroke="#1c1917" stroke-width="1"/>
+  <rect x="29.5" y="39" width="5" height="6" rx="1" fill="#ca8a04" stroke="#713f12" stroke-width="0.8"/>
+  <rect x="22" y="42" width="4.5" height="5" rx="1" fill="#5c2e14" stroke="#1c1917" stroke-width="0.8"/>
+
+  <!-- Draped Left Leather Arm -->
+  <path d="M 17 24 Q 12 32 14 41 Q 18 42 20 38 Q 18 31 20 24 Z" fill="#5c2e14" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="13" y1="34" x2="19" y2="34" stroke="#a16207" stroke-width="1"/>
+  <circle cx="16" cy="40" r="2.5" fill="#382313" stroke="#1c1917" stroke-width="0.8"/>
+
+  <!-- Draped Right Leather Arm -->
+  <path d="M 47 24 Q 52 32 50 41 Q 46 42 44 38 Q 46 31 44 24 Z" fill="#451a03" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="45" y1="34" x2="51" y2="34" stroke="#a16207" stroke-width="1"/>
+  <circle cx="48" cy="40" r="2.5" fill="#382313" stroke="#1c1917" stroke-width="0.8"/>
+
+  <!-- Warm Fur Collar / Mantle around Neck -->
+  <path d="M 17 21 C 21 25 43 25 47 21 C 50 25 51 29 46 30 C 40 32 24 32 18 30 C 13 29 14 25 17 21 Z" fill="url(#fur)" stroke="#2b1405" stroke-width="1.4"/>
+  <path d="M 21 26 L 23 29 M 31 27 L 33 30 M 41 26 L 43 29" stroke="#fef08a" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- Hunter Green Hood with Pointed Peak -->
+  <path d="M 32 2 C 23 4 16 12 18 21 C 24 24 40 24 46 21 C 48 12 41 4 32 2 Z" fill="url(#cloakGreen)" stroke="#052e16" stroke-width="1.8"/>
+  <path d="M 32 2 Q 34 6 35 12" fill="none" stroke="#22c55e" stroke-width="1" opacity="0.5"/>
+
+  <!-- Leather Face Half-Mask -->
+  <path d="M 21 14 L 43 14 L 41 21 L 23 21 Z" fill="#3d1d07" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="22" y1="18" x2="42" y2="18" stroke="#713f12" stroke-width="0.8"/>
+
+  <!-- Glowing Keen Amber Eyes -->
+  <ellipse cx="27" cy="13" rx="3.5" ry="2.2" fill="url(#eyeAmber)"/>
+  <ellipse cx="37" cy="13" rx="3.5" ry="2.2" fill="url(#eyeAmber)"/>
+  <ellipse cx="27" cy="13" rx="1.8" ry="1.1" fill="#fef08a"/>
+  <ellipse cx="37" cy="13" rx="1.8" ry="1.1" fill="#fef08a"/>
+  <circle cx="27" cy="12.5" r="0.7" fill="#ffffff"/>
+  <circle cx="37" cy="12.5" r="0.7" fill="#ffffff"/>
 </svg>"""
 
 	d["icon_warrior.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">

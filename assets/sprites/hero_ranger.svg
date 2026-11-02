@@ -1,14 +1,97 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <path d="M 20 22 C 16 34, 14 46, 18 56 C 24 58, 40 58, 46 56 C 50 46, 48 34, 44 22 Z" fill="#1e3a1e" stroke="#0b1b09" stroke-width="2"/>
-  <rect x="24" y="24" width="16" height="18" rx="3" fill="#8b5a2b" stroke="#2b1a0a" stroke-width="1.5"/>
-  <line x1="24" y1="26" x2="38" y2="40" stroke="#4a2e12" stroke-width="2"/>
-  <circle cx="31" cy="33" r="2.5" fill="#f1c40f"/>
-  <rect x="25" y="42" width="5" height="16" rx="2" fill="#3d2b1f"/>
-  <rect x="34" y="42" width="5" height="16" rx="2" fill="#3d2b1f"/>
-  <path d="M 32 5 C 22 7, 20 18, 22 23 C 27 24, 37 24, 42 23 C 44 18, 42 7, 32 5 Z" fill="#2d5a27" stroke="#0e230b" stroke-width="2"/>
-  <rect x="25" y="16" width="14" height="6" rx="2" fill="#4a2e12"/>
-  <ellipse cx="28" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
-  <ellipse cx="36" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
-  <circle cx="18" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
-  <circle cx="46" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="eyeAmber" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#fbbf24"/>
+      <stop offset="80%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#78350f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cloakGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#166534"/>
+      <stop offset="50%" stop-color="#14532d"/>
+      <stop offset="100%" stop-color="#052e16"/>
+    </linearGradient>
+    <linearGradient id="leatherVest" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="50%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <linearGradient id="fur" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="50%" stop-color="#a16207"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Flowing Hunter Cloak Back Hem -->
+  <path d="M 22 26 L 19 53 L 26 50 L 32 54 L 38 50 L 45 53 L 42 26 Z" fill="#082b13" stroke="#021408" stroke-width="1.2"/>
+
+  <!-- Back Quiver with Arrows (Angled over right shoulder) -->
+  <rect x="42" y="10" width="8" height="22" rx="3" transform="rotate(22 46 21)" fill="#3d1d07" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="43" y1="16" x2="49" y2="16" stroke="#a16207" stroke-width="1" transform="rotate(22 46 21)"/>
+  <!-- Arrows -->
+  <line x1="43" y1="10" x2="47" y2="2" stroke="#78350f" stroke-width="1.6"/>
+  <polygon points="45,1 48,2 46,6" fill="#22c55e"/>
+  <line x1="46" y1="12" x2="52" y2="4" stroke="#78350f" stroke-width="1.6"/>
+  <polygon points="50,3 53,4 51,8" fill="#15803d"/>
+  <line x1="49" y1="14" x2="56" y2="7" stroke="#78350f" stroke-width="1.6"/>
+  <polygon points="54,6 57,7 55,11" fill="#4ade80"/>
+
+  <!-- Left Hunting Boot -->
+  <g id="ranger_left_boot">
+    <rect x="21" y="46" width="8" height="13" rx="2" fill="#2b1405" stroke="#0a0502" stroke-width="1.2"/>
+    <line x1="21" y1="50" x2="29" y2="50" stroke="#854d0e" stroke-width="1"/>
+    <line x1="21" y1="54" x2="29" y2="54" stroke="#854d0e" stroke-width="1"/>
+  </g>
+
+  <!-- Right Hunting Boot -->
+  <g id="ranger_right_boot">
+    <rect x="35" y="46" width="8" height="13" rx="2" fill="#2b1405" stroke="#0a0502" stroke-width="1.2"/>
+    <line x1="35" y1="50" x2="43" y2="50" stroke="#854d0e" stroke-width="1"/>
+    <line x1="35" y1="54" x2="43" y2="54" stroke="#854d0e" stroke-width="1"/>
+  </g>
+
+  <!-- Studded Leather Brigandine / Tunic -->
+  <path d="M 21 24 L 43 24 L 41 42 L 23 42 Z" fill="url(#leatherVest)" stroke="#1c1917" stroke-width="1.6"/>
+  <!-- Crossed Harness Straps -->
+  <line x1="22" y1="25" x2="42" y2="41" stroke="#291102" stroke-width="2.2"/>
+  <line x1="42" y1="25" x2="22" y2="41" stroke="#291102" stroke-width="2.2"/>
+  <circle cx="32" cy="33" r="2.5" fill="#facc15" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="27" cy="29" r="1" fill="#cbd5e1"/>
+  <circle cx="37" cy="37" r="1" fill="#cbd5e1"/>
+
+  <!-- Leather Utility Belt & Pouch -->
+  <rect x="21" y="40" width="22" height="4" rx="1" fill="#3d1d07" stroke="#1c1917" stroke-width="1"/>
+  <rect x="29.5" y="39" width="5" height="6" rx="1" fill="#ca8a04" stroke="#713f12" stroke-width="0.8"/>
+  <rect x="22" y="42" width="4.5" height="5" rx="1" fill="#5c2e14" stroke="#1c1917" stroke-width="0.8"/>
+
+  <!-- Draped Left Leather Arm -->
+  <path d="M 17 24 Q 12 32 14 41 Q 18 42 20 38 Q 18 31 20 24 Z" fill="#5c2e14" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="13" y1="34" x2="19" y2="34" stroke="#a16207" stroke-width="1"/>
+  <circle cx="16" cy="40" r="2.5" fill="#382313" stroke="#1c1917" stroke-width="0.8"/>
+
+  <!-- Draped Right Leather Arm -->
+  <path d="M 47 24 Q 52 32 50 41 Q 46 42 44 38 Q 46 31 44 24 Z" fill="#451a03" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="45" y1="34" x2="51" y2="34" stroke="#a16207" stroke-width="1"/>
+  <circle cx="48" cy="40" r="2.5" fill="#382313" stroke="#1c1917" stroke-width="0.8"/>
+
+  <!-- Warm Fur Collar / Mantle around Neck -->
+  <path d="M 17 21 C 21 25 43 25 47 21 C 50 25 51 29 46 30 C 40 32 24 32 18 30 C 13 29 14 25 17 21 Z" fill="url(#fur)" stroke="#2b1405" stroke-width="1.4"/>
+  <path d="M 21 26 L 23 29 M 31 27 L 33 30 M 41 26 L 43 29" stroke="#fef08a" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- Hunter Green Hood with Pointed Peak -->
+  <path d="M 32 2 C 23 4 16 12 18 21 C 24 24 40 24 46 21 C 48 12 41 4 32 2 Z" fill="url(#cloakGreen)" stroke="#052e16" stroke-width="1.8"/>
+  <path d="M 32 2 Q 34 6 35 12" fill="none" stroke="#22c55e" stroke-width="1" opacity="0.5"/>
+
+  <!-- Leather Face Half-Mask -->
+  <path d="M 21 14 L 43 14 L 41 21 L 23 21 Z" fill="#3d1d07" stroke="#1c1917" stroke-width="1.2"/>
+  <line x1="22" y1="18" x2="42" y2="18" stroke="#713f12" stroke-width="0.8"/>
+
+  <!-- Glowing Keen Amber Eyes -->
+  <ellipse cx="27" cy="13" rx="3.5" ry="2.2" fill="url(#eyeAmber)"/>
+  <ellipse cx="37" cy="13" rx="3.5" ry="2.2" fill="url(#eyeAmber)"/>
+  <ellipse cx="27" cy="13" rx="1.8" ry="1.1" fill="#fef08a"/>
+  <ellipse cx="37" cy="13" rx="1.8" ry="1.1" fill="#fef08a"/>
+  <circle cx="27" cy="12.5" r="0.7" fill="#ffffff"/>
+  <circle cx="37" cy="12.5" r="0.7" fill="#ffffff"/>
 </svg>

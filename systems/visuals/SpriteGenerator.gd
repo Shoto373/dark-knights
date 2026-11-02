@@ -710,26 +710,49 @@ static func _draw_warrior_sprite(img: Image) -> void:
 	_fill_rect(img, 9, 14, 3, 5, Color(0.7, 0.75, 0.85))
 	_fill_rect(img, 20, 14, 3, 5, Color(0.7, 0.75, 0.85))
 	
-	# Пояс и поножи
-	_fill_rect(img, 12, 22, 8, 2, Color(0.35, 0.22, 0.1))
-	_fill_rect(img, 12, 24, 3, 6, Color(0.45, 0.5, 0.58))
-	_fill_rect(img, 17, 24, 3, 6, Color(0.45, 0.5, 0.58))
+	# Пояс, поножи и сапоги
+	_fill_rect(img, 11, 21, 10, 2, Color(0.35, 0.22, 0.1))
+	_fill_rect(img, 15, 21, 2, 2, Color(0.85, 0.7, 0.2)) # Пряжка пояса
+	_fill_rect(img, 11, 23, 10, 2, Color(0.6, 0.1, 0.1)) # Багряный пояс/тассеты
+	_fill_rect(img, 12, 25, 3, 5, Color(0.45, 0.5, 0.58)) # Латные поножи
+	_fill_rect(img, 17, 25, 3, 5, Color(0.45, 0.5, 0.58))
+	_fill_rect(img, 11, 29, 4, 2, Color(0.2, 0.25, 0.3)) # Сабатоны
+	_fill_rect(img, 17, 29, 4, 2, Color(0.2, 0.25, 0.3))
 	
 	# Стальные латные наручи и рукавицы (оружие динамически управляется WeaponPivot)
-	_fill_rect(img, 8, 18, 3, 4, Color(0.55, 0.6, 0.7))
-	_fill_rect(img, 21, 18, 3, 4, Color(0.55, 0.6, 0.7))
+	_fill_rect(img, 8, 17, 3, 5, Color(0.55, 0.6, 0.7))
+	_fill_rect(img, 21, 17, 3, 5, Color(0.55, 0.6, 0.7))
+	_set_p(img, 9, 18, Color(0.85, 0.88, 0.95)) # Блик на металле
+	_set_p(img, 22, 18, Color(0.85, 0.88, 0.95))
 
 static func _draw_mage_sprite(img: Image) -> void:
-	# Фиолетовая мантия мага
-	_fill_rect(img, 10, 13, 12, 15, C_OUTLINE)
-	_fill_rect(img, 11, 14, 10, 13, Color(0.35, 0.15, 0.55))
-	_fill_rect(img, 13, 14, 6, 13, Color(0.45, 0.2, 0.7))
-	_fill_rect(img, 15, 14, 2, 13, Color(0.85, 0.75, 0.25)) # Золотая тесьма
+	# Темно-фиолетовая ниспадающая мантия мага с глубокими складками
+	_fill_rect(img, 10, 13, 12, 16, C_OUTLINE)
+	_fill_rect(img, 11, 14, 10, 14, Color(0.28, 0.1, 0.45))
+	_fill_rect(img, 13, 14, 6, 14, Color(0.42, 0.16, 0.65))
+	_fill_rect(img, 15, 14, 2, 14, Color(0.85, 0.75, 0.25)) # Золотая тесьма
+	_fill_rect(img, 11, 27, 10, 1, Color(0.85, 0.75, 0.25)) # Золотая кайма подола
 	
-	# Глубокий капюшон
-	_fill_rect(img, 10, 4, 12, 11, C_OUTLINE)
-	_fill_rect(img, 11, 5, 10, 9, Color(0.3, 0.12, 0.5))
-	_fill_rect(img, 12, 8, 8, 5, C_DARK_OUTLINE) # Тень под капюшоном
+	# Сапоги, выглядывающие из-под подола
+	_fill_rect(img, 12, 28, 3, 2, Color(0.2, 0.12, 0.08))
+	_fill_rect(img, 17, 28, 3, 2, Color(0.2, 0.12, 0.08))
+	
+	# Золотой пояс с рубиновым зельем и свитком
+	_fill_rect(img, 11, 20, 10, 2, Color(0.7, 0.55, 0.15))
+	_fill_rect(img, 12, 22, 2, 3, Color(0.9, 0.15, 0.15)) # Колба зелья
+	_set_p(img, 12, 22, Color(1, 1, 1))
+	_fill_rect(img, 18, 22, 2, 3, Color(0.95, 0.9, 0.75)) # Свиток
+	
+	# Глубокий заостренный капюшон с наплечной пелериной
+	_fill_rect(img, 10, 3, 12, 12, C_OUTLINE)
+	_fill_rect(img, 11, 4, 10, 10, Color(0.26, 0.08, 0.42))
+	_set_p(img, 15, 2, C_OUTLINE) # Острый пик капюшона
+	_set_p(img, 16, 2, C_OUTLINE)
+	_set_p(img, 15, 3, Color(0.42, 0.16, 0.65))
+	_set_p(img, 16, 3, Color(0.42, 0.16, 0.65))
+	
+	# Тень под капюшоном
+	_fill_rect(img, 12, 8, 8, 5, C_DARK_OUTLINE)
 	# Мистические сияющие фиолетово-голубые глаза
 	_set_p(img, 14, 10, Color(0.5, 0.95, 1.0))
 	_set_p(img, 17, 10, Color(0.5, 0.95, 1.0))
@@ -737,35 +760,42 @@ static func _draw_mage_sprite(img: Image) -> void:
 	_set_p(img, 18, 10, Color(0.8, 0.4, 1.0))
 	
 	# Рукава мантии и золотая кайма (оружие динамически управляется WeaponPivot)
-	_fill_rect(img, 8, 16, 3, 6, Color(0.3, 0.12, 0.5))
-	_fill_rect(img, 21, 16, 3, 6, Color(0.3, 0.12, 0.5))
+	_fill_rect(img, 8, 16, 3, 6, Color(0.28, 0.1, 0.45))
+	_fill_rect(img, 21, 16, 3, 6, Color(0.28, 0.1, 0.45))
 	_fill_rect(img, 8, 21, 3, 2, Color(0.85, 0.75, 0.25))
 	_fill_rect(img, 21, 21, 3, 2, Color(0.85, 0.75, 0.25))
 
 static func _draw_ranger_sprite(img: Image) -> void:
 	# Зеленый лесной плащ и колчан
 	_fill_rect(img, 9, 13, 14, 14, C_OUTLINE)
-	_fill_rect(img, 10, 14, 12, 12, Color(0.18, 0.38, 0.22))
+	_fill_rect(img, 10, 14, 12, 12, Color(0.15, 0.35, 0.18))
 	# Колчан со стрелами на плече
-	_fill_rect(img, 20, 9, 3, 8, Color(0.45, 0.3, 0.15))
-	_set_p(img, 21, 8, Color(0.9, 0.9, 0.9)) # Оперение
-	_set_p(img, 22, 7, Color(0.9, 0.9, 0.9))
+	_fill_rect(img, 20, 8, 4, 9, Color(0.45, 0.3, 0.15))
+	_set_p(img, 21, 7, Color(0.2, 0.7, 0.3)) # Зеленое оперение
+	_set_p(img, 22, 6, Color(0.2, 0.7, 0.3))
+	_set_p(img, 23, 7, Color(0.2, 0.7, 0.3))
 	
 	# Капюшон следопыта с маской
-	_fill_rect(img, 11, 4, 10, 10, C_OUTLINE)
-	_fill_rect(img, 12, 5, 8, 8, Color(0.22, 0.45, 0.25))
+	_fill_rect(img, 11, 3, 10, 11, C_OUTLINE)
+	_fill_rect(img, 12, 4, 8, 9, Color(0.2, 0.42, 0.22))
 	# Зоркие янтарные глаза
 	_fill_rect(img, 13, 8, 6, 2, C_DARK_OUTLINE)
 	_set_p(img, 14, 8, Color(1.0, 0.85, 0.2))
 	_set_p(img, 17, 8, Color(1.0, 0.85, 0.2))
 	# Кожаная полумаска
-	_fill_rect(img, 13, 10, 6, 3, Color(0.38, 0.25, 0.15))
+	_fill_rect(img, 13, 10, 6, 3, Color(0.35, 0.22, 0.12))
 	
-	# Кожаный доспех с ремнями
+	# Кожаный доспех с перекрестными ремнями и пряжками
 	_fill_rect(img, 12, 14, 8, 8, Color(0.35, 0.24, 0.14))
 	_fill_rect(img, 14, 14, 2, 8, Color(0.55, 0.4, 0.25))
-	_fill_rect(img, 12, 22, 3, 7, Color(0.2, 0.3, 0.2))
-	_fill_rect(img, 17, 22, 3, 7, Color(0.2, 0.3, 0.2))
+	_set_p(img, 15, 17, Color(0.9, 0.75, 0.2)) # Золотая застежка
+	
+	# Пояс и штаны
+	_fill_rect(img, 11, 21, 10, 2, Color(0.25, 0.15, 0.08))
+	_fill_rect(img, 12, 23, 3, 5, Color(0.18, 0.28, 0.18))
+	_fill_rect(img, 17, 23, 3, 5, Color(0.18, 0.28, 0.18))
+	_fill_rect(img, 11, 27, 4, 3, Color(0.32, 0.2, 0.1)) # Сапоги
+	_fill_rect(img, 17, 27, 4, 3, Color(0.32, 0.2, 0.1))
 	
 	# Кожаные наручи (лук динамически управляется WeaponPivot)
 	_fill_rect(img, 8, 16, 3, 5, Color(0.38, 0.25, 0.15))

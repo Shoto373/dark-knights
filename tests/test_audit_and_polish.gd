@@ -310,3 +310,42 @@ func test_pedestal_radial_aura_and_high_res_items() -> void:
 	var apple_tex: Texture2D = SpriteGenerator.get_item_texture(apple_item)
 	assert_not_null(apple_tex)
 	assert_eq(apple_tex.get_width(), 32, "Иконка яблока 32px")
+
+func test_hero_visual_overhaul_and_procedural_animations() -> void:
+	# 1. Проверяем анатомическую структуру и отсутствие монолитного мешка/кокона
+	var warrior_svg: String = FileAccess.get_file_as_string("res://assets/sprites/hero_warrior.svg")
+	var mage_svg: String = FileAccess.get_file_as_string("res://assets/sprites/hero_mage.svg")
+	var ranger_svg: String = FileAccess.get_file_as_string("res://assets/sprites/hero_ranger.svg")
+	
+	assert_true(warrior_svg.contains("left_leg") and warrior_svg.contains("right_leg"), "Воин имеет раздельные бронированные ноги/сапоги")
+	assert_true(warrior_svg.contains("visorGlow"), "Воин имеет светящийся визор шлема")
+	assert_true(mage_svg.contains("mage_left_boot") and mage_svg.contains("mage_right_boot"), "Маг имеет раздельные сапоги под подолом мантии")
+	assert_true(mage_svg.contains("eyeSoul"), "Маг имеет сияющие мистические глаза души")
+	assert_true(ranger_svg.contains("ranger_left_boot") and ranger_svg.contains("ranger_right_boot"), "Следопыт имеет сапоги следопыта")
+	assert_true(ranger_svg.contains("eyeAmber"), "Следопыт имеет зоркие янтарные глаза")
+	
+	# 2. Проверяем мягкую тень персонажа на полу
+	var p_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var p: Player = p_scene.instantiate() as Player
+	add_child_autofree(p)
+	
+	assert_not_null(p._shadow_sprite, "У героя создана мягкая тень на полу")
+	assert_true(p._shadow_sprite.z_index < 0, "Тень находится под героем")
+	assert_eq(p._shadow_sprite.position.y, 18.0, "Тень точно центрирована под стопами героя")
+	
+	# 3. Проверяем дыхание в покое (Idle breathing)
+	p.velocity = Vector2.ZERO
+	p._update_procedural_animations(0.5)
+	assert_ne(p.visuals.scale.y, 1.0, "В покое работает дыхание корпуса")
+	
+	# 4. Проверяем динамический наклон и покачивание при беге
+	p.velocity = Vector2(200.0, 0.0)
+	p._update_procedural_animations(0.1)
+	assert_ne(p.visuals.position.y, 0.0, "При беге корпус покачивается (bobbing)")
+	assert_ne(p.visuals.rotation, 0.0, "При беге корпус наклоняется вперед по движению")
+	
+	# 5. Проверяем выпад при атаке ближнего боя
+	p.aim_direction = Vector2.RIGHT
+	p._swing_melee_weapon()
+	assert_true(p.is_swinging, "Активирован взмах оружием")
+	assert_false(p.attack_collision.disabled, "Коллизия удара активна")

@@ -33,8 +33,8 @@ func test_sprite_generator_heroes_textures() -> void:
 	assert_not_null(mage_tex, "Текстура мага сгенерирована")
 	assert_not_null(ranger_tex, "Текстура следопыта сгенерирована")
 	
-	assert_eq(warrior_tex.get_width(), 32)
-	assert_eq(warrior_tex.get_height(), 32)
+	assert_true(warrior_tex.get_width() >= 32, "Ширина текстуры героя не менее 32px")
+	assert_true(warrior_tex.get_height() >= 32, "Высота текстуры героя не менее 32px")
 
 func test_sprite_generator_hero_icons() -> void:
 	var icon: Texture2D = SpriteGenerator.get_hero_icon("warrior")

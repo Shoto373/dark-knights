@@ -38,6 +38,8 @@ var shield_barrier: ShieldBarrier = null
 var _walk_anim_phase: float = 0.0
 var _ghost_timer: float = 0.0
 var _facing_left: bool = false
+var _shadow_sprite: Sprite2D = null
+var _step_dust_timer: float = 0.0
 
 func _ready() -> void:
 	add_to_group("player")
@@ -88,6 +90,7 @@ func _ready() -> void:
 			hero_data = load("res://data/heroes/warrior.tres") as HeroData
 	
 	apply_hero_data(hero_data)
+	_setup_character_shadow()
 	
 	# Мягкий динамический фонарь героя (Forward+ Vulkan 2D Lighting)
 	var lantern_light: PointLight2D = LightTextureGenerator.create_point_light(Color(1.0, 0.92, 0.8), 0.82, 2.8)
@@ -160,6 +163,17 @@ func apply_hero_data(data: HeroData) -> void:
 	
 	recalculate_stats()
 	EventBus.player_health_changed.emit(health_component.current_health, health_component.max_health)
+
+func _setup_character_shadow() -> void:
+	if _shadow_sprite == null:
+		_shadow_sprite = Sprite2D.new()
+		_shadow_sprite.name = "FloorShadow"
+		_shadow_sprite.texture = EffectsHelper.get_spark_texture()
+		_shadow_sprite.scale = Vector2(2.5, 0.9)
+		_shadow_sprite.position = Vector2(0, 18.0)
+		_shadow_sprite.modulate = Color(0, 0, 0, 0.5)
+		_shadow_sprite.z_index = -1
+		add_child(_shadow_sprite)
 	EventBus.hero_changed.emit(hero_data)
 
 func recalculate_stats() -> void:
@@ -236,6 +250,9 @@ func _process(delta: float) -> void:
 	_update_iframes_blink(delta)
 
 func _update_procedural_animations(delta: float) -> void:
+	_step_dust_timer = maxf(0.0, _step_dust_timer - delta)
+	var cur_facing: float = -1.0 if _facing_left else 1.0
+
 	if is_dashing:
 		_ghost_timer += delta
 		if _ghost_timer >= 0.035:
@@ -245,22 +262,52 @@ func _update_procedural_animations(delta: float) -> void:
 			var ghost_tint: Color = hero_data.color if hero_data else Color(0.3, 0.8, 1.0, 0.7)
 			ghost_tint.a = 0.65
 			EffectsHelper.spawn_dash_ghost(get_parent(), global_position, tex, visuals.scale.x < 0, ghost_tint)
+		if _shadow_sprite != null:
+			_shadow_sprite.scale = Vector2(3.2, 0.65)
 		return
 	
 	var is_moving: bool = velocity.length_squared() > 100.0
 	if is_moving:
-		_walk_anim_phase += delta * 14.0
-		# Пошаговое покачивание (Bobbing) в стиле Isaac / Gungeon
-		visuals.position.y = -abs(sin(_walk_anim_phase)) * 3.5
-		visuals.rotation = sin(_walk_anim_phase) * 0.07
-		var squash: float = 1.0 + sin(_walk_anim_phase * 2.0) * 0.04
-		visuals.scale.y = squash
+		_walk_anim_phase += delta * 15.0
+		var step_sin: float = sin(_walk_anim_phase)
+		
+		# Динамическое покачивание корпуса (Bobbing)
+		visuals.position.y = -abs(step_sin) * 4.2
+		
+		# Наклон корпуса по направлению бега (Running lean)
+		var run_lean: float = clampf(velocity.x / 260.0, -1.0, 1.0) * 0.14
+		visuals.rotation = run_lean + step_sin * 0.05
+		
+		# Пружинистый сквош и стретч при шаге
+		var squash_y: float = 1.0 + sin(_walk_anim_phase * 2.0) * 0.06
+		var squash_x: float = (1.0 - sin(_walk_anim_phase * 2.0) * 0.03) * cur_facing
+		visuals.scale = Vector2(squash_x, squash_y)
+		
+		# Динамическая деформация тени под ногами
+		if _shadow_sprite != null:
+			_shadow_sprite.scale = Vector2(2.5 + abs(step_sin) * 0.35, 0.9 - abs(step_sin) * 0.18)
+		
+		# Пыль от шагов при приземлении стопы
+		if abs(step_sin) > 0.88 and _step_dust_timer <= 0.0:
+			var foot_offset: Vector2 = Vector2(-5.0 if step_sin > 0 else 5.0, 14.0)
+			EffectsHelper.spawn_dust_puff(get_parent(), global_position + foot_offset)
+			_step_dust_timer = 0.22
 	else:
 		_walk_anim_phase += delta * 3.0
-		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 20.0)
-		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 3.0)
-		# Дыхание в покое (Idle breathing)
-		visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.02
+		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 25.0)
+		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 4.0)
+		
+		# Живое дыхание в покое (Idle breathing)
+		var breath: float = sin(_walk_anim_phase) * 0.035
+		visuals.scale = Vector2((1.0 - breath * 0.5) * cur_facing, 1.0 + breath)
+		
+		# Плавное парение оружия в покое
+		var w_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
+		if w_sprite != null and not is_swinging:
+			w_sprite.position.y = sin(_walk_anim_phase * 1.3) * 1.8
+		
+		if _shadow_sprite != null:
+			_shadow_sprite.scale = Vector2(2.5 + breath * 0.3, 0.9 - breath * 0.1)
 
 func _physics_process(delta: float) -> void:
 	if health_component.is_dead:
@@ -338,6 +385,12 @@ func _start_dash() -> void:
 	
 	health_component.set_invulnerable(true)
 	visuals.modulate.a = 0.5
+	
+	# Динамический наклон и аэродинамический стретч при рывке
+	var cur_facing: float = -1.0 if _facing_left else 1.0
+	visuals.scale = Vector2(1.35 * cur_facing, 0.72)
+	visuals.rotation = dash_direction.angle() * 0.35
+	
 	EffectsHelper.spawn_dust_puff(get_parent(), global_position)
 	EffectsHelper.spawn_shockwave(get_parent(), global_position, 110.0, 0.28, 0.035)
 	AudioManager.play_sfx_named("dash")
@@ -348,7 +401,13 @@ func _on_dash_finished() -> void:
 	is_dashing = false
 	if iframes_timer.is_stopped():
 		health_component.set_invulnerable(false)
-		visuals.modulate.a = 1.0
+	visuals.modulate.a = 1.0
+	
+	# Пружинный отскок после рывка
+	var cur_facing: float = -1.0 if _facing_left else 1.0
+	var bounce_tween: Tween = visuals.create_tween()
+	bounce_tween.tween_property(visuals, "scale", Vector2(cur_facing, 1.0), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	bounce_tween.tween_property(visuals, "rotation", 0.0, 0.1)
 
 func _perform_attack() -> void:
 	can_attack = false
@@ -390,9 +449,22 @@ func _swing_melee_weapon() -> void:
 		is_swinging = false
 	)
 
+	# Выпад телом вперед и упругий возврат при ударе
+	var cur_facing: float = -1.0 if _facing_left else 1.0
 	var thrust_tween: Tween = visuals.create_tween()
-	thrust_tween.tween_property(visuals, "position", aim_direction * 6.0, 0.08)
-	thrust_tween.tween_property(visuals, "position", Vector2.ZERO, 0.1)
+	thrust_tween.tween_property(visuals, "position", aim_direction * 10.0, 0.07).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	thrust_tween.tween_property(visuals, "position", Vector2.ZERO, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+	var squash_tween: Tween = visuals.create_tween()
+	squash_tween.tween_property(visuals, "scale", Vector2(1.24 * cur_facing, 0.8), 0.07).set_trans(Tween.TRANS_QUAD)
+	squash_tween.tween_property(visuals, "scale", Vector2(cur_facing, 1.0), 0.12).set_trans(Tween.TRANS_BACK)
+
+	# Увеличение оружия на пике взмаха (Weapon scale pop)
+	var w_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
+	if w_sprite != null:
+		var w_pop: Tween = w_sprite.create_tween()
+		w_pop.tween_property(w_sprite, "scale", Vector2(1.35, 1.35), 0.07).set_trans(Tween.TRANS_QUAD)
+		w_pop.tween_property(w_sprite, "scale", Vector2(1.0, 1.0), 0.12)
 
 func _shoot_basic_projectile() -> void:
 	AudioManager.play_sfx_named("shoot")
@@ -400,9 +472,26 @@ func _shoot_basic_projectile() -> void:
 	get_parent().add_child(proj)
 	proj.global_position = global_position + aim_direction * 20.0
 	
+	# Отдача тела назад от выстрела/каста
+	var cur_facing: float = -1.0 if _facing_left else 1.0
 	var recoil_tween: Tween = visuals.create_tween()
-	recoil_tween.tween_property(visuals, "position", -aim_direction * 4.0, 0.06)
-	recoil_tween.tween_property(visuals, "position", Vector2.ZERO, 0.1)
+	recoil_tween.tween_property(visuals, "position", -aim_direction * 6.0, 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	recoil_tween.tween_property(visuals, "position", Vector2.ZERO, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+	var stretch_tween: Tween = visuals.create_tween()
+	stretch_tween.tween_property(visuals, "scale", Vector2(0.88 * cur_facing, 1.15), 0.06)
+	stretch_tween.tween_property(visuals, "scale", Vector2(cur_facing, 1.0), 0.12).set_trans(Tween.TRANS_BACK)
+
+	# Отдача оружия назад (Kickback)
+	var w_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
+	if w_sprite != null:
+		var kick_tween: Tween = w_sprite.create_tween()
+		kick_tween.tween_property(w_sprite, "position:x", 10.0, 0.05).set_trans(Tween.TRANS_QUAD)
+		kick_tween.tween_property(w_sprite, "position:x", 18.0, 0.12).set_trans(Tween.TRANS_BACK)
+
+	# Вспышка искр на кончике посоха / лука
+	var muzzle_color: Color = Color(0.9, 0.5, 1.4) if hero_data and hero_data.id == "mage" else Color(1.2, 1.1, 0.5)
+	EffectsHelper.spawn_hit_sparks(get_parent(), global_position + aim_direction * 26.0, muzzle_color, 5)
 
 	var p_type: String = "magic" if hero_data and hero_data.id == "mage" else "arrow"
 	if weapon_hitbox.damage_type == "fire" or weapon_hitbox.tags.has("fire"):
@@ -606,6 +695,12 @@ func _on_health_damaged(amount: int, current_hp: int, max_hp: int) -> void:
 	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.0, 0.3, 0.3, 1.0), 6)
 	
 	EffectsHelper.apply_hit_flash(visuals, 0.14, Color(1.0, 0.3, 0.3, 1.0))
+	
+	# Отклик на получение урона (Flinch & Squash)
+	var cur_facing: float = -1.0 if _facing_left else 1.0
+	var flinch_tween: Tween = visuals.create_tween()
+	flinch_tween.tween_property(visuals, "scale", Vector2(1.25 * cur_facing, 0.78), 0.05).set_trans(Tween.TRANS_QUAD)
+	flinch_tween.tween_property(visuals, "scale", Vector2(cur_facing, 1.0), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	
 	if status_effect_manager == null or not status_effect_manager.is_processing_dot:
 		health_component.set_invulnerable(true)

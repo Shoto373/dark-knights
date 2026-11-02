@@ -1,18 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <path d="M 18 24 C 14 36, 12 50, 16 58 C 22 60, 42 60, 48 58 C 52 50, 50 36, 46 24 Z" fill="#1e3c72" stroke="#0b1320" stroke-width="2"/>
-  <rect x="22" y="44" width="8" height="15" rx="3" fill="#2c3e50" stroke="#17202a" stroke-width="2"/>
-  <rect x="34" y="44" width="8" height="15" rx="3" fill="#2c3e50" stroke="#17202a" stroke-width="2"/>
-  <path d="M 20 25 L 44 25 L 41 44 L 23 44 Z" fill="#95a5a6" stroke="#1a252f" stroke-width="2"/>
-  <rect x="30" y="28" width="4" height="12" fill="#f1c40f"/>
-  <rect x="26" y="32" width="12" height="4" fill="#f1c40f"/>
-  <circle cx="18" cy="27" r="6" fill="#bdc3c7" stroke="#b7950b" stroke-width="1.5"/>
-  <circle cx="46" cy="27" r="6" fill="#bdc3c7" stroke="#b7950b" stroke-width="1.5"/>
-  <path d="M 23 10 C 23 5, 41 5, 41 10 L 43 23 L 21 23 Z" fill="#bdc3c7" stroke="#1a252f" stroke-width="2"/>
-  <path d="M 28 8 L 32 3 L 36 8 L 32 6 Z" fill="#f1c40f"/>
-  <path d="M 25 15 L 39 15 L 34 18 L 30 18 Z" fill="#111118"/>
-  <rect x="30.5" y="15" width="3" height="8" fill="#111118"/>
-  <ellipse cx="28" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
-  <ellipse cx="36" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
-  <circle cx="18" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
-  <circle cx="46" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="steel" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="35%" stop-color="#64748b"/>
+      <stop offset="60%" stop-color="#94a3b8"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <linearGradient id="steelDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="45%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#713f12"/>
+    </linearGradient>
+    <linearGradient id="cape" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#b91c1c"/>
+      <stop offset="60%" stop-color="#7f1d1d"/>
+      <stop offset="100%" stop-color="#450a0a"/>
+    </linearGradient>
+    <radialGradient id="visorGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#0891b2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Flowing Crimson Battle Cape (Hanging narrow behind back, visible between legs & below belt) -->
+  <path d="M 23 24 L 21 54 L 28 50 L 32 55 L 36 50 L 43 54 L 41 24 Z" fill="url(#cape)" stroke="#2b0505" stroke-width="1.2"/>
+
+  <!-- Left Leg (Armored Greave & Sabaton) -->
+  <g id="left_leg">
+    <!-- Thigh Armor -->
+    <rect x="20" y="42" width="9" height="7" rx="1.5" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+    <!-- Knee Poleyn -->
+    <rect x="19" y="47" width="10" height="4" rx="2" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <circle cx="24" cy="49" r="1" fill="#facc15"/>
+    <!-- Greave Shin & Boot Sabaton -->
+    <path d="M 20 50 L 29 50 L 29 59 L 18 59 L 19 55 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <line x1="20" y1="55" x2="28" y2="55" stroke="#cbd5e1" stroke-width="1"/>
+  </g>
+
+  <!-- Right Leg (Armored Greave & Sabaton) - Clear 7px gap between legs! -->
+  <g id="right_leg">
+    <!-- Thigh Armor -->
+    <rect x="35" y="42" width="9" height="7" rx="1.5" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+    <!-- Knee Poleyn -->
+    <rect x="35" y="47" width="10" height="4" rx="2" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <circle cx="40" cy="49" r="1" fill="#facc15"/>
+    <!-- Greave Shin & Boot Sabaton -->
+    <path d="M 35 50 L 44 50 L 45 55 L 46 59 L 35 59 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.2"/>
+    <line x1="36" y1="55" x2="44" y2="55" stroke="#cbd5e1" stroke-width="1"/>
+  </g>
+
+  <!-- Tassets (Thigh Plates hanging from belt) -->
+  <polygon points="19,41 27,41 25,48 19,46" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+  <polygon points="37,41 45,41 45,46 39,48" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+
+  <!-- Forged Steel Cuirass (Breastplate with athletic tapered waist) -->
+  <path d="M 18 22 L 46 22 L 42 41 L 22 41 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.6"/>
+  <!-- Gothic Inlaid Center Breastplate -->
+  <path d="M 23 24 L 41 24 L 38 39 L 26 39 Z" fill="url(#steelDark)"/>
+  <!-- Gold Heraldic Cross & Cyan Core Gem -->
+  <polygon points="32,26 36,32 32,38 28,32" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="32" cy="32" r="1.8" fill="#06b6d4"/>
+
+  <!-- Leather War Belt -->
+  <rect x="21" y="39" width="22" height="4" rx="1" fill="#3d1d07" stroke="#1c1917" stroke-width="1"/>
+  <rect x="29" y="38" width="6" height="6" rx="1.2" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/>
+
+  <!-- Spiked Left Pauldron (Layered Shoulder Armor flared out) -->
+  <path d="M 10 21 L 18 20 L 20 28 L 12 30 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.4"/>
+  <polygon points="10,21 5,19 11,18" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/> <!-- Sharp Spike -->
+  <!-- Left Arm Vambrace (Held naturally at side) -->
+  <rect x="12" y="29" width="6" height="11" rx="2" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+  <circle cx="15" cy="40" r="3" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+
+  <!-- Spiked Right Pauldron -->
+  <path d="M 54 21 L 46 20 L 44 28 L 52 30 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.4"/>
+  <polygon points="54,21 59,19 53,18" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/> <!-- Sharp Spike -->
+  <!-- Right Arm Vambrace -->
+  <rect x="46" y="29" width="6" height="11" rx="2" fill="url(#steelDark)" stroke="#090d16" stroke-width="1.2"/>
+  <circle cx="49" cy="40" r="3" fill="url(#steel)" stroke="#090d16" stroke-width="1"/>
+
+  <!-- Gothic Greathelm (Angular, sharp crest, menacing visor) -->
+  <path d="M 21 8 C 21 3 43 3 43 8 L 44 22 L 20 22 Z" fill="url(#steel)" stroke="#090d16" stroke-width="1.6"/>
+  <!-- Helmet Golden Brow Crest & Spire -->
+  <polygon points="32,1 35,6 29,6" fill="url(#gold)" stroke="#713f12" stroke-width="0.8"/>
+  <line x1="32" y1="6" x2="32" y2="13" stroke="url(#gold)" stroke-width="1.5"/>
+
+  <!-- Menacing Visor Slit -->
+  <path d="M 22 13 L 42 13 L 38 18 L 26 18 Z" fill="#040711" stroke="#090d16" stroke-width="1"/>
+  <rect x="24" y="14.5" width="16" height="2.5" rx="1" fill="url(#visorGlow)"/>
+  <circle cx="28" cy="15.8" r="1.1" fill="#ffffff"/>
+  <circle cx="36" cy="15.8" r="1.1" fill="#ffffff"/>
+
+  <!-- Lower Helm Bevor (Chin ventilation guard) -->
+  <polygon points="25,18 32,22 39,18 32,20" fill="url(#steelDark)" stroke="#090d16" stroke-width="0.8"/>
 </svg>

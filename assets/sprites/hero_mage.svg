@@ -1,12 +1,97 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <path d="M 24 22 L 40 22 L 46 58 L 18 58 Z" fill="#3b0764" stroke="#090114" stroke-width="2"/>
-  <path d="M 31 24 L 31 58" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,2"/>
-  <path d="M 32 4 C 20 8, 18 20, 20 25 C 26 26, 38 26, 44 25 C 46 20, 44 8, 32 4 Z" fill="#2c0b4d" stroke="#090114" stroke-width="2"/>
-  <path d="M 23 14 C 23 11, 41 11, 41 14 C 42 22, 22 22, 23 14 Z" fill="#08020f"/>
-  <circle cx="28" cy="17" r="2.2" fill="#38bdf8"/>
-  <circle cx="36" cy="17" r="2.2" fill="#38bdf8"/>
-  <circle cx="28" cy="17" r="1" fill="#ffffff"/>
-  <circle cx="36" cy="17" r="1" fill="#ffffff"/>
-  <circle cx="20" cy="36" r="3.5" fill="#4c1d95" stroke="#1e1b4b" stroke-width="1.5"/>
-  <circle cx="44" cy="36" r="3.5" fill="#4c1d95" stroke="#1e1b4b" stroke-width="1.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="eyeSoul" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#38bdf8"/>
+      <stop offset="75%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mageViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4c1d95"/>
+      <stop offset="50%" stop-color="#3b0764"/>
+      <stop offset="100%" stop-color="#1e0538"/>
+    </linearGradient>
+    <linearGradient id="cowlMage" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6b21a8"/>
+      <stop offset="100%" stop-color="#2e1065"/>
+    </linearGradient>
+    <linearGradient id="goldMage" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#713f12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Flowing Back Robe Hem (Visible behind boots and between split folds) -->
+  <path d="M 23 28 L 20 54 L 28 52 L 32 55 L 36 52 L 44 54 L 41 28 Z" fill="#130321" stroke="#08010d" stroke-width="1.2"/>
+
+  <!-- Left Boot (Dark Arcane Leather with Gold Cuff) -->
+  <g id="mage_left_boot">
+    <rect x="21" y="47" width="8" height="12" rx="2" fill="#18181b" stroke="#09090b" stroke-width="1.2"/>
+    <line x1="21" y1="52" x2="29" y2="52" stroke="url(#goldMage)" stroke-width="1.2"/>
+    <circle cx="25" cy="56" r="0.8" fill="#38bdf8"/>
+  </g>
+
+  <!-- Right Boot (Clear gap between feet!) -->
+  <g id="mage_right_boot">
+    <rect x="35" y="47" width="8" height="12" rx="2" fill="#18181b" stroke="#09090b" stroke-width="1.2"/>
+    <line x1="35" y1="52" x2="43" y2="52" stroke="url(#goldMage)" stroke-width="1.2"/>
+    <circle cx="39" cy="56" r="0.8" fill="#38bdf8"/>
+  </g>
+
+  <!-- Main Archmage Robe with Open Split Hem -->
+  <!-- Left Robe Panel -->
+  <path d="M 21 24 L 16 48 L 27 50 L 26 26 Z" fill="url(#mageViolet)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 16 48 L 27 50" stroke="url(#goldMage)" stroke-width="1.5"/>
+  <!-- Right Robe Panel -->
+  <path d="M 43 24 L 48 48 L 37 50 L 38 26 Z" fill="url(#mageViolet)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 37 50 L 48 48" stroke="url(#goldMage)" stroke-width="1.5"/>
+
+  <!-- Center Tabard & Gold Runic Inscriptions -->
+  <path d="M 26 26 L 27 49 L 37 49 L 38 26 Z" fill="#24073d" stroke="url(#goldMage)" stroke-width="0.8"/>
+  <line x1="32" y1="27" x2="32" y2="47" stroke="url(#goldMage)" stroke-width="1.6" stroke-dasharray="3,2"/>
+
+  <!-- Leather Arcane Belt & Trinkets -->
+  <rect x="21" y="36" width="22" height="4" rx="1" fill="#451a03" stroke="#1c1917" stroke-width="1"/>
+  <!-- Gold Runic Buckle & Cyan Soul Jewel -->
+  <rect x="29" y="35" width="6" height="6" rx="1.2" fill="url(#goldMage)" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="32" cy="38" r="1.3" fill="#38bdf8"/>
+  <!-- Ruby Potion Vial -->
+  <rect x="23" y="39" width="3.5" height="5.5" rx="1" fill="#dc2626" stroke="#450a0a" stroke-width="0.8"/>
+  <circle cx="24.8" cy="40.5" r="0.8" fill="#fca5a5"/>
+  <!-- Spell Scroll with Wax Seal -->
+  <rect x="37.5" y="39" width="4" height="6" rx="1" fill="#fef08a" stroke="#713f12" stroke-width="0.8"/>
+  <circle cx="39.5" cy="42" r="1" fill="#b91c1c"/>
+
+  <!-- Draped Left Sleeve (Flared downwards naturally) -->
+  <path d="M 17 23 Q 11 31 13 41 Q 17 43 19 39 Q 18 31 20 24 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 13 39 Q 16 42 19 38" fill="none" stroke="url(#goldMage)" stroke-width="1.2"/>
+
+  <!-- Draped Right Sleeve -->
+  <path d="M 47 23 Q 53 31 51 41 Q 47 43 45 39 Q 46 31 44 24 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.4"/>
+  <path d="M 45 38 Q 48 42 51 39" fill="none" stroke="url(#goldMage)" stroke-width="1.2"/>
+
+  <!-- Shoulder Cowl / Mantle (Flared over shoulders, tapering down) -->
+  <path d="M 16 21 Q 12 27 16 30 Q 24 32 32 29 Q 40 32 48 30 Q 52 27 48 21 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.6"/>
+  <path d="M 16 29 Q 24 31 32 28 Q 40 31 48 29" fill="none" stroke="url(#goldMage)" stroke-width="1.2"/>
+
+  <!-- High Gothic Arcane Collar -->
+  <path d="M 23 21 L 27 14 L 37 14 L 41 21 Z" fill="#2e1065" stroke="#09010f" stroke-width="1.2"/>
+  <circle cx="32" cy="20" r="2.2" fill="url(#eyeSoul)"/>
+  <circle cx="32" cy="20" r="1.1" fill="#ffffff"/>
+
+  <!-- Pointed Archmage Hood (Deep gothic cowl with peak fold) -->
+  <path d="M 32 2 C 23 4 17 11 18 20 C 23 23 41 23 46 20 C 47 11 41 4 32 2 Z" fill="url(#cowlMage)" stroke="#09010f" stroke-width="1.8"/>
+  <path d="M 32 2 Q 35 6 36 12" fill="none" stroke="#a855f7" stroke-width="1.2"/>
+
+  <!-- Deep Face Void inside Hood -->
+  <path d="M 20 14 C 20 20 44 20 44 14 C 43 11 21 11 20 14 Z" fill="#04010a"/>
+
+  <!-- Piercing Glowing Soul Eyes -->
+  <ellipse cx="27" cy="15.5" rx="3.5" ry="2.2" fill="url(#eyeSoul)"/>
+  <ellipse cx="37" cy="15.5" rx="3.5" ry="2.2" fill="url(#eyeSoul)"/>
+  <ellipse cx="27" cy="15.5" rx="1.8" ry="1.1" fill="#e0f2fe"/>
+  <ellipse cx="37" cy="15.5" rx="1.8" ry="1.1" fill="#e0f2fe"/>
+  <circle cx="27" cy="15" r="0.7" fill="#ffffff"/>
+  <circle cx="37" cy="15" r="0.7" fill="#ffffff"/>
 </svg>
