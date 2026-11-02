@@ -43,3 +43,4 @@ func _draw() -> void:
 		# Маленькие рунические узлы на внешнем кольце
 		var p_node: Vector2 = Vector2(cos(ang), sin(ang)) * radius
 		draw_circle(p_node, 2.0, col_outer)
+

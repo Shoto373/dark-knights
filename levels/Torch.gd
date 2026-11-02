@@ -48,10 +48,11 @@ func _process(delta: float) -> void:
 		_spawn_ember()
 
 func _spawn_ember() -> void:
-	var spark: ColorRect = ColorRect.new()
-	var sz: float = randf_range(1.5, 2.5)
-	spark.size = Vector2(sz, sz)
-	spark.color = Color(1.0, randf_range(0.6, 0.9), 0.2, 0.9)
+	var spark: Sprite2D = Sprite2D.new()
+	spark.texture = EffectsHelper.get_spark_texture()
+	var sz: float = randf_range(0.12, 0.22)
+	spark.scale = Vector2(sz, sz)
+	spark.modulate = Color(1.0, randf_range(0.6, 0.9), 0.2, 0.9)
 	spark.position = flame_sprite.position + Vector2(randf_range(-3.0, 3.0), -6.0)
 	add_child(spark)
 	

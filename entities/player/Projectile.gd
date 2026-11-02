@@ -87,10 +87,11 @@ func _spawn_trail() -> void:
 	var p_parent: Node = get_parent()
 	if p_parent == null:
 		return
-	var spark: ColorRect = ColorRect.new()
-	var sz: float = randf_range(2.0, 4.0)
-	spark.size = Vector2(sz, sz)
-	spark.position = global_position - Vector2(sz, sz) / 2.0 - direction * 6.0
+	var spark: Sprite2D = Sprite2D.new()
+	spark.texture = EffectsHelper.get_spark_texture()
+	var sz: float = randf_range(0.2, 0.4)
+	spark.scale = Vector2(sz, sz)
+	spark.global_position = global_position - direction * 6.0
 	
 	var trail_color: Color = modulate
 	if proj_type == "fireball":
@@ -100,7 +101,7 @@ func _spawn_trail() -> void:
 	elif proj_type == "arrow":
 		trail_color = Color(0.7, 0.7, 0.7, 0.5)
 	
-	spark.color = trail_color
+	spark.modulate = trail_color
 	p_parent.add_child(spark)
 	
 	var tween: Tween = spark.create_tween()

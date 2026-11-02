@@ -266,15 +266,11 @@ func _perform_phase_special(dir: Vector2) -> void:
 		_cast_blizzard_storm(dir)
 
 func _cast_ice_pillars_and_nova() -> void:
-	floor_telegraph.visible = true
-	floor_telegraph.position = -Vector2(80, 80)
-	floor_telegraph.size = Vector2(160, 160)
-	floor_telegraph.color = Color(0.2, 0.6, 1.0, 0.4)
+	EffectsHelper.spawn_telegraph_circle(get_parent(), global_position, 80.0, 0.4, Color(0.3, 0.8, 1.4, 0.6))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(floor_telegraph, "color:a", 0.85, 0.4)
+	tween.tween_interval(0.4)
 	tween.tween_callback(func():
-		floor_telegraph.visible = false
 		_spawn_ice_pillars()
 		_release_frost_nova()
 		is_acting = false

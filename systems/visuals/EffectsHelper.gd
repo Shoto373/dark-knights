@@ -8,6 +8,9 @@ static var _spark_tex: Texture2D = null
 static var _hit_flash_shader: Shader = preload("res://shaders/hit_flash.gdshader")
 static var _shockwave_shader: Shader = preload("res://shaders/shockwave.gdshader")
 static var _dissolve_shader: Shader = preload("res://shaders/dissolve_burn.gdshader")
+static var _shockwave_ring_script: GDScript = preload("res://systems/visuals/ShockwaveRing.gd")
+static var _cast_circle_script: GDScript = preload("res://systems/visuals/CastCircleVisual.gd")
+static var _telegraph_circle_script: GDScript = preload("res://systems/visuals/TelegraphCircle.gd")
 
 static func get_spark_texture() -> Texture2D:
 	if _spark_tex != null:
@@ -206,42 +209,20 @@ static func spawn_portal_mote(parent: Node, spawn_pos: Vector2, center_pos: Vect
 	tween.parallel().tween_property(node, "scale", Vector2.ZERO, 0.6)
 	tween.tween_callback(node.queue_free)
 
-static func spawn_shockwave(parent: Node, global_pos: Vector2, radius: float = 140.0, duration: float = 0.32, force: float = 0.04) -> void:
+static func spawn_shockwave(parent: Node, global_pos: Vector2, radius: float = 140.0, duration: float = 0.32, color_or_force: Variant = null) -> void:
 	if parent == null:
 		return
 	if "postprocessing_enabled" in SettingsManager and not SettingsManager.postprocessing_enabled:
 		return
 		
-	var bbc: BackBufferCopy = BackBufferCopy.new()
-	bbc.copy_mode = BackBufferCopy.COPY_MODE_RECT
-	bbc.rect = Rect2(-radius, -radius, radius * 2.0, radius * 2.0)
-	bbc.global_position = global_pos
+	var ring_col: Color = Color(1.8, 1.6, 1.2, 0.85)
+	if color_or_force is Color:
+		ring_col = color_or_force
 	
-	var rect: ColorRect = ColorRect.new()
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.offset_left = -radius
-	rect.offset_top = -radius
-	rect.offset_right = radius
-	rect.offset_bottom = radius
-	
-	var mat: ShaderMaterial = ShaderMaterial.new()
-	mat.shader = _shockwave_shader
-	mat.set_shader_parameter("center", Vector2(0.5, 0.5))
-	mat.set_shader_parameter("wave_size", 0.48)
-	mat.set_shader_parameter("wave_thickness", 0.07)
-	mat.set_shader_parameter("wave_force", force)
-	mat.set_shader_parameter("progress", 0.0)
-	rect.material = mat
-	
-	bbc.add_child(rect)
-	parent.add_child(bbc)
-	
-	var tween: Tween = bbc.create_tween()
-	tween.tween_method(func(val: float):
-		if is_instance_valid(rect) and rect.material is ShaderMaterial:
-			(rect.material as ShaderMaterial).set_shader_parameter("progress", val)
-	, 0.0, 1.0, duration).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_callback(bbc.queue_free)
+	var ring: Node2D = _shockwave_ring_script.new() as Node2D
+	ring.global_position = global_pos
+	parent.add_child(ring)
+	ring.call("setup", radius, duration, ring_col)
 
 static func apply_burn_dissolve(node: CanvasItem, duration: float = 0.45, burn_color: Color = Color(2.8, 0.95, 0.15, 1.0)) -> Tween:
 	if not is_instance_valid(node):
@@ -262,11 +243,20 @@ static func apply_burn_dissolve(node: CanvasItem, duration: float = 0.45, burn_c
 static func spawn_cast_circle(parent: Node, global_pos: Vector2, color: Color = Color(1.0, 0.85, 0.35)) -> void:
 	if parent == null:
 		return
-	var circle: CastCircleVisual = CastCircleVisual.new()
-	circle.circle_color = color
+	var circle: Node2D = _cast_circle_script.new() as Node2D
+	circle.set("circle_color", color)
 	circle.global_position = global_pos
 	circle.z_index = 0
 	parent.add_child(circle)
+
+static func spawn_telegraph_circle(parent: Node, global_pos: Vector2, radius: float = 40.0, duration: float = 0.5, color: Color = Color(1.0, 0.25, 0.1, 0.45)) -> Node2D:
+	if parent == null:
+		return null
+	var tg: Node2D = _telegraph_circle_script.new() as Node2D
+	tg.global_position = global_pos
+	parent.add_child(tg)
+	tg.call("setup", radius, duration, color)
+	return tg
 
 static func spawn_magic_burst(parent: Node, global_pos: Vector2, color: Color, count: int = 10) -> void:
 	if parent == null:

@@ -6,7 +6,6 @@ extends Node2D
 @onready var hitbox: HitboxComponent = %HitboxComponent
 @onready var collision_shape: CollisionShape2D = %CollisionShape2D
 @onready var circle_shape: CircleShape2D = collision_shape.shape as CircleShape2D
-@onready var visual_circle: ColorRect = %VisualCircle
 
 var radius: float = 80.0
 var blast_color: Color = Color(1.0, 0.45, 0.1, 0.8)
@@ -29,13 +28,9 @@ func setup(
 	hitbox.knockback_force = knockback
 	hitbox.source_owner = self
 	
-	if visual_circle != null:
-		visual_circle.visible = false
 	queue_redraw()
 
 func _ready() -> void:
-	if visual_circle != null:
-		visual_circle.visible = false
 	scale = Vector2.ZERO
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

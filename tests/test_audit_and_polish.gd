@@ -164,3 +164,17 @@ func test_knockback_impulse_and_decay() -> void:
 		mc.move(body, Vector2.ZERO, 0.016)
 	assert_eq(mc.knockback_velocity, Vector2.ZERO, "Knockback velocity fully decayed to zero")
 	assert_eq(body.velocity, Vector2.ZERO, "Body velocity returned to zero")
+
+func test_telegraph_circle_and_shockwave_ring() -> void:
+	var root: Node2D = Node2D.new()
+	add_child_autofree(root)
+	
+	# Проверка процедурного телеграфа (без ColorRect)
+	var tg: Node2D = EffectsHelper.spawn_telegraph_circle(root, Vector2(50, 50), 60.0, 0.3, Color(1.0, 0.2, 0.1, 0.5))
+	assert_not_null(tg, "Телеграф должен быть создан")
+	assert_eq(tg.get("radius"), 60.0, "Радиус телеграфа 60px")
+	assert_true(tg is Node2D, "Телеграф является Node2D")
+	
+	# Проверка ударной волны ShockwaveRing
+	EffectsHelper.spawn_shockwave(root, Vector2(100, 100), 75.0, 0.2, Color(1.5, 1.2, 0.5))
+	assert_gte(root.get_child_count(), 2, "В root спавнятся процедурные визуальные ноды")

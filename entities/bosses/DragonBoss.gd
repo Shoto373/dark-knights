@@ -182,15 +182,11 @@ func _perform_flame_breath(dir: Vector2) -> void:
 	is_acting = true
 	special_timer = 4.0 if current_phase == 1 else 2.8
 	
-	floor_telegraph.visible = true
-	floor_telegraph.position = dir * 40.0 - Vector2(40, 40)
-	floor_telegraph.size = Vector2(80, 80)
-	floor_telegraph.color = Color(1.0, 0.3, 0.05, 0.45)
+	EffectsHelper.spawn_telegraph_circle(get_parent(), global_position + dir * 40.0, 42.0, 0.35, Color(1.0, 0.35, 0.05, 0.55))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(floor_telegraph, "color:a", 0.9, 0.35)
+	tween.tween_interval(0.35)
 	tween.tween_callback(func():
-		floor_telegraph.visible = false
 		_emit_flame_cone(dir)
 	)
 
@@ -247,15 +243,11 @@ func _perform_tail_swipe() -> void:
 	is_acting = true
 	attack_timer = 1.6
 	
-	floor_telegraph.visible = true
-	floor_telegraph.position = Vector2(-50, -50)
-	floor_telegraph.size = Vector2(100, 100)
-	floor_telegraph.color = Color(1.0, 0.15, 0.05, 0.4)
+	EffectsHelper.spawn_telegraph_circle(get_parent(), global_position, 55.0, 0.3, Color(1.0, 0.2, 0.05, 0.55))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(floor_telegraph, "color:a", 0.85, 0.3)
+	tween.tween_interval(0.3)
 	tween.tween_callback(func():
-		floor_telegraph.visible = false
 		tail_hitbox.reset_hits()
 		tail_shape.disabled = false
 		EventBus.screen_shake_requested.emit(8.0, 0.2)
@@ -328,16 +320,11 @@ func _start_meteor_barrage() -> void:
 	land_tween.tween_callback(_land_from_flight)
 
 func _drop_single_meteor(target_pos: Vector2) -> void:
-	var marker: ColorRect = ColorRect.new()
-	marker.size = Vector2(70, 70)
-	marker.position = target_pos - Vector2(35, 35)
-	marker.color = Color(1.0, 0.25, 0.05, 0.45)
-	get_parent().add_child(marker)
+	EffectsHelper.spawn_telegraph_circle(get_parent(), target_pos, 42.0, 0.4, Color(1.0, 0.35, 0.05, 0.55))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(marker, "color:a", 0.95, 0.4)
+	tween.tween_interval(0.4)
 	tween.tween_callback(func():
-		marker.queue_free()
 		EventBus.screen_shake_requested.emit(8.0, 0.25)
 		
 		# Снаряд метеоритного удара

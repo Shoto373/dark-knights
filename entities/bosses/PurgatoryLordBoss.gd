@@ -255,15 +255,11 @@ func _perform_phase_special(dir: Vector2) -> void:
 		_cast_apocalyptic_nova()
 
 func _cast_rift_and_nova() -> void:
-	floor_telegraph.visible = true
-	floor_telegraph.position = Vector2(-70, -70)
-	floor_telegraph.size = Vector2(140, 140)
-	floor_telegraph.color = Color(0.6, 0.2, 0.9, 0.45)
+	EffectsHelper.spawn_telegraph_circle(get_parent(), global_position, 70.0, 0.4, Color(0.8, 0.3, 1.4, 0.6))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(floor_telegraph, "color:a", 0.9, 0.4)
+	tween.tween_interval(0.4)
 	tween.tween_callback(func():
-		floor_telegraph.visible = false
 		EventBus.screen_shake_requested.emit(8.0, 0.25)
 		# Круговая волна астральных сфер
 		for i in range(8):

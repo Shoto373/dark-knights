@@ -156,3 +156,4 @@ func deactivate() -> void:
 		shield_sprite.visible = false
 		queue_redraw()
 	)
+

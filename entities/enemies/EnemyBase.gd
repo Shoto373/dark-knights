@@ -720,16 +720,11 @@ func _executioner_cleave() -> void:
 
 func _cast_flame_pillar() -> void:
 	var target_pos: Vector2 = player_target.global_position
-	var telegraph: ColorRect = ColorRect.new()
-	telegraph.size = Vector2(56, 56)
-	telegraph.position = target_pos - Vector2(28, 28)
-	telegraph.color = Color(1.0, 0.3, 0.1, 0.4)
-	get_parent().add_child(telegraph)
+	EffectsHelper.spawn_telegraph_circle(get_parent(), target_pos, 32.0, 0.5, Color(1.0, 0.35, 0.1, 0.55))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(telegraph, "color:a", 0.9, 0.5)
+	tween.tween_interval(0.5)
 	tween.tween_callback(func():
-		telegraph.queue_free()
 		EventBus.screen_shake_requested.emit(5.0, 0.2)
 		var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
 		get_parent().add_child(proj)

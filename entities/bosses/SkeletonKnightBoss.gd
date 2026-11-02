@@ -162,16 +162,12 @@ func _perform_telegraphed_slash(dir: Vector2) -> void:
 	is_acting = true
 	attack_timer = 1.2 if current_phase < 3 else 0.7
 	
-	# Показываем красный предупреждающий индикатор на полу
-	floor_telegraph.visible = true
-	floor_telegraph.position = dir * 35.0 - Vector2(30, 30)
-	floor_telegraph.size = Vector2(60, 60)
-	floor_telegraph.color = Color(1.0, 0.15, 0.1, 0.4)
+	# Показываем круглый предупреждающий рунический индикатор на полу
+	EffectsHelper.spawn_telegraph_circle(get_parent(), global_position + dir * 35.0, 32.0, 0.35, Color(1.0, 0.15, 0.1, 0.55))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(floor_telegraph, "color:a", 0.85, 0.35)
+	tween.tween_interval(0.35)
 	tween.tween_callback(func():
-		floor_telegraph.visible = false
 		_strike_sword(dir)
 	)
 
