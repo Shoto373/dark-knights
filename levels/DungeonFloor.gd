@@ -51,7 +51,7 @@ func _build_floor() -> void:
 		var room_node: DungeonRoom = ROOM_SCENE.instantiate() as DungeonRoom
 		rooms_container.add_child(room_node)
 		room_node.position = Vector2(pos.x * ROOM_WIDTH, pos.y * ROOM_HEIGHT)
-		room_node.setup(rooms[pos], current_biome)
+		room_node.setup(rooms[pos], current_biome, rooms)
 		room_node.door_entered.connect(_on_room_door_entered)
 		spawned_rooms[pos] = room_node
 	

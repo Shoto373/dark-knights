@@ -501,3 +501,108 @@ func test_cooldown_bars_and_live_countdown_timers() -> void:
 	assert_lt(hud.dash_bar.value, 100.0, "Шкала рывка опустошилась при перезарядке")
 	assert_true(hud.dash_timer_label.text.ends_with("с"), "Таймер показывает секунды до готовности (например, 0.8с)")
 	assert_lt(hud.dash_label.modulate.a, 1.0, "Текст названия приглушается во время перезарядки")
+
+func test_themed_dungeon_doors_and_neighbor_detection() -> void:
+	var room_scene: PackedScene = load("res://levels/Room.tscn")
+	var room: DungeonRoom = room_scene.instantiate() as DungeonRoom
+	add_child_autofree(room)
+	
+	var r_data: RoomData = RoomData.new()
+	r_data.grid_pos = Vector2i(0, 0)
+	r_data.doors[Vector2i.UP] = true
+	r_data.doors[Vector2i.RIGHT] = true
+	
+	var boss_data: RoomData = RoomData.new()
+	boss_data.grid_pos = Vector2i(0, -1)
+	boss_data.room_type = RoomData.RoomType.BOSS
+	
+	var treasure_data: RoomData = RoomData.new()
+	treasure_data.grid_pos = Vector2i(1, 0)
+	treasure_data.room_type = RoomData.RoomType.TREASURE
+	
+	var all_rooms: Dictionary = {
+		Vector2i(0, 0): r_data,
+		Vector2i(0, -1): boss_data,
+		Vector2i(1, 0): treasure_data
+	}
+	
+	room.setup(r_data, null, all_rooms)
+	
+	var door_up: DungeonDoor = room.get_node("%DoorUp") as DungeonDoor
+	var door_right: DungeonDoor = room.get_node("%DoorRight") as DungeonDoor
+	
+	assert_not_null(door_up, "Верхняя дверь существует")
+	assert_not_null(door_right, "Правая дверь существует")
+	assert_eq(door_up.target_room_type, RoomData.RoomType.BOSS, "Верхняя дверь ведет к боссу")
+	assert_eq(door_right.target_room_type, RoomData.RoomType.TREASURE, "Правая дверь ведет к сокровищнице")
+	
+	var boss_col: Color = door_up.get_theme_color()
+	assert_gt(boss_col.r, 0.9, "Цвет двери босса ярко-красный/рубиновый")
+	assert_lt(boss_col.g, 0.4, "Цвет двери босса имеет низкий зеленый компонент")
+	
+	var treasure_col: Color = door_right.get_theme_color()
+	assert_gt(treasure_col.r, 0.9, "Цвет двери сокровищницы ярко-золотой")
+	assert_gt(treasure_col.g, 0.8, "Цвет двери сокровищницы имеет высокий золотистый зеленый тон")
+
+func test_minimap_adjacent_room_type_preview() -> void:
+	var minimap_scene: PackedScene = load("res://ui/Minimap.tscn")
+	var minimap: Minimap = minimap_scene.instantiate() as Minimap
+	add_child_autofree(minimap)
+	
+	var start_room: RoomData = RoomData.new()
+	start_room.grid_pos = Vector2i(0, 0)
+	start_room.room_type = RoomData.RoomType.START
+	start_room.doors[Vector2i.UP] = true
+	start_room.doors[Vector2i.RIGHT] = true
+	start_room.doors[Vector2i.DOWN] = true
+	
+	var boss_room: RoomData = RoomData.new()
+	boss_room.grid_pos = Vector2i(0, -1)
+	boss_room.room_type = RoomData.RoomType.BOSS
+	boss_room.doors[Vector2i.DOWN] = true
+	
+	var treasure_room: RoomData = RoomData.new()
+	treasure_room.grid_pos = Vector2i(1, 0)
+	treasure_room.room_type = RoomData.RoomType.TREASURE
+	treasure_room.doors[Vector2i.LEFT] = true
+	
+	var shop_room: RoomData = RoomData.new()
+	shop_room.grid_pos = Vector2i(0, 1)
+	shop_room.room_type = RoomData.RoomType.SHOP
+	shop_room.doors[Vector2i.UP] = true
+	
+	var rooms: Dictionary = {
+		Vector2i(0, 0): start_room,
+		Vector2i(0, -1): boss_room,
+		Vector2i(1, 0): treasure_room,
+		Vector2i(0, 1): shop_room
+	}
+	
+	minimap.setup_minimap(rooms, Vector2i(0, 0))
+	
+	# Проверяем, что стартовая комната исследована и посещена
+	assert_true(start_room.is_visited, "Стартовая комната посещена")
+	assert_true(start_room.is_discovered, "Стартовая комната открыта")
+	
+	# Проверяем, что смежные комнаты разведаны, но еще НЕ посещены
+	assert_true(boss_room.is_discovered, "Смежная комната босса разведана")
+	assert_false(boss_room.is_visited, "Смежная комната босса еще не посещена")
+	assert_true(treasure_room.is_discovered, "Смежная комната сокровищницы разведана")
+	assert_false(treasure_room.is_visited, "Смежная комната сокровищницы еще не посещена")
+	assert_true(shop_room.is_discovered, "Смежный магазин разведан")
+	assert_false(shop_room.is_visited, "Смежный магазин еще не посещен")
+	
+	# Проверяем тематическую цветовую расцветку непосещенных соседних комнат
+	var boss_preview_col: Color = minimap._get_room_color(boss_room)
+	assert_gt(boss_preview_col.r, boss_preview_col.g, "Цвет превью босса смещен в красный спектр")
+	
+	var treasure_preview_col: Color = minimap._get_room_color(treasure_room)
+	assert_gt(treasure_preview_col.r, 0.4, "Цвет превью сокровищницы содержит золото")
+	assert_gt(treasure_preview_col.g, 0.3, "Цвет превью сокровищницы содержит золотой оттенок")
+	
+	# Проверяем контрастную рамку у соседних комнат
+	var boss_border_col: Color = minimap._get_room_border_color(boss_room, false)
+	assert_gt(boss_border_col.r, 0.9, "Рамка комнаты босса ярко-красная")
+	
+	var treasure_border_col: Color = minimap._get_room_border_color(treasure_room, false)
+	assert_gt(treasure_border_col.r, 0.9, "Рамка комнаты сокровищницы сияет золотом")

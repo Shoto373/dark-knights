@@ -38,15 +38,18 @@ var current_biome: BiomeData = null
 var active_enemies: Array[Node2D] = []
 var wave_spawner: WaveSpawner = WaveSpawner.new()
 
+var _all_floor_rooms: Dictionary = {}
+
 func _ready() -> void:
 	door_up.door_entered.connect(_on_door_entered)
 	door_down.door_entered.connect(_on_door_entered)
 	door_left.door_entered.connect(_on_door_entered)
 	door_right.door_entered.connect(_on_door_entered)
 
-func setup(data: RoomData, biome: BiomeData = null) -> void:
+func setup(data: RoomData, biome: BiomeData = null, all_rooms: Dictionary = {}) -> void:
 	room_data = data
 	current_biome = biome if biome != null else GameState.get_current_biome()
+	_all_floor_rooms = all_rooms
 	room_type_label.visible = false
 	_apply_biome_theme()
 	_configure_doors()
@@ -242,6 +245,13 @@ func _setup_door(door: DungeonDoor, blocker: StaticBody2D, dir: Vector2i) -> voi
 	door.monitoring = has_door
 	blocker.set_collision_layer_value(1, not has_door)
 	blocker.visible = false # Блокер используется только как коллизия. Стена рисуется единым монолитом!
+	
+	if has_door and not _all_floor_rooms.is_empty():
+		var neighbor_pos: Vector2i = room_data.grid_pos + dir
+		if _all_floor_rooms.has(neighbor_pos):
+			var neighbor: RoomData = _all_floor_rooms[neighbor_pos] as RoomData
+			if neighbor != null:
+				door.target_room_type = neighbor.room_type
 
 func _update_wall_geometry(has_up: bool, has_down: bool, has_left: bool, has_right: bool) -> void:
 	var w1: ColorRect = get_node_or_null("VisualWalls/W1") as ColorRect

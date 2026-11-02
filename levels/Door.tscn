@@ -18,19 +18,21 @@ shape = SubResource("RectangleShape2D_trigger")
 
 [node name="DoorVisual" type="ColorRect" parent="."]
 unique_name_in_owner = true
+visible = false
 offset_left = -48.0
 offset_top = -20.0
 offset_right = 48.0
 offset_bottom = 20.0
-color = Color(0.2, 0.6, 0.3, 0.8)
+color = Color(0.2, 0.6, 0.3, 0)
 
 [node name="StatusLight" type="ColorRect" parent="."]
 unique_name_in_owner = true
+visible = false
 offset_left = -4.0
 offset_top = -4.0
 offset_right = 4.0
 offset_bottom = 4.0
-color = Color(0.3, 1, 0.4, 1)
+color = Color(0.3, 1, 0.4, 0)
 
 [node name="BarrierCollider" type="StaticBody2D" parent="."]
 unique_name_in_owner = true
