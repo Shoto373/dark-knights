@@ -35,3 +35,4 @@ static func create_point_light(color: Color = Color(1.0, 0.8, 0.5), energy: floa
 	light.texture_scale = scale
 	light.blend_mode = PointLight2D.BLEND_MODE_ADD
 	return light
+

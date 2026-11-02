@@ -34,6 +34,7 @@ var aim_direction: Vector2 = Vector2.RIGHT
 
 var ability_1_timer: Timer
 var ability_2_timer: Timer
+var shield_barrier: ShieldBarrier = null
 var _walk_anim_phase: float = 0.0
 var _ghost_timer: float = 0.0
 var _facing_left: bool = false
@@ -92,6 +93,12 @@ func _ready() -> void:
 	var lantern_light: PointLight2D = LightTextureGenerator.create_point_light(Color(1.0, 0.92, 0.8), 0.82, 2.8)
 	lantern_light.name = "LanternLight"
 	add_child(lantern_light)
+	
+	# Визуальный щит и руническая эгида (Warrior block / charge)
+	var shield_scene: PackedScene = load("res://entities/player/ShieldBarrier.tscn")
+	if shield_scene != null:
+		shield_barrier = shield_scene.instantiate() as ShieldBarrier
+		add_child(shield_barrier)
 	
 	EventBus.player_spawned.emit(self)
 
@@ -222,6 +229,8 @@ func _process(delta: float) -> void:
 	if health_component.is_dead:
 		return
 	_update_aim()
+	if is_instance_valid(shield_barrier):
+		shield_barrier.update_aim(aim_direction)
 	_handle_input()
 	_update_procedural_animations(delta)
 	_update_iframes_blink(delta)
@@ -301,7 +310,8 @@ func _update_aim() -> void:
 	if w_sprite != null:
 		w_sprite.flip_v = _facing_left
 	
-	weapon_pivot.z_index = -1 if aim_direction.y < -0.3 else 0
+	# Оружие всегда отображается поверх персонажа и никогда не уходит под пол
+	weapon_pivot.z_index = 1
 
 func _handle_input() -> void:
 	if status_effect_manager != null and (status_effect_manager.is_frozen() or status_effect_manager.is_stunned()):
@@ -419,6 +429,32 @@ func _trigger_ability(ability: AbilityData, timer: Timer) -> void:
 	
 	AudioManager.play_sfx_named("cast")
 	timer.start()
+	
+	# Сочный отклик каста: рунический круг под ногами, волна и сквош персонажа
+	var cast_color: Color = Color(1.2, 0.9, 0.3)
+	if hero_data != null:
+		match hero_data.id:
+			"mage":
+				cast_color = Color(0.4, 0.85, 1.4)
+			"ranger":
+				cast_color = Color(0.3, 1.3, 0.6)
+			_:
+				cast_color = Color(1.2, 0.9, 0.3)
+	
+	EffectsHelper.spawn_cast_circle(get_parent(), global_position, cast_color)
+	EffectsHelper.spawn_shockwave(get_parent(), global_position, 85.0, 0.22, 0.025)
+	EffectsHelper.spawn_magic_burst(get_parent(), global_position, cast_color, 8)
+	
+	var cur_sx: float = signf(visuals.scale.x)
+	var cast_tween: Tween = visuals.create_tween()
+	cast_tween.tween_property(visuals, "scale", Vector2(1.22 * cur_sx, 0.78), 0.06).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	cast_tween.tween_property(visuals, "scale", Vector2(0.88 * cur_sx, 1.18), 0.09).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	cast_tween.tween_property(visuals, "scale", Vector2(cur_sx, 1.0), 0.08)
+	
+	var w_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
+	if w_sprite != null:
+		EffectsHelper.apply_hit_flash(w_sprite, 0.14, Color(2.0, 2.0, 1.8))
+	
 	match ability.effect_type:
 		"buff":
 			_apply_buff_ability(ability)
@@ -433,20 +469,34 @@ func _trigger_ability(ability: AbilityData, timer: Timer) -> void:
 
 func _apply_buff_ability(ability: AbilityData) -> void:
 	health_component.set_invulnerable(true)
-	visuals.modulate = Color(1.5, 1.5, 0.5, 1.0)
+	
+	# Активируем физический щит и защитный купол
+	if is_instance_valid(shield_barrier):
+		shield_barrier.activate_block(ability.duration)
+	
+	visuals.modulate = Color(1.3, 1.3, 0.8, 1.0)
 	var tween: Tween = create_tween()
 	tween.tween_interval(ability.duration)
 	tween.tween_callback(func():
 		if iframes_timer.is_stopped():
 			health_component.set_invulnerable(false)
 		visuals.modulate = Color.WHITE
+		if is_instance_valid(shield_barrier):
+			shield_barrier.deactivate()
 	)
 
 func _apply_dash_ability(ability: AbilityData) -> void:
 	is_dashing = true
 	dash_direction = aim_direction
 	health_component.set_invulnerable(true)
-	visuals.modulate = Color(1.5, 0.5, 0.5, 0.8)
+	
+	# Выпад щитом вперед при таране
+	if is_instance_valid(shield_barrier):
+		shield_barrier.activate_charge(dash_direction, ability.duration)
+	
+	EffectsHelper.spawn_shockwave(get_parent(), global_position, 110.0, 0.28, 0.035)
+	EffectsHelper.spawn_dust_puff(get_parent(), global_position)
+	visuals.modulate = Color(1.5, 0.6, 0.6, 0.9)
 	
 	weapon_hitbox.base_damage = ability.base_damage
 	weapon_hitbox.reset_hits()
@@ -464,30 +514,59 @@ func _apply_dash_ability(ability: AbilityData) -> void:
 
 func _apply_aoe_ability(ability: AbilityData) -> void:
 	var target_pos: Vector2 = get_global_mouse_position()
-	# Ограничение дальности применения AoE
 	var dist: float = (target_pos - global_position).length()
 	if dist > 350.0:
 		target_pos = global_position + (target_pos - global_position).normalized() * 350.0
 	
-	var aoe: AreaOfEffect = AOE_SCENE.instantiate() as AreaOfEffect
-	get_parent().add_child(aoe)
-	aoe.setup(target_pos, ability.range_or_radius, ability.base_damage, true, 400.0)
-	if ability.id == "fireball" or ability.name.to_lower().contains("огн") or ability.name.to_lower().contains("fire"):
-		aoe.hitbox.damage_type = "fire"
-		aoe.hitbox.tags = ["fire"]
+	var is_fire: bool = ability.id == "fireball" or ability.name.to_lower().contains("огн") or ability.name.to_lower().contains("fire")
+	
+	if is_fire:
+		var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
+		get_parent().add_child(proj)
+		var fly_dir: Vector2 = (target_pos - global_position).normalized()
+		proj.global_position = global_position + fly_dir * 20.0
+		var fly_time: float = clampf(dist / 650.0, 0.12, 0.42)
+		proj.setup(fly_dir, 650.0, 0, true, dist, 0.0, Color(1.4, 0.6, 0.1))
+		
+		var fly_tween: Tween = create_tween()
+		fly_tween.tween_interval(fly_time)
+		fly_tween.tween_callback(func():
+			if is_instance_valid(proj):
+				proj.queue_free()
+			var aoe: AreaOfEffect = AOE_SCENE.instantiate() as AreaOfEffect
+			get_parent().add_child(aoe)
+			aoe.setup(target_pos, ability.range_or_radius, ability.base_damage, true, 400.0, Color(1.3, 0.45, 0.1, 0.85))
+			aoe.hitbox.damage_type = "fire"
+			aoe.hitbox.tags = ["fire"]
+			EffectsHelper.spawn_shockwave(get_parent(), target_pos, ability.range_or_radius * 1.3, 0.28, 0.045)
+			EffectsHelper.spawn_hit_sparks(get_parent(), target_pos, Color(1.0, 0.65, 0.15), 14)
+		)
+	else:
+		var aoe: AreaOfEffect = AOE_SCENE.instantiate() as AreaOfEffect
+		get_parent().add_child(aoe)
+		aoe.setup(target_pos, ability.range_or_radius, ability.base_damage, true, 400.0)
+		EffectsHelper.spawn_shockwave(get_parent(), target_pos, ability.range_or_radius * 1.2, 0.25, 0.035)
 
 func _apply_teleport_ability(ability: AbilityData) -> void:
+	var old_pos: Vector2 = global_position
 	var target_pos: Vector2 = global_position + aim_direction * ability.range_or_radius
 	health_component.set_invulnerable(true)
-	visuals.modulate.a = 0.2
 	
+	EffectsHelper.spawn_cast_circle(get_parent(), old_pos, Color(0.8, 0.4, 1.2))
+	EffectsHelper.spawn_magic_burst(get_parent(), old_pos, Color(0.8, 0.4, 1.2), 14)
+	EffectsHelper.spawn_shockwave(get_parent(), old_pos, 70.0, 0.2, 0.03)
+	
+	visuals.modulate.a = 0.0
 	global_position = target_pos
 	
+	EffectsHelper.spawn_cast_circle(get_parent(), target_pos, Color(0.4, 0.8, 1.4))
+	EffectsHelper.spawn_magic_burst(get_parent(), target_pos, Color(0.4, 0.8, 1.4), 16)
+	EffectsHelper.spawn_shockwave(get_parent(), target_pos, 90.0, 0.22, 0.035)
+	
 	var tween: Tween = create_tween()
-	tween.tween_interval(0.15)
+	tween.tween_property(visuals, "modulate:a", 1.0, 0.12)
 	tween.tween_callback(func():
 		health_component.set_invulnerable(false)
-		visuals.modulate.a = 1.0
 	)
 
 func _apply_projectile_ability(ability: AbilityData) -> void:

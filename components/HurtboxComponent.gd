@@ -40,6 +40,10 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	
 	if health_component != null and (health_component.is_invulnerable or health_component.is_dead):
+		if health_component.is_invulnerable and "shield_barrier" in parent_node and parent_node.shield_barrier != null:
+			if parent_node.shield_barrier.is_active:
+				parent_node.shield_barrier.trigger_block_impact()
+				hitbox.register_hit(parent_node)
 		return
 	
 	var is_crit: bool = DamageCalculator.roll_crit(hitbox.crit_chance)

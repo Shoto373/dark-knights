@@ -258,3 +258,37 @@ static func apply_burn_dissolve(node: CanvasItem, duration: float = 0.45, burn_c
 			mat.set_shader_parameter("progress", val)
 	, 0.0, 1.0, duration)
 	return tween
+
+static func spawn_cast_circle(parent: Node, global_pos: Vector2, color: Color = Color(1.0, 0.85, 0.35)) -> void:
+	if parent == null:
+		return
+	var circle: CastCircleVisual = CastCircleVisual.new()
+	circle.circle_color = color
+	circle.global_position = global_pos
+	circle.z_index = 0
+	parent.add_child(circle)
+
+static func spawn_magic_burst(parent: Node, global_pos: Vector2, color: Color, count: int = 10) -> void:
+	if parent == null:
+		return
+	var tex: Texture2D = get_spark_texture()
+	for i in range(count):
+		var mote: Sprite2D = Sprite2D.new()
+		mote.texture = tex
+		var sz: float = randf_range(0.4, 0.8)
+		mote.scale = Vector2(sz, sz)
+		mote.modulate = color.lightened(randf_range(-0.1, 0.3))
+		
+		var pivot: Node2D = Node2D.new()
+		pivot.global_position = global_pos
+		pivot.add_child(mote)
+		parent.add_child(pivot)
+		
+		var angle: float = randf_range(0, TAU)
+		var dist: float = randf_range(20.0, 50.0)
+		var target: Vector2 = Vector2(cos(angle), sin(angle)) * dist
+		
+		var tween: Tween = pivot.create_tween()
+		tween.tween_property(mote, "position", target, 0.3).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		tween.parallel().tween_property(mote, "scale", Vector2.ZERO, 0.3)
+		tween.tween_callback(pivot.queue_free)

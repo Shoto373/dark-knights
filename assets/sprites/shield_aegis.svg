@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 56" width="48" height="56">
+  <defs>
+    <!-- Металлический градиент щита -->
+    <linearGradient id="shield_plate" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4a586e"/>
+      <stop offset="45%" stop-color="#2c3545"/>
+      <stop offset="70%" stop-color="#1e2430"/>
+      <stop offset="100%" stop-color="#141820"/>
+    </linearGradient>
+    
+    <!-- Золотая кайма -->
+    <linearGradient id="gold_trim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe270"/>
+      <stop offset="50%" stop-color="#d4a017"/>
+      <stop offset="100%" stop-color="#8a6305"/>
+    </linearGradient>
+
+    <!-- Руническое свечение -->
+    <radialGradient id="rune_glow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#ffd54f" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#ff9800" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ff5722" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Внешняя тень -->
+  <path d="M 24 3 C 38 3 45 9 45 22 C 45 37 32 49 24 54 C 16 49 3 37 3 22 C 3 9 10 3 24 3 Z" fill="rgba(0,0,0,0.5)" transform="translate(1, 2)"/>
+
+  <!-- Золотой рант / кайма -->
+  <path d="M 24 2 C 39 2 46 8 46 22 C 46 38 33 50 24 55 C 15 50 2 38 2 22 C 2 8 9 2 24 2 Z" fill="url(#gold_trim)" stroke="#5c4103" stroke-width="1.2"/>
+
+  <!-- Внутренняя стальная пластина -->
+  <path d="M 24 5 C 36 5 42 10 42 22 C 42 35 30 46 24 51 C 18 46 6 35 6 22 C 6 10 12 5 24 5 Z" fill="url(#shield_plate)" stroke="#1a202c" stroke-width="1"/>
+
+  <!-- Центральное ребро жесткости -->
+  <path d="M 24 6 L 24 50" stroke="#718096" stroke-width="1.5" opacity="0.6"/>
+  <path d="M 24 6 L 24 50" stroke="#1a202c" stroke-width="0.8" opacity="0.8"/>
+
+  <!-- Руническое свечение в центре -->
+  <circle cx="24" cy="22" r="14" fill="url(#rune_glow)"/>
+
+  <!-- Золотой гербовый крест / крылья -->
+  <path d="M 24 12 L 26.5 19 L 33 21.5 L 26.5 24 L 24 31 L 21.5 24 L 15 21.5 L 21.5 19 Z" fill="url(#gold_trim)" stroke="#fff" stroke-width="0.6"/>
+
+  <!-- Стальные заклепки по углам -->
+  <circle cx="10" cy="11" r="1.5" fill="#e2e8f0" stroke="#1a202c" stroke-width="0.5"/>
+  <circle cx="38" cy="11" r="1.5" fill="#e2e8f0" stroke="#1a202c" stroke-width="0.5"/>
+  <circle cx="9" cy="24" r="1.5" fill="#e2e8f0" stroke="#1a202c" stroke-width="0.5"/>
+  <circle cx="39" cy="24" r="1.5" fill="#e2e8f0" stroke="#1a202c" stroke-width="0.5"/>
+  <circle cx="15" cy="38" r="1.5" fill="#e2e8f0" stroke="#1a202c" stroke-width="0.5"/>
+  <circle cx="33" cy="38" r="1.5" fill="#e2e8f0" stroke="#1a202c" stroke-width="0.5"/>
+  <circle cx="24" cy="46" r="1.5" fill="#e2e8f0" stroke="#1a202c" stroke-width="0.5"/>
+
+  <!-- Верхний блик -->
+  <path d="M 12 7 C 18 5 30 5 36 7 C 40 10 40 16 40 20 C 34 14 26 12 12 14 Z" fill="#ffffff" opacity="0.25"/>
+</svg>

@@ -75,3 +75,27 @@ func test_hero_unlock_with_souls() -> void:
 	assert_true(unlocked, "unlock_hero should return true on success")
 	assert_true(MetaProgress.is_hero_unlocked("ranger"), "Ranger is now unlocked")
 
+func test_shield_barrier_and_weapon_aim_up_visibility() -> void:
+	var player_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var player: Player = player_scene.instantiate() as Player
+	add_child_autofree(player)
+	
+	# Проверка: при прицеливании строго вверх оружие НЕ должно уходить под пол (z_index >= 0)
+	player.aim_direction = Vector2(0, -1)
+	player._process(0.016)
+	assert_gte(player.weapon_pivot.z_index, 0, "Оружие при прицеливании вверх не должно иметь отрицательный z_index")
+	assert_gte(player.z_index, 0, "Сам персонаж находится над полом")
+	
+	# Проверка: наличие компонента физического щита и защитного купола
+	assert_not_null(player.shield_barrier, "У игрока должен быть ShieldBarrier")
+	assert_false(player.shield_barrier.is_active, "До каста щит неактивен")
+	
+	# Проверка каста блока щитом
+	var shield_block_ab: AbilityData = load("res://data/heroes/shield_block.tres") as AbilityData
+	assert_not_null(shield_block_ab, "shield_block.tres должен существовать")
+	
+	player._trigger_ability(shield_block_ab, player.ability_1_timer)
+	assert_true(player.shield_barrier.is_active, "После каста блока щит становится активен")
+	assert_true(player.shield_barrier.shield_sprite.visible, "Спрайт щита должен быть видимым")
+	assert_true(player.health_component.is_invulnerable, "Герой получает неуязвимость")
+

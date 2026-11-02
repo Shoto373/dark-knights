@@ -52,3 +52,4 @@ func _apply_environment_settings() -> void:
 
 func _on_settings_changed() -> void:
 	_apply_environment_settings()
+
