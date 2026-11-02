@@ -227,6 +227,13 @@ func test_hero_sprite_has_no_duplicate_static_weapons() -> void:
 	assert_not_null(char_sprite, "CharacterSprite существует")
 	assert_not_null(char_sprite.texture, "CharacterSprite имеет текстуру мага")
 	
+	var img: Image = char_sprite.texture.get_image()
+	assert_not_null(img, "Image текстуры мага доступен")
+	var sample_x: int = int(round(img.get_width() * (51.0 / 64.0)))
+	var sample_y: int = int(round(img.get_height() * (7.0 / 64.0)))
+	var px_staff: Color = img.get_pixel(sample_x, sample_y)
+	assert_eq(px_staff.a, 0.0, "В месте старого кристалла посоха теперь полная прозрачность (alpha == 0)")
+	
 	var weapon_pivot: Node2D = player.get_node_or_null("WeaponPivot") as Node2D
 	assert_not_null(weapon_pivot, "WeaponPivot существует")
 	var weapon_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
