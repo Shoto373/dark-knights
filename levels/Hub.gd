@@ -24,5 +24,11 @@ func _ready() -> void:
 		if pp.has_method("setup_biome"):
 			pp.setup_biome("hub")
 
+	# Атмосферные теплые пылинки в Хабе
+	var atmosphere: BiomeAtmosphere = BiomeAtmosphere.new()
+	atmosphere.name = "BiomeAtmosphere"
+	add_child(atmosphere)
+	atmosphere.setup_biome("hub")
+
 func _on_back_to_menu_pressed() -> void:
 	SceneRouter.change_scene("res://ui/MainMenu.tscn", 0.3)

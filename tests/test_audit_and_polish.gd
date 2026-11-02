@@ -349,3 +349,72 @@ func test_hero_visual_overhaul_and_procedural_animations() -> void:
 	p._swing_melee_weapon()
 	assert_true(p.is_swinging, "Активирован взмах оружием")
 	assert_false(p.attack_collision.disabled, "Коллизия удара активна")
+
+func test_animated_boots_and_eye_glow_lights() -> void:
+	# 1. Текстуры сапог для всех классов
+	var w_boot: Texture2D = SpriteGenerator.get_hero_boot_texture("warrior")
+	var m_boot: Texture2D = SpriteGenerator.get_hero_boot_texture("mage")
+	var r_boot: Texture2D = SpriteGenerator.get_hero_boot_texture("ranger")
+	assert_not_null(w_boot, "Стальной сапог воина создан")
+	assert_not_null(m_boot, "Сапог мага создан")
+	assert_not_null(r_boot, "Сапог следопыта создан")
+	
+	# 2. Игрок: проверяем сапоги и светящийся взор
+	var p_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var p: Player = p_scene.instantiate() as Player
+	add_child_autofree(p)
+	
+	assert_not_null(p._left_boot, "Левый сапог инстанциирован")
+	assert_not_null(p._right_boot, "Правый сапог инстанциирован")
+	assert_not_null(p._eye_light, "Свет очей PointLight2D инстанциирован")
+	assert_true(p._eye_light.energy > 0.0, "Энергия света очей активна")
+	
+	# 3. Проверяем шаг стопами при движении
+	p.velocity = Vector2(180.0, 0.0)
+	p._update_procedural_animations(0.08)
+	assert_ne(p._left_boot.position.x, -5.0, "Левая стопа делает шаг")
+	assert_ne(p._right_boot.position.x, 5.0, "Правая стопа делает шаг")
+
+func test_enemy_visual_overhaul_and_archetype_animations() -> void:
+	var enemy_scene: PackedScene = load("res://entities/enemies/EnemyBase.tscn")
+	var enemy: EnemyBase = enemy_scene.instantiate() as EnemyBase
+	add_child_autofree(enemy)
+	
+	var data: EnemyData = load("res://data/enemies/goblin_slasher.tres") as EnemyData
+	enemy.setup_from_data(data)
+	
+	# Тень и подсветка очей монстра
+	assert_not_null(enemy._shadow_sprite, "Монстр имеет тень на полу")
+	assert_true(enemy._shadow_sprite.z_index < 0, "Тень под монстром")
+	assert_not_null(enemy._eye_light, "Монстр имеет светящийся взор PointLight2D")
+	
+	# Проверка телеграфа атаки
+	var attack_state: EnemyAttackState = enemy.state_machine.get_node_or_null("Attack") as EnemyAttackState
+	if attack_state != null:
+		attack_state.enter()
+		assert_true(attack_state.windup_timer > 0.0, "Таймер замаха активен")
+
+func test_boss_animations_and_biome_atmosphere() -> void:
+	# 1. Босс гоблинов: тень, подсветка и дыхание
+	var boss_scene: PackedScene = load("res://entities/bosses/GoblinBoss.tscn")
+	var boss: GoblinBoss = boss_scene.instantiate() as GoblinBoss
+	add_child_autofree(boss)
+	
+	assert_not_null(boss._shadow_sprite, "Босс имеет мягкую тень на полу")
+	assert_not_null(boss._eye_light, "Босс имеет зловещий взор PointLight2D")
+	
+	# 2. Атмосферные частицы в Хабе
+	var hub_scene: PackedScene = load("res://levels/Hub.tscn")
+	var hub: Node2D = hub_scene.instantiate() as Node2D
+	add_child_autofree(hub)
+	var hub_atmosphere: Node = hub.get_node_or_null("BiomeAtmosphere")
+	assert_not_null(hub_atmosphere, "Хаб имеет систему атмосферных частиц BiomeAtmosphere")
+	
+	# 3. Атмосферные частицы в Комнате
+	var room_scene: PackedScene = load("res://levels/Room.tscn")
+	var room: Node2D = room_scene.instantiate() as Node2D
+	add_child_autofree(room)
+	var r_data: RoomData = RoomData.new()
+	room.setup(r_data)
+	var room_atmosphere: Node = room.get_node_or_null("BiomeAtmosphere")
+	assert_not_null(room_atmosphere, "Комната имеет систему атмосферных частиц BiomeAtmosphere")

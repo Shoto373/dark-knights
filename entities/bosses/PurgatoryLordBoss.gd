@@ -39,6 +39,9 @@ var teleport_timer: float = 5.5
 var is_acting: bool = false
 var is_beam_active: bool = false
 var beam_rotation_speed: float = 1.4
+var _shadow_sprite: Sprite2D = null
+var _eye_light: PointLight2D = null
+var _float_phase: float = 0.0
 
 var active_rifts: Array[Node2D] = []
 
@@ -100,6 +103,25 @@ func _ready() -> void:
 	health_component.died.connect(_on_died)
 	
 	floor_telegraph.visible = false
+	
+	# Тень владыки
+	if _shadow_sprite == null:
+		_shadow_sprite = Sprite2D.new()
+		_shadow_sprite.name = "FloorShadow"
+		_shadow_sprite.texture = EffectsHelper.get_spark_texture()
+		_shadow_sprite.modulate = Color(0, 0, 0, 0.45)
+		_shadow_sprite.scale = Vector2(4.8, 1.45)
+		_shadow_sprite.position = Vector2(0, 26.0)
+		_shadow_sprite.z_index = -1
+		add_child(_shadow_sprite)
+	
+	# Светящееся астральное ядро
+	if _eye_light == null and visuals != null:
+		_eye_light = LightTextureGenerator.create_point_light(Color(0.85, 0.35, 1.2), 1.0, 1.6)
+		_eye_light.name = "BossEyeLight"
+		_eye_light.position = Vector2(0, -10.0)
+		visuals.add_child(_eye_light)
+	
 	EventBus.boss_spawned.emit(boss_data.name if boss_data else "Владыка Чистилища", health_component.max_health)
 
 func _physics_process(delta: float) -> void:
@@ -152,6 +174,17 @@ func _physics_process(delta: float) -> void:
 			else:
 				movement_component.stop(self)
 
+	# Космическая левитация и дыхание пустоты
+	_float_phase += delta * 2.5
+	var hover_y: float = sin(_float_phase) * 7.0 - 6.0
+	visuals.position.y = hover_y
+	visuals.rotation = sin(_float_phase * 0.7) * 0.06
+	if _shadow_sprite != null:
+		var s_shrink: float = clampf(1.0 - (hover_y / -14.0) * 0.25, 0.7, 1.2)
+		_shadow_sprite.scale = Vector2(4.8 * s_shrink, 1.45 * s_shrink)
+	if _eye_light != null:
+		_eye_light.energy = 0.9 + sin(_float_phase * 1.8) * 0.2
+
 func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.boss_health_changed.emit(current_hp, max_hp)
 	_flash_purple()
@@ -173,7 +206,10 @@ func _enter_phase_2() -> void:
 	phase_changed.emit(2)
 	
 	movement_component.max_speed *= 1.2
-	EventBus.screen_shake_requested.emit(12.0, 0.5)
+	EventBus.screen_shake_requested.emit(14.0, 0.5)
+	EffectsHelper.spawn_death_burst(get_parent(), global_position, Color(1.8, 0.5, 2.5))
+	if _eye_light != null:
+		_eye_light.energy = 1.3
 	
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(1.8, 0.8, 3.2, 1.0)
@@ -191,7 +227,11 @@ func _enter_phase_3() -> void:
 	movement_component.max_speed *= 1.35
 	attack_hitbox.base_damage = int(round(attack_hitbox.base_damage * 1.3))
 	
-	EventBus.screen_shake_requested.emit(20.0, 0.8)
+	EventBus.screen_shake_requested.emit(22.0, 0.85)
+	EffectsHelper.spawn_death_burst(get_parent(), global_position, Color(2.5, 0.8, 3.5))
+	if _eye_light != null:
+		_eye_light.energy = 1.6
+		_eye_light.color = Color(1.8, 0.4, 2.8)
 	
 	# Трансформация: раскрываются крылья пустоты
 	wings_node.visible = true

@@ -39,6 +39,10 @@ var _walk_anim_phase: float = 0.0
 var _ghost_timer: float = 0.0
 var _facing_left: bool = false
 var _shadow_sprite: Sprite2D = null
+var _left_boot: Sprite2D = null
+var _right_boot: Sprite2D = null
+var _eye_light: PointLight2D = null
+var _base_eye_energy: float = 0.65
 var _step_dust_timer: float = 0.0
 
 func _ready() -> void:
@@ -139,6 +143,48 @@ func apply_hero_data(data: HeroData) -> void:
 			body_rect.visible = false
 		if visuals.has_node("EyeRect"):
 			visuals.get_node("EyeRect").visible = false
+
+	# Установка анимированных сапог героя
+	var boot_tex: Texture2D = SpriteGenerator.get_hero_boot_texture(hero_id)
+	if boot_tex != null and visuals != null:
+		if _left_boot == null:
+			_left_boot = Sprite2D.new()
+			_left_boot.name = "LeftBoot"
+			_left_boot.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			_left_boot.z_index = -1
+			visuals.add_child(_left_boot)
+		_left_boot.texture = boot_tex
+		_left_boot.position = Vector2(-5.0, 16.0)
+		
+		if _right_boot == null:
+			_right_boot = Sprite2D.new()
+			_right_boot.name = "RightBoot"
+			_right_boot.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+			_right_boot.z_index = -1
+			visuals.add_child(_right_boot)
+		_right_boot.texture = boot_tex
+		_right_boot.position = Vector2(5.0, 16.0)
+
+	# Стилизованный светящийся взор героя (Forward+ Eye Glow Light)
+	var eye_color: Color = Color(0.25, 0.9, 1.0)
+	match hero_id:
+		"warrior":
+			eye_color = Color(0.25, 0.9, 1.0)
+			_base_eye_energy = 0.7
+		"mage":
+			eye_color = Color(0.85, 0.35, 1.25)
+			_base_eye_energy = 0.85
+		"ranger":
+			eye_color = Color(1.0, 0.8, 0.25)
+			_base_eye_energy = 0.7
+	if _eye_light == null and visuals != null:
+		_eye_light = LightTextureGenerator.create_point_light(eye_color, _base_eye_energy, 0.7)
+		_eye_light.name = "HeroEyeLight"
+		_eye_light.position = Vector2(0, -6.0)
+		visuals.add_child(_eye_light)
+	elif _eye_light != null:
+		_eye_light.color = eye_color
+		_eye_light.energy = _base_eye_energy
 
 	# Установка детализированного оружия героя
 	var weapon_tex: Texture2D = SpriteGenerator.get_weapon_texture(hero_id)
@@ -292,10 +338,30 @@ func _update_procedural_animations(delta: float) -> void:
 			var foot_offset: Vector2 = Vector2(-5.0 if step_sin > 0 else 5.0, 14.0)
 			EffectsHelper.spawn_dust_puff(get_parent(), global_position + foot_offset)
 			_step_dust_timer = 0.22
+
+		# Анимированный шаг стопами в противофазе с дугой отрыва от пола
+		if _left_boot != null and _right_boot != null:
+			_left_boot.position.x = -5.0 - step_sin * 6.0
+			_left_boot.position.y = 16.0 - maxf(0.0, -step_sin) * 4.0
+			_left_boot.rotation = -step_sin * 0.25
+			
+			_right_boot.position.x = 5.0 + step_sin * 6.0
+			_right_boot.position.y = 16.0 - maxf(0.0, step_sin) * 4.0
+			_right_boot.rotation = step_sin * 0.25
 	else:
 		_walk_anim_phase += delta * 3.0
 		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 25.0)
 		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 4.0)
+		
+		if _left_boot != null and _right_boot != null:
+			_left_boot.position = _left_boot.position.lerp(Vector2(-5.0, 16.0), delta * 12.0)
+			_right_boot.position = _right_boot.position.lerp(Vector2(5.0, 16.0), delta * 12.0)
+			_left_boot.rotation = lerp(_left_boot.rotation, 0.0, delta * 12.0)
+			_right_boot.rotation = lerp(_right_boot.rotation, 0.0, delta * 12.0)
+		
+		# Живое дыхание очей
+		if _eye_light != null:
+			_eye_light.energy = _base_eye_energy + sin(_walk_anim_phase * 1.5) * 0.15
 		
 		# Живое дыхание в покое (Idle breathing)
 		var breath: float = sin(_walk_anim_phase) * 0.035

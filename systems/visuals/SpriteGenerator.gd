@@ -44,6 +44,47 @@ static func get_hero_texture(hero_id: String) -> Texture2D:
 	_cache[key] = tex
 	return tex
 
+static func get_hero_boot_texture(hero_id: String) -> Texture2D:
+	var key: String = "boot_" + hero_id
+	if _cache.has(key):
+		return _cache[key]
+	
+	var img: Image = Image.create(16, 16, false, Image.FORMAT_RGBA8)
+	img.fill(C_TRANSPARENT)
+	
+	match hero_id:
+		"warrior":
+			# Стальной сапог с наголенником и заклепкой
+			_fill_rect(img, 5, 4, 6, 7, Color(0.2, 0.22, 0.28))
+			_fill_rect(img, 6, 5, 4, 6, Color(0.68, 0.72, 0.8))
+			_set_p(img, 7, 5, Color(0.9, 0.94, 1.0))
+			_fill_rect(img, 4, 11, 8, 3, Color(0.15, 0.16, 0.2))
+			_fill_rect(img, 5, 10, 7, 2, Color(0.55, 0.6, 0.68))
+			_set_p(img, 7, 9, Color(0.92, 0.75, 0.2))
+		"mage":
+			# Сапог полуночной кожи с золотой рунической манжетой
+			_fill_rect(img, 5, 4, 6, 7, Color(0.12, 0.08, 0.2))
+			_fill_rect(img, 6, 5, 4, 6, Color(0.24, 0.16, 0.38))
+			_fill_rect(img, 5, 4, 6, 2, Color(0.88, 0.72, 0.22))
+			_fill_rect(img, 4, 11, 8, 3, Color(0.08, 0.06, 0.12))
+			_fill_rect(img, 5, 10, 7, 2, Color(0.3, 0.2, 0.45))
+			_set_p(img, 8, 8, Color(0.4, 0.9, 1.0))
+		"ranger":
+			# Охотничий сапог из кожи с ремешком и пряжкой
+			_fill_rect(img, 5, 4, 6, 7, Color(0.25, 0.16, 0.1))
+			_fill_rect(img, 6, 5, 4, 6, Color(0.45, 0.3, 0.18))
+			_fill_rect(img, 5, 7, 6, 2, Color(0.18, 0.32, 0.16))
+			_set_p(img, 8, 7, Color(0.85, 0.75, 0.3))
+			_fill_rect(img, 4, 11, 8, 3, Color(0.14, 0.09, 0.05))
+			_fill_rect(img, 5, 10, 7, 2, Color(0.4, 0.26, 0.15))
+		_:
+			_fill_rect(img, 5, 4, 6, 8, Color(0.3, 0.3, 0.35))
+			_fill_rect(img, 4, 11, 8, 3, Color(0.15, 0.15, 0.18))
+	
+	var b_tex: ImageTexture = ImageTexture.create_from_image(img)
+	_cache[key] = b_tex
+	return b_tex
+
 static func get_hero_icon(hero_id: String) -> Texture2D:
 	var key: String = "icon_hero_" + hero_id
 	if _cache.has(key):

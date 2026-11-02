@@ -36,6 +36,10 @@ var is_collapsed: bool = false
 var has_reassembled: bool = false
 var reassemble_timer: float = 0.0
 var _walk_anim_phase: float = randf_range(0.0, 10.0)
+var _shadow_sprite: Sprite2D = null
+var _eye_light: PointLight2D = null
+var _base_eye_energy: float = 0.55
+var _step_dust_timer: float = 0.0
 
 func _ready() -> void:
 	add_to_group("enemies")
@@ -90,6 +94,56 @@ func setup_from_data(data: EnemyData) -> void:
 	time_since_damage = enemy_data.regen_delay_seconds
 	if status_effect_manager != null and enemy_data != null:
 		status_effect_manager.immunities = enemy_data.immunities
+	_setup_enemy_visuals()
+
+func _setup_enemy_visuals() -> void:
+	var type_key: String = enemy_data.id if (enemy_data and not enemy_data.id.is_empty()) else (enemy_data.enemy_type if enemy_data else "")
+	
+	if _shadow_sprite == null:
+		_shadow_sprite = Sprite2D.new()
+		_shadow_sprite.name = "FloorShadow"
+		_shadow_sprite.texture = EffectsHelper.get_spark_texture()
+		_shadow_sprite.modulate = Color(0, 0, 0, 0.45)
+		_shadow_sprite.z_index = -1
+		add_child(_shadow_sprite)
+	
+	var is_heavy: bool = type_key.contains("troll") or type_key.contains("golem") or type_key.contains("brute") or type_key.contains("executioner")
+	var is_small: bool = type_key.contains("spider") or type_key.contains("slime")
+	if is_heavy:
+		_shadow_sprite.scale = Vector2(3.6, 1.2)
+		_shadow_sprite.position = Vector2(0, 18.0)
+	elif is_small:
+		_shadow_sprite.scale = Vector2(1.8, 0.65)
+		_shadow_sprite.position = Vector2(0, 10.0)
+	else:
+		_shadow_sprite.scale = Vector2(2.4, 0.85)
+		_shadow_sprite.position = Vector2(0, 14.0)
+	
+	var eye_col: Color = Color(1.0, 0.25, 0.2)
+	_base_eye_energy = 0.55
+	if type_key.contains("skeleton") or type_key.contains("wraith"):
+		eye_col = Color(0.2, 0.85, 1.0)
+		_base_eye_energy = 0.7
+	elif type_key.contains("troll"):
+		eye_col = Color(0.75, 0.95, 0.25)
+	elif type_key.contains("fire") or type_key.contains("magma") or type_key.contains("flame"):
+		eye_col = Color(1.1, 0.55, 0.15)
+		_base_eye_energy = 0.75
+	elif type_key.contains("frost") or type_key.contains("ice"):
+		eye_col = Color(0.3, 0.9, 1.1)
+		_base_eye_energy = 0.7
+	elif type_key.contains("void") or type_key.contains("chimera") or type_key.contains("archon") or type_key.contains("purgatory"):
+		eye_col = Color(0.85, 0.35, 1.1)
+		_base_eye_energy = 0.8
+	
+	if _eye_light == null and visuals != null:
+		_eye_light = LightTextureGenerator.create_point_light(eye_col, _base_eye_energy, 0.8)
+		_eye_light.name = "EnemyEyeLight"
+		_eye_light.position = Vector2(0, -6.0)
+		visuals.add_child(_eye_light)
+	elif _eye_light != null:
+		_eye_light.color = eye_col
+		_eye_light.energy = _base_eye_energy
 
 func _physics_process(delta: float) -> void:
 	if health_component.is_dead:
@@ -150,22 +204,85 @@ func _physics_process(delta: float) -> void:
 		if movement_component.knockback_velocity.length_squared() > 1.0:
 			movement_component.move(self, Vector2.ZERO, delta)
 	
+	_step_dust_timer = maxf(0.0, _step_dust_timer - delta)
+	var facing_sign: float = -1.0 if visuals.scale.x < 0.0 else 1.0
 	if velocity.x < -5.0:
-		visuals.scale.x = -1.0
+		facing_sign = -1.0
+		visuals.scale.x = -abs(visuals.scale.x)
 	elif velocity.x > 5.0:
-		visuals.scale.x = 1.0
+		facing_sign = 1.0
+		visuals.scale.x = abs(visuals.scale.x)
 
 	var is_moving: bool = velocity.length_squared() > 100.0
-	if is_moving:
-		_walk_anim_phase += delta * 12.0
-		visuals.position.y = -abs(sin(_walk_anim_phase)) * 2.5
-		visuals.rotation = sin(_walk_anim_phase) * 0.05
-		visuals.scale.y = 1.0 + sin(_walk_anim_phase * 2.0) * 0.03
+	var type_key: String = enemy_data.id if (enemy_data and not enemy_data.id.is_empty()) else (enemy_data.enemy_type if enemy_data else "")
+	
+	var is_floating: bool = type_key.contains("wraith") or type_key.contains("specter") or type_key.contains("archon") or type_key.contains("necromancer")
+	var is_heavy: bool = type_key.contains("troll") or type_key.contains("golem") or type_key.contains("brute") or type_key.contains("executioner")
+	var is_skitter: bool = type_key.contains("spider") or type_key.contains("worm")
+	var is_slime: bool = type_key.contains("slime")
+	
+	if is_floating:
+		_walk_anim_phase += delta * 2.8
+		var hover_y: float = sin(_walk_anim_phase) * 6.0 - 5.0
+		visuals.position.y = hover_y
+		visuals.rotation = sin(_walk_anim_phase * 0.8) * 0.08
+		if _shadow_sprite != null:
+			var s_shrink: float = clampf(1.0 - (hover_y / -12.0) * 0.25, 0.7, 1.2)
+			_shadow_sprite.scale = Vector2(2.4 * s_shrink, 0.85 * s_shrink)
+	elif is_heavy:
+		if is_moving:
+			_walk_anim_phase += delta * 7.5
+			var step_sin: float = sin(_walk_anim_phase)
+			visuals.position.y = -abs(step_sin) * 4.5
+			visuals.rotation = step_sin * 0.08
+			visuals.scale.y = 1.0 - abs(step_sin) * 0.12
+			visuals.scale.x = (1.0 + abs(step_sin) * 0.06) * facing_sign
+			if abs(step_sin) > 0.92 and _step_dust_timer <= 0.0:
+				EffectsHelper.spawn_dust_puff(get_parent(), global_position + Vector2(0, 16.0))
+				_step_dust_timer = 0.35
+		else:
+			_walk_anim_phase += delta * 2.0
+			visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
+			visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 2.0)
+			visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.03
+			visuals.scale.x = facing_sign
+	elif is_skitter:
+		if is_moving:
+			_walk_anim_phase += delta * 22.0
+			visuals.position.y = -abs(sin(_walk_anim_phase)) * 2.0
+			visuals.rotation = sin(_walk_anim_phase) * 0.14
+		else:
+			_walk_anim_phase += delta * 4.0
+			visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
+			visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 3.0)
+			visuals.scale.y = 1.0
+			visuals.scale.x = facing_sign
+	elif is_slime:
+		_walk_anim_phase += delta * (12.0 if is_moving else 3.5)
+		var squash: float = sin(_walk_anim_phase) * 0.25
+		visuals.scale.y = 1.0 + squash
+		visuals.scale.x = (1.0 - squash * 0.5) * facing_sign
+		visuals.position.y = -abs(sin(_walk_anim_phase)) * 5.0
 	else:
-		_walk_anim_phase += delta * 2.5
-		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
-		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 2.0)
-		visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.02
+		if is_moving:
+			_walk_anim_phase += delta * 14.0
+			var step_sin: float = sin(_walk_anim_phase)
+			visuals.position.y = -abs(step_sin) * 3.2
+			visuals.rotation = clampf(velocity.x / 180.0, -1.0, 1.0) * 0.12 + step_sin * 0.04
+			visuals.scale.y = 1.0 + sin(_walk_anim_phase * 2.0) * 0.04
+			visuals.scale.x = (1.0 - sin(_walk_anim_phase * 2.0) * 0.02) * facing_sign
+			if abs(step_sin) > 0.9 and _step_dust_timer <= 0.0:
+				EffectsHelper.spawn_dust_puff(get_parent(), global_position + Vector2(0, 12.0))
+				_step_dust_timer = 0.25
+		else:
+			_walk_anim_phase += delta * 2.5
+			visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
+			visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 2.0)
+			visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.02
+			visuals.scale.x = facing_sign
+	
+	if _eye_light != null:
+		_eye_light.energy = _base_eye_energy + sin(_walk_anim_phase * 2.0) * 0.1
 
 func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
 	# Проверка щита рыцаря-стража: блок спереди, уязвим со спины
@@ -352,17 +469,27 @@ func _melee_attack() -> void:
 	attack_hitbox.rotation = dir.angle()
 	attack_hitbox.reset_hits()
 	attack_shape.disabled = false
+	AudioManager.play_sfx_named("swing")
+	
+	# Дуга взмаха когтей/оружия врага
+	var slash_col: Color = enemy_data.color if enemy_data else Color(1.0, 0.4, 0.3, 0.85)
+	slash_col.a = 0.85
+	EffectsHelper.spawn_slash_arc(get_parent(), global_position + dir * 20.0, dir.angle(), 24.0, slash_col)
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(self, "position", position + dir * 18.0, 0.1)
+	tween.tween_property(self, "position", position + dir * 22.0, 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func(): attack_shape.disabled = true)
-	tween.tween_property(self, "position", position, 0.1)
+	tween.tween_property(self, "position", position, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _heavy_attack() -> void:
 	var dir: Vector2 = (player_target.global_position - global_position).normalized()
 	attack_hitbox.rotation = dir.angle()
 	attack_hitbox.knockback_force = 420.0
 	attack_hitbox.reset_hits()
+	AudioManager.play_sfx_named("swing")
+	
+	var slash_col: Color = Color(1.2, 0.7, 0.2, 0.9)
+	EffectsHelper.spawn_slash_arc(get_parent(), global_position + dir * 26.0, dir.angle(), 32.0, slash_col)
 	
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(2.0, 1.2, 0.4, 1.0)
@@ -372,9 +499,9 @@ func _heavy_attack() -> void:
 		visuals.modulate = Color.WHITE
 		EventBus.screen_shake_requested.emit(4.0, 0.15)
 	)
-	tween.tween_property(self, "position", position + dir * 28.0, 0.12)
+	tween.tween_property(self, "position", position + dir * 28.0, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func(): attack_shape.disabled = true)
-	tween.tween_property(self, "position", position, 0.15)
+	tween.tween_property(self, "position", position, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _throw_boulder() -> void:
 	var dir: Vector2 = (player_target.global_position - global_position).normalized()

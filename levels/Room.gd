@@ -117,6 +117,14 @@ func _apply_biome_theme() -> void:
 				t_light.name = "TorchLight"
 				t.add_child(t_light)
 
+	# Атмосферные частицы биома
+	var atmosphere: BiomeAtmosphere = get_node_or_null("BiomeAtmosphere") as BiomeAtmosphere
+	if atmosphere == null:
+		atmosphere = BiomeAtmosphere.new()
+		atmosphere.name = "BiomeAtmosphere"
+		add_child(atmosphere)
+	atmosphere.setup_biome(current_biome.id)
+
 func _setup_biome_hazards() -> void:
 	if current_biome == null:
 		return

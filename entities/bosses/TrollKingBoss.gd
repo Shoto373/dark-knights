@@ -32,6 +32,9 @@ var slam_timer: float = 3.5
 var boulder_timer: float = 2.0
 
 var is_acting: bool = false
+var _shadow_sprite: Sprite2D = null
+var _eye_light: PointLight2D = null
+var _walk_anim_phase: float = 0.0
 
 # Регенерация и статус горения
 var time_since_damage: float = 2.0
@@ -86,6 +89,24 @@ func _ready() -> void:
 	
 	flame_fx.visible = false
 	regen_fx.visible = false
+	
+	# Тень короля троллей на полу
+	if _shadow_sprite == null:
+		_shadow_sprite = Sprite2D.new()
+		_shadow_sprite.name = "FloorShadow"
+		_shadow_sprite.texture = EffectsHelper.get_spark_texture()
+		_shadow_sprite.modulate = Color(0, 0, 0, 0.45)
+		_shadow_sprite.scale = Vector2(4.6, 1.4)
+		_shadow_sprite.position = Vector2(0, 26.0)
+		_shadow_sprite.z_index = -1
+		add_child(_shadow_sprite)
+	
+	# Светящийся взор короля троллей
+	if _eye_light == null and visuals != null:
+		_eye_light = LightTextureGenerator.create_point_light(Color(0.85, 0.95, 0.25), 0.75, 1.3)
+		_eye_light.name = "BossEyeLight"
+		_eye_light.position = Vector2(0, -12.0)
+		visuals.add_child(_eye_light)
 	
 	EventBus.boss_spawned.emit(boss_data.name if boss_data else "Король троллей", health_component.max_health)
 
@@ -145,6 +166,20 @@ func _physics_process(delta: float) -> void:
 		else:
 			movement_component.move(self, dir, delta)
 
+	# Анимация поступи и тяжелого дыхания Короля троллей
+	var is_moving: bool = velocity.length_squared() > 100.0
+	if is_moving:
+		_walk_anim_phase += delta * 7.5
+		var step_sin: float = sin(_walk_anim_phase)
+		visuals.position.y = -abs(step_sin) * 5.0
+		visuals.rotation = step_sin * 0.08
+		visuals.scale.y = 1.0 - abs(step_sin) * 0.1
+	else:
+		_walk_anim_phase += delta * 2.0
+		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
+		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 2.0)
+		visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.03
+
 func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
 	time_since_damage = 0.0
 	# Огненный урон сбивает регенерацию Короля троллей
@@ -171,8 +206,12 @@ func _enter_phase_2() -> void:
 	attack_hitbox.base_damage = int(round(attack_hitbox.base_damage * 1.25))
 	regen_heal_amount = 15
 	
-	EventBus.screen_shake_requested.emit(14.0, 0.5)
+	EventBus.screen_shake_requested.emit(16.0, 0.5)
+	EffectsHelper.spawn_death_burst(get_parent(), global_position, Color(0.85, 0.95, 0.25))
 	crown_rect.color = Color(1.0, 0.2, 0.1, 1.0)
+	if _eye_light != null:
+		_eye_light.energy = 1.4
+		_eye_light.color = Color(1.2, 0.4, 0.1)
 	
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(2.2, 0.8, 0.3, 1.0)
@@ -193,6 +232,7 @@ func _flash_regen_pulse() -> void:
 func _melee_club_smash(dir: Vector2) -> void:
 	attack_timer = 1.2 if current_phase == 1 else 0.9
 	is_acting = true
+	AudioManager.play_sfx_named("swing")
 	
 	# Замах булавой
 	var tween: Tween = create_tween()
@@ -203,6 +243,8 @@ func _melee_club_smash(dir: Vector2) -> void:
 		attack_hitbox.reset_hits()
 		attack_shape.disabled = false
 		EventBus.screen_shake_requested.emit(6.0, 0.2)
+		var slash_col: Color = Color(0.9, 0.95, 0.3, 0.9)
+		EffectsHelper.spawn_slash_arc(get_parent(), global_position + dir * 35.0, dir.angle(), 48.0, slash_col)
 	)
 	tween.tween_property(self, "position", position + dir * 30.0, 0.12)
 	tween.tween_callback(func():

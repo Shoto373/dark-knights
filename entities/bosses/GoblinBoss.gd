@@ -26,6 +26,9 @@ var attack_timer: float = 0.0
 var special_timer: float = 3.0
 var is_charging: bool = false
 var charge_direction: Vector2 = Vector2.ZERO
+var _shadow_sprite: Sprite2D = null
+var _eye_light: PointLight2D = null
+var _walk_anim_phase: float = 0.0
 
 func _ready() -> void:
 	add_to_group("bosses")
@@ -70,6 +73,24 @@ func _ready() -> void:
 	health_component.damaged.connect(_on_damaged)
 	health_component.died.connect(_on_died)
 	
+	# Тень босса на полу
+	if _shadow_sprite == null:
+		_shadow_sprite = Sprite2D.new()
+		_shadow_sprite.name = "FloorShadow"
+		_shadow_sprite.texture = EffectsHelper.get_spark_texture()
+		_shadow_sprite.modulate = Color(0, 0, 0, 0.45)
+		_shadow_sprite.scale = Vector2(4.2, 1.3)
+		_shadow_sprite.position = Vector2(0, 24.0)
+		_shadow_sprite.z_index = -1
+		add_child(_shadow_sprite)
+	
+	# Светящийся взор вождя
+	if _eye_light == null and visuals != null:
+		_eye_light = LightTextureGenerator.create_point_light(Color(1.0, 0.25, 0.15), 0.75, 1.2)
+		_eye_light.name = "BossEyeLight"
+		_eye_light.position = Vector2(0, -10.0)
+		visuals.add_child(_eye_light)
+	
 	EventBus.boss_spawned.emit(boss_data.name if boss_data else "Вождь гоблинов", health_component.max_health)
 
 func _physics_process(delta: float) -> void:
@@ -102,6 +123,22 @@ func _physics_process(delta: float) -> void:
 		else:
 			movement_component.move(self, to_player.normalized(), delta)
 
+	# Анимация покачивания при шаге и тяжелого дыхания
+	var is_moving: bool = velocity.length_squared() > 100.0
+	if is_moving:
+		_walk_anim_phase += delta * 11.0
+		visuals.position.y = -abs(sin(_walk_anim_phase)) * 4.0
+		visuals.rotation = sin(_walk_anim_phase) * 0.06
+	else:
+		_walk_anim_phase += delta * 2.5
+		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
+		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 2.0)
+	
+	var breath: float = sin(_walk_anim_phase) * 0.04
+	visuals.scale = Vector2(1.0 - breath * 0.5, 1.0 + breath)
+	if _eye_light != null:
+		_eye_light.energy = 0.75 + breath * 2.0
+
 func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.boss_health_changed.emit(current_hp, max_hp)
 	_flash_red()
@@ -116,7 +153,12 @@ func _enter_phase_2() -> void:
 	movement_component.max_speed *= 1.35
 	attack_hitbox.base_damage = int(round(attack_hitbox.base_damage * 1.3))
 	
-	EventBus.screen_shake_requested.emit(10.0, 0.4)
+	EventBus.screen_shake_requested.emit(12.0, 0.45)
+	EffectsHelper.spawn_death_burst(get_parent(), global_position, Color(1.2, 0.35, 0.1))
+	if _eye_light != null:
+		_eye_light.energy = 1.3
+		_eye_light.color = Color(1.8, 0.1, 0.05)
+	
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(2.5, 0.5, 0.2, 1.0)
 	crown_rect.color = Color(1.0, 0.1, 0.1, 1.0)
@@ -140,11 +182,15 @@ func _melee_cleave(dir: Vector2) -> void:
 	attack_hitbox.rotation = dir.angle()
 	attack_hitbox.reset_hits()
 	attack_shape.disabled = false
+	AudioManager.play_sfx_named("swing")
+	
+	var slash_col: Color = Color(1.2, 0.4, 0.15, 0.9) if current_phase == 2 else Color(0.95, 0.75, 0.25, 0.85)
+	EffectsHelper.spawn_slash_arc(get_parent(), global_position + dir * 30.0, dir.angle(), 44.0, slash_col)
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(self, "position", position + dir * 30.0, 0.15)
+	tween.tween_property(self, "position", position + dir * 30.0, 0.15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func(): attack_shape.disabled = true)
-	tween.tween_property(self, "position", position, 0.15)
+	tween.tween_property(self, "position", position, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _perform_special_ability(dir: Vector2) -> void:
 	special_timer = 4.0 if current_phase == 1 else 2.5
