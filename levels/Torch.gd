@@ -1,7 +1,7 @@
 class_name TorchSconce
 extends Node2D
 
-## Настенный факел с живым пламенем, искрами и мягким рассеянным освещением
+## Настенный факел с живым многочастотным пламенем, искрами и динамическим источником света
 
 @onready var sconce_sprite: Sprite2D = $SconceSprite
 @onready var flame_sprite: Sprite2D = $FlameSprite
@@ -13,6 +13,7 @@ extends Node2D
 var _flame_phase: float = 0.0
 var _base_glow_scale: Vector2 = Vector2(1.2, 1.2)
 var _ember_timer: float = 0.0
+var _torch_point_light: PointLight2D = null
 
 func _ready() -> void:
 	_flame_phase = randf() * 10.0
@@ -26,6 +27,12 @@ func _ready() -> void:
 	if glow_tex != null:
 		light_glow.texture = glow_tex
 		light_glow.modulate = torch_color
+	
+	# Динамический PointLight2D для освещения стен и окружения
+	_torch_point_light = LightTextureGenerator.create_point_light(Color(1.0, 0.8, 0.45), 0.85, 2.4)
+	_torch_point_light.name = "TorchPointLight"
+	_torch_point_light.position = Vector2(0, -14)
+	add_child(_torch_point_light)
 
 func _process(delta: float) -> void:
 	_flame_phase += delta * 12.0
@@ -36,10 +43,16 @@ func _process(delta: float) -> void:
 	flame_sprite.scale = Vector2(f_scale_x, f_scale_y)
 	flame_sprite.rotation = sin(_flame_phase * 0.7) * 0.08
 	
-	# Пульсация мягкого света
+	# Пульсация мягкого рассеянного ореола
 	var light_pulse: float = 1.0 + sin(_flame_phase * 0.5) * 0.08 + randf_range(-0.03, 0.03)
 	light_glow.scale = _base_glow_scale * light_pulse
 	light_glow.modulate.a = torch_color.a * (0.9 + sin(_flame_phase * 0.8) * 0.15)
+	
+	# Органический многочастотный танец света факела (AAA Dynamic Light Flicker)
+	if _torch_point_light != null:
+		var energy_fluctuation: float = 0.78 + sin(_flame_phase * 0.7) * 0.07 + sin(_flame_phase * 1.9) * 0.04 + randf_range(-0.02, 0.02)
+		_torch_point_light.energy = energy_fluctuation
+		_torch_point_light.position.x = sin(_flame_phase * 1.1) * 1.2
 	
 	# Выброс отдельных искорок
 	_ember_timer += delta

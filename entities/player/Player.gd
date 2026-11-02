@@ -460,6 +460,12 @@ func _start_dash() -> void:
 	EffectsHelper.spawn_dust_puff(get_parent(), global_position)
 	EffectsHelper.spawn_shockwave(get_parent(), global_position, 110.0, 0.28, 0.035)
 	AudioManager.play_sfx_named("dash")
+	
+	# Кинематографическая отдача камеры в сторону, противоположную рывку
+	var cam: Camera2D = get_viewport().get_camera_2d()
+	if cam != null and cam.has_method("add_kick"):
+		cam.call("add_kick", -dash_direction, 7.5)
+	
 	dash_timer.start()
 	dash_cooldown_timer.start()
 
@@ -505,6 +511,11 @@ func _swing_melee_weapon() -> void:
 		slash_color = Color(0.3, 0.85, 1.0, 0.9)
 	EffectsHelper.spawn_slash_arc(get_parent(), global_position + aim_direction * 22.0, base_angle, 28.0, slash_color)
 
+	# Отдача камеры при ударе
+	var cam: Camera2D = get_viewport().get_camera_2d()
+	if cam != null and cam.has_method("add_kick"):
+		cam.call("add_kick", -aim_direction, 4.0)
+
 	var tween: Tween = create_tween()
 	tween.tween_property(weapon_pivot, "rotation", end_angle, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func():
@@ -534,6 +545,12 @@ func _swing_melee_weapon() -> void:
 
 func _shoot_basic_projectile() -> void:
 	AudioManager.play_sfx_named("shoot")
+	
+	# Отдача камеры при выстреле/касте
+	var cam: Camera2D = get_viewport().get_camera_2d()
+	if cam != null and cam.has_method("add_kick"):
+		cam.call("add_kick", -aim_direction, 5.0)
+
 	var proj: Projectile = PROJECTILE_SCENE.instantiate() as Projectile
 	get_parent().add_child(proj)
 	proj.global_position = global_position + aim_direction * 20.0

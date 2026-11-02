@@ -113,9 +113,43 @@ static func spawn_dust_puff(parent: Node, global_pos: Vector2) -> void:
 		tween.parallel().tween_property(dust, "modulate:a", 0.0, 0.25)
 		tween.tween_callback(pivot.queue_free)
 
+static func trigger_hitstop(tree: SceneTree, duration: float = 0.045, slow_factor: float = 0.06) -> void:
+	if tree == null:
+		return
+	Engine.time_scale = slow_factor
+	var timer = tree.create_timer(duration * slow_factor, true, false, true)
+	timer.timeout.connect(func():
+		Engine.time_scale = 1.0
+	)
+
+static func spawn_ground_decal(parent: Node, global_pos: Vector2, decal_color: Color = Color(0.18, 0.04, 0.04, 0.55), radius: float = 22.0, duration: float = 14.0) -> Sprite2D:
+	if parent == null:
+		return null
+	var decal: Sprite2D = Sprite2D.new()
+	decal.name = "BattleDecal"
+	decal.texture = get_spark_texture()
+	decal.global_position = global_pos
+	decal.rotation = randf_range(0.0, TAU)
+	decal.scale = Vector2(randf_range(1.2, 1.8), randf_range(0.8, 1.4)) * (radius / 16.0)
+	decal.modulate = decal_color
+	decal.z_index = -1
+	parent.add_child(decal)
+	
+	var tween: Tween = decal.create_tween()
+	tween.tween_interval(duration * 0.7)
+	tween.tween_property(decal, "modulate:a", 0.0, duration * 0.3)
+	tween.tween_callback(decal.queue_free)
+	return decal
+
 static func spawn_death_burst(parent: Node, global_pos: Vector2, color: Color = Color(0.85, 0.2, 0.2, 1.0)) -> void:
 	if parent == null:
 		return
+	
+	# Оставляем кровавый / стихийный след на полу (AAA Battle Decal)
+	var decal_tint: Color = color.darkened(0.55)
+	decal_tint.a = 0.55
+	spawn_ground_decal(parent, global_pos, decal_tint, 24.0, 14.0)
+	
 	var tex: Texture2D = get_spark_texture()
 	for i in range(12):
 		var p: Sprite2D = Sprite2D.new()

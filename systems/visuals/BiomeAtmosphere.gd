@@ -136,3 +136,4 @@ func _create_particles() -> void:
 			particles.color = Color(0.8, 0.8, 0.8, 0.4)
 			
 	add_child(particles)
+

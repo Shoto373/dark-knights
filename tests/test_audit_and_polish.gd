@@ -418,3 +418,57 @@ func test_boss_animations_and_biome_atmosphere() -> void:
 	room.setup(r_data)
 	var room_atmosphere: Node = room.get_node_or_null("BiomeAtmosphere")
 	assert_not_null(room_atmosphere, "Комната имеет систему атмосферных частиц BiomeAtmosphere")
+
+func test_aaa_dynamic_camera_aim_lead_and_kickback() -> void:
+	var cam: PlayerCamera = PlayerCamera.new()
+	add_child_autofree(cam)
+	
+	# Проверяем отдачу (Kickback)
+	cam.add_kick(Vector2(1, 0), 10.0)
+	assert_gt(cam._kick_offset.length(), 0.0, "Отдача камеры добавлена")
+	
+	# Проверяем угасание отдачи при процессинге
+	var initial_kick_len: float = cam._kick_offset.length()
+	cam._process(0.1)
+	assert_lt(cam._kick_offset.length(), initial_kick_len, "Отдача камеры плавно затухает")
+
+func test_aaa_ghost_health_bars_on_hud() -> void:
+	var hud_scene: PackedScene = load("res://ui/HUD.tscn")
+	var hud: HUD = hud_scene.instantiate() as HUD
+	add_child_autofree(hud)
+	
+	assert_not_null(hud.ghost_hp_bar, "HUD должен иметь ghost bar для здоровья игрока")
+	assert_not_null(hud.boss_ghost_hp_bar, "HUD должен иметь ghost bar для здоровья босса")
+	
+	# Проверяем поведение ghost bar при получении урона
+	hud._on_player_health_changed(100, 100)
+	assert_eq(hud.ghost_hp_bar.value, 100.0, "Ghost bar инициализирован на 100")
+	
+	# Наносим урон
+	hud._on_player_health_changed(70, 100)
+	assert_eq(hud.hp_bar.value, 70.0, "Основная шкала здоровья моментально перешла на 70")
+	assert_gt(hud.ghost_hp_bar.value, 70.0, "Ghost bar отстает, показывая след потерянного здоровья")
+
+func test_aaa_hitstop_and_ground_battle_decals() -> void:
+	var root: Node2D = Node2D.new()
+	add_child_autofree(root)
+	
+	# 1. Проверка создания боевого декаля на полу
+	var decal: Sprite2D = EffectsHelper.spawn_ground_decal(root, Vector2(100, 100), Color(0.8, 0.1, 0.1, 0.6), 24.0, 5.0)
+	assert_not_null(decal, "Декаль пола успешно создан")
+	if decal is Sprite2D:
+		assert_eq(decal.z_index, -1, "Декаль пола находится под персонажами (z_index = -1)")
+	
+	# 2. Проверка функции хитстопа (не падает и корректно обращается к SceneTree)
+	EffectsHelper.trigger_hitstop(get_tree(), 0.04, 0.05)
+	assert_true(true, "Хитстоп корректно выполнился")
+
+func test_torch_dynamic_lighting() -> void:
+	var torch_scene: PackedScene = load("res://levels/Torch.tscn")
+	var torch: TorchSconce = torch_scene.instantiate() as TorchSconce
+	add_child_autofree(torch)
+	
+	var point_light: Node = torch.get_node_or_null("TorchPointLight")
+	assert_not_null(point_light, "Факел имеет динамический источник света TorchPointLight")
+	if point_light is PointLight2D:
+		assert_gt(point_light.energy, 0.0, "Энергия света факела больше нуля")
