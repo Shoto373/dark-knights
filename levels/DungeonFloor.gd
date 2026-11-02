@@ -24,6 +24,7 @@ var current_grid_pos: Vector2i = Vector2i.ZERO
 var is_room_transitioning: bool = false
 
 func _ready() -> void:
+	AudioManager.play_music_named("dungeon", 1.0)
 	if GameState.current_seed == 0:
 		GameState.current_seed = randi()
 	

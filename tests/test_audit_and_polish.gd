@@ -6,18 +6,40 @@ func test_audio_manager_named_sfx_playback() -> void:
 	assert_not_null(AudioManager, "AudioManager is available")
 	# Check that all procedural sound effects are generated in cache
 	var expected_keys: Array[String] = [
-		"swing", "shoot", "cast", "hit", "crit", "dash", "coin", "hurt", "heal", "room_clear", "victory"
+		"swing", "shoot", "cast", "hit", "crit", "dash", "coin", "hurt", "heal", "room_clear", "victory", "shield_block"
 	]
 	for key in expected_keys:
 		assert_true(AudioManager._sfx_cache.has(key), "Cache should have SFX: " + key)
 		var stream: AudioStream = AudioManager._sfx_cache.get(key)
 		assert_not_null(stream, "SFX stream should not be null for " + key)
+		if stream is AudioStreamWAV:
+			assert_eq(stream.format, AudioStreamWAV.FORMAT_16_BITS, "SFX %s должен быть высококачественным 16-bit" % key)
 	
 	# Calling play_sfx_named does not crash
 	AudioManager.play_sfx_named("swing")
 	AudioManager.play_sfx_named("hit", 0.1)
 	AudioManager.play_sfx_named("coin")
+	AudioManager.play_sfx_named("shield_block")
 	assert_true(true, "SFX playback executed smoothly")
+
+func test_audio_manager_background_music_playback() -> void:
+	assert_not_null(AudioManager, "AudioManager is available")
+	var music_tracks: Array[String] = ["menu", "hub", "dungeon", "boss"]
+	for track in music_tracks:
+		assert_true(AudioManager._music_cache.has(track), "Music cache should contain: " + track)
+		var stream: AudioStream = AudioManager._music_cache.get(track)
+		assert_not_null(stream, "Music stream should not be null for " + track)
+		if stream is AudioStreamWAV:
+			assert_eq(stream.format, AudioStreamWAV.FORMAT_16_BITS, "Музыка %s должна быть 16-bit" % track)
+			assert_eq(stream.loop_mode, AudioStreamWAV.LOOP_FORWARD, "Музыка %s должна циклически бесшовно зацикливаться" % track)
+	
+	# Проверка переключения треков
+	AudioManager.play_music_named("menu", 0.1)
+	assert_eq(AudioManager.current_track_name, "menu", "Текущий трек стал menu")
+	AudioManager.play_music_named("dungeon", 0.1)
+	assert_eq(AudioManager.current_track_name, "dungeon", "Текущий трек переключился на dungeon")
+	AudioManager.stop_music(0.1)
+	assert_eq(AudioManager.current_track_name, "", "После stop_music имя трека очищается")
 
 func test_game_state_end_run_increments_meta_progress() -> void:
 	var initial_runs: int = MetaProgress.lifetime_stats.get("total_runs", 0)

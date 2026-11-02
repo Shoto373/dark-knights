@@ -5,6 +5,7 @@ const PAUSE_MENU_SCENE: PackedScene = preload("res://ui/PauseMenu.tscn")
 @onready var btn_back_to_menu: Button = %BtnBackToMenu
 
 func _ready() -> void:
+	AudioManager.play_music_named("hub", 1.0)
 	if btn_back_to_menu:
 		btn_back_to_menu.pressed.connect(_on_back_to_menu_pressed)
 	

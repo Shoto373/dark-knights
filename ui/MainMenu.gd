@@ -12,6 +12,7 @@ const SETTINGS_DIALOG_SCENE: PackedScene = preload("res://ui/SettingsDialog.tscn
 var _ember_timer: float = 0.0
 
 func _ready() -> void:
+	AudioManager.play_music_named("menu", 1.0)
 	btn_new_game.pressed.connect(_on_new_game_pressed)
 	btn_continue.pressed.connect(_on_continue_pressed)
 	btn_settings.pressed.connect(_on_settings_pressed)

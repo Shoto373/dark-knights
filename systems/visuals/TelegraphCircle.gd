@@ -56,3 +56,4 @@ func _draw() -> void:
 		var p1: Vector2 = Vector2(cos(ang), sin(ang)) * (radius - 5.0)
 		var p2: Vector2 = Vector2(cos(ang), sin(ang)) * (radius + 2.0)
 		draw_line(p1, p2, ring_color, 1.5)
+

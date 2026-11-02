@@ -48,3 +48,4 @@ func _draw() -> void:
 	# Внутренний спад волны
 	if current_radius > 6.0:
 		draw_arc(Vector2.ZERO, maxf(1.0, current_radius - 2.5), 0.0, TAU, 36, col_glow, w * 0.6)
+

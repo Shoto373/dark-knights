@@ -43,6 +43,7 @@ func _on_area_entered(area: Area2D) -> void:
 		if health_component.is_invulnerable and "shield_barrier" in parent_node and parent_node.shield_barrier != null:
 			if parent_node.shield_barrier.is_active:
 				parent_node.shield_barrier.trigger_block_impact()
+				AudioManager.play_sfx_named("shield_block")
 				hitbox.register_hit(parent_node)
 		return
 	
