@@ -26,9 +26,9 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MenuPanel/CenterContainer"]
-custom_minimum_size = Vector2(460, 0)
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="Title" type="Label" parent="MenuPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2
@@ -63,14 +63,17 @@ text = "СОБРАННЫЕ АРТЕФАКТЫ"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MenuPanel/CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 140)
+custom_minimum_size = Vector2(520, 180)
 layout_mode = 2
+size_flags_horizontal = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 1
 
 [node name="ItemsContainer" type="VBoxContainer" parent="MenuPanel/CenterContainer/VBoxContainer/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="HSeparator2" type="HSeparator" parent="MenuPanel/CenterContainer/VBoxContainer"]
 layout_mode = 2

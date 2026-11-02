@@ -57,7 +57,7 @@ func _init_sprites() -> void:
 		rarity_aura_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 		rarity_aura_sprite.texture = EffectsHelper.get_spark_texture()
 		rarity_aura_sprite.scale = Vector2(3.5, 3.5)
-		var base_y: float = -20.0 if floating_only else -32.0
+		var base_y: float = -22.0 if floating_only else -36.0
 		rarity_aura_sprite.position = Vector2(0, base_y)
 		add_child(rarity_aura_sprite)
 		move_child(rarity_aura_sprite, 0) # Располагаем за предметом
@@ -66,11 +66,15 @@ func _init_sprites() -> void:
 		item_sprite = Sprite2D.new()
 		item_sprite.name = "ItemVisualSprite"
 		item_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		var base_y: float = -20.0 if floating_only else -32.0
+		var base_y: float = -22.0 if floating_only else -36.0
 		item_sprite.position = Vector2(0, base_y)
 		add_child(item_sprite)
 		if item_icon != null:
 			item_icon.visible = false
+	
+	var ui_node: Node2D = get_node_or_null("UI") as Node2D
+	if ui_node != null:
+		ui_node.z_index = 10 # Текст всегда рисуется поверх всех спрайтов
 	
 	if rarity_glow != null:
 		rarity_glow.visible = false # Старый квадратный ColorRect навсегда выключен
@@ -81,7 +85,7 @@ func set_floating_only(val: bool) -> void:
 		pedestal_sprite.visible = not floating_only
 	if pedestal_base != null:
 		pedestal_base.visible = false
-	var base_y: float = -20.0 if floating_only else -32.0
+	var base_y: float = -22.0 if floating_only else -36.0
 	if item_sprite != null:
 		item_sprite.position.y = base_y
 	if rarity_aura_sprite != null:
@@ -89,9 +93,22 @@ func set_floating_only(val: bool) -> void:
 	var col_shape: Node2D = get_node_or_null("CollisionShape2D") as Node2D
 	if col_shape != null:
 		col_shape.position = Vector2(0, -16 if floating_only else 0)
-	var ui_node: Node2D = get_node_or_null("UI") as Node2D
-	if ui_node != null:
-		ui_node.position = Vector2(0, -38 if floating_only else -44)
+	
+	if name_label != null:
+		if floating_only:
+			name_label.offset_top = -68.0
+			name_label.offset_bottom = -46.0
+		else:
+			name_label.offset_top = -80.0
+			name_label.offset_bottom = -58.0
+	
+	if cost_label != null:
+		if floating_only:
+			cost_label.offset_top = 10.0
+			cost_label.offset_bottom = 32.0
+		else:
+			cost_label.offset_top = 22.0
+			cost_label.offset_bottom = 44.0
 
 func setup(item: ItemData, price: int = 0, is_blessing: bool = false) -> void:
 	item_data = item
@@ -134,7 +151,7 @@ func _process(_delta: float) -> void:
 	if item_sprite != null and not is_collected:
 		var time: float = Time.get_ticks_msec() * 0.0032
 		var bob: float = sin(time) * 3.5
-		var base_y: float = -20.0 if floating_only else -32.0
+		var base_y: float = -22.0 if floating_only else -36.0
 		item_sprite.position.y = base_y + bob
 		if rarity_aura_sprite != null:
 			var pulse: float = 1.0 + sin(time * 1.5) * 0.12
@@ -163,8 +180,10 @@ func _try_collect() -> void:
 		AudioManager.play_sfx_named("cast")
 	EffectsHelper.spawn_hit_sparks(get_parent(), global_position + Vector2(0, -26), r_col, 10)
 	
-	# Добавляем предмет игроку
-	if item_data.id != "shop_key":
+	# Добавляем предмет игроку (или ключ от магазина)
+	if item_data.id == "shop_key":
+		GameState.add_keys(1)
+	else:
 		GameState.inventory_items.append({
 			"id": item_data.id,
 			"name": item_data.name,

@@ -721,7 +721,28 @@ func _apply_aoe_ability(ability: AbilityData) -> void:
 
 func _apply_teleport_ability(ability: AbilityData) -> void:
 	var old_pos: Vector2 = global_position
-	var target_pos: Vector2 = global_position + aim_direction * ability.range_or_radius
+	var max_dist: float = ability.range_or_radius
+	var target_pos: Vector2 = old_pos + aim_direction * max_dist
+	
+	# Проверка препятствий (слой 1: world) — маг не может телепортироваться сквозь стены
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	if space_state != null:
+		var ray_query: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(old_pos, target_pos, 1) # Layer 1: World
+		ray_query.collide_with_areas = false
+		ray_query.collide_with_bodies = true
+		var hit: Dictionary = space_state.intersect_ray(ray_query)
+		if not hit.is_empty():
+			var hit_dist: float = old_pos.distance_to(hit.position)
+			var safe_dist: float = maxf(0.0, hit_dist - 24.0)
+			target_pos = old_pos + aim_direction * safe_dist
+	
+	# Дополнительная проверка коллизии в целевой точке — отступаем, если задеваем стену
+	var step_back_dir: Vector2 = (old_pos - target_pos).normalized()
+	var test_attempts: int = 0
+	while test_move(Transform2D(0.0, target_pos), Vector2.ZERO, null, 0.08, true) and test_attempts < 12 and target_pos.distance_to(old_pos) > 4.0:
+		target_pos += step_back_dir * 4.0
+		test_attempts += 1
+	
 	health_component.set_invulnerable(true)
 	
 	EffectsHelper.spawn_cast_circle(get_parent(), old_pos, Color(0.8, 0.4, 1.2))

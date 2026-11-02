@@ -37,6 +37,7 @@ var attack_timer: float = 0.0
 var special_timer: float = 3.2
 var teleport_timer: float = 5.5
 var is_acting: bool = false
+var _acting_watchdog: float = 0.0
 var is_beam_active: bool = false
 var beam_rotation_speed: float = 1.4
 var _shadow_sprite: Sprite2D = null
@@ -138,9 +139,17 @@ func _physics_process(delta: float) -> void:
 			break
 	
 	if is_acting:
+		_acting_watchdog += delta
+		if _acting_watchdog > 3.5:
+			modulate.a = 1.0
+			visuals.modulate = Color.WHITE
+			is_acting = false
+			_acting_watchdog = 0.0
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
+	else:
+		_acting_watchdog = 0.0
 	
 	if attack_timer > 0.0:
 		attack_timer -= delta
@@ -404,6 +413,11 @@ func _spawn_center_rift() -> void:
 	active_rifts.append(rift)
 
 func _teleport_with_flash() -> void:
+	if is_acting:
+		return
+	is_acting = true
+	teleport_timer = 5.0
+	
 	var corners: Array[Vector2] = [
 		Vector2(380, 220),
 		Vector2(900, 220),
@@ -428,6 +442,9 @@ func _teleport_with_flash() -> void:
 	)
 	tween.tween_property(self, "modulate:a", 1.0, 0.15)
 	tween.tween_property(visuals, "modulate", Color.WHITE, 0.2)
+	tween.tween_callback(func():
+		is_acting = false
+	)
 
 func _on_died() -> void:
 	remove_from_group("bosses")

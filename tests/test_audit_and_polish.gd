@@ -606,3 +606,89 @@ func test_minimap_adjacent_room_type_preview() -> void:
 	
 	var treasure_border_col: Color = minimap._get_room_border_color(treasure_room, false)
 	assert_gt(treasure_border_col.r, 0.9, "Рамка комнаты сокровищницы сияет золотом")
+
+func test_mage_teleport_wall_collision_and_safe_clamping() -> void:
+	var player_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var player: Player = player_scene.instantiate() as Player
+	add_child_autofree(player)
+	
+	player.global_position = Vector2(100, 100)
+	player.aim_direction = Vector2.RIGHT
+	
+	var ability: AbilityData = AbilityData.new()
+	ability.id = "teleport"
+	ability.effect_type = "teleport"
+	ability.range_or_radius = 200.0
+	
+	# Вызываем телепортацию
+	player._apply_teleport_ability(ability)
+	assert_eq(player.global_position.x, 300.0, "В открытом пространстве телепортация перемещает на полную дистанцию")
+
+func test_pedestal_and_interaction_labels_formatting_and_z_index() -> void:
+	var ped_scene: PackedScene = load("res://entities/loot/ItemPedestal.tscn")
+	var ped: ItemPedestal = ped_scene.instantiate() as ItemPedestal
+	add_child_autofree(ped)
+	
+	var ui_node: Node2D = ped.get_node("UI") as Node2D
+	assert_not_null(ui_node, "Пьедестал имеет UI контейнер")
+	assert_eq(ui_node.z_index, 10, "UI пьедестала имеет z_index = 10 для отрисовки поверх спрайтов")
+	
+	var name_lbl: Label = ped.get_node("%NameLabel") as Label
+	var cost_lbl: Label = ped.get_node("%CostLabel") as Label
+	assert_gte(name_lbl.size.x, 250.0, "NameLabel достаточно широкая (>= 250px), текст не обрезается")
+	assert_gte(cost_lbl.size.x, 250.0, "CostLabel достаточно широкая (>= 250px), текст не обрезается")
+
+func test_troll_king_boss_no_legacy_colorrects() -> void:
+	var troll_scene: PackedScene = load("res://entities/bosses/TrollKingBoss.tscn")
+	var boss: TrollKingBoss = troll_scene.instantiate() as TrollKingBoss
+	add_child_autofree(boss)
+	
+	var flame_fx: ColorRect = boss.get_node_or_null("%FlameFx") as ColorRect
+	var regen_fx: ColorRect = boss.get_node_or_null("%RegenFx") as ColorRect
+	assert_not_null(flame_fx, "FlameFx узел существует")
+	assert_not_null(regen_fx, "RegenFx узел существует")
+	assert_false(flame_fx.visible, "Устаревший плоский прямоугольник FlameFx выключен")
+	assert_false(regen_fx.visible, "Устаревший плоский прямоугольник RegenFx выключен")
+
+func test_lich_king_boss_teleport_state_lock_and_watchdog() -> void:
+	var lich_scene: PackedScene = load("res://entities/bosses/LichKingBoss.tscn")
+	var lich: LichKingBoss = lich_scene.instantiate() as LichKingBoss
+	add_child_autofree(lich)
+	
+	assert_false(lich.is_acting, "Изначально босс не находится в состоянии действия")
+	lich._teleport_away()
+	assert_true(lich.is_acting, "Во время телепортации установлен замок действия is_acting = true")
+	
+	# Симулируем срабатывание аварийного сторожевого таймера
+	lich._acting_watchdog = 4.0
+	lich._physics_process(0.1)
+	assert_false(lich.is_acting, "Сторожевой таймер гарантирует сброс is_acting и предотвращает зависание")
+	assert_eq(lich.modulate.a, 1.0, "Сторожевой таймер гарантирует восстановление видимости босса (modulate.a = 1.0)")
+
+func test_pause_menu_artifacts_inventory_cards_rendering() -> void:
+	var pause_scene: PackedScene = load("res://ui/PauseMenu.tscn")
+	var pause_menu: PauseMenu = pause_scene.instantiate() as PauseMenu
+	add_child_autofree(pause_menu)
+	
+	# 1. Проверяем пустой инвентарь
+	GameState.inventory_items.clear()
+	pause_menu._update_inventory_display()
+	assert_eq(pause_menu.items_container.get_child_count(), 1, "При пустом инвентаре отображается подсказка")
+	
+	# 2. Добавляем тестовый артефакт
+	var boots_item: ItemData = load("res://data/items/leather_boots.tres") as ItemData
+	assert_not_null(boots_item, "Ресурс сапог успешно загружен")
+	GameState.inventory_items.append({
+		"id": boots_item.id,
+		"name": boots_item.name,
+		"rarity": boots_item.rarity,
+		"item_ref": boots_item
+	})
+	
+	pause_menu._update_inventory_display()
+	assert_eq(pause_menu.items_container.get_child_count(), 1, "Создана карточка артефакта")
+	var card: Node = pause_menu.items_container.get_child(0)
+	assert_true(card is PanelContainer, "Артефакт отрисован как стильная карточка PanelContainer")
+	
+	# Очищаем за собой
+	GameState.inventory_items.clear()

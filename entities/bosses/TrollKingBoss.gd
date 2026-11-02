@@ -84,6 +84,11 @@ func _ready() -> void:
 			if child != boss_sprite and child is CanvasItem:
 				(child as CanvasItem).visible = false
 	
+	if flame_fx != null:
+		flame_fx.visible = false
+	if regen_fx != null:
+		regen_fx.visible = false
+	
 	health_component.damaged.connect(_on_damaged)
 	health_component.died.connect(_on_died)
 	
@@ -123,11 +128,11 @@ func _physics_process(delta: float) -> void:
 	# Обработка горения (сбивающего регенерацию)
 	if is_burning:
 		burn_timer -= delta
-		flame_fx.visible = true
-		flame_fx.color = Color(1.0, randf_range(0.3, 0.7), 0.1, 0.8)
+		if randf() < 0.35:
+			var spark_offset: Vector2 = Vector2(randf_range(-18, 18), randf_range(-24, 20))
+			EffectsHelper.spawn_hit_sparks(get_parent(), global_position + spark_offset, Color(1.4, 0.65, 0.15), 1)
 		if burn_timer <= 0.0:
 			is_burning = false
-			flame_fx.visible = false
 	
 	# Пассивная регенерация (сбивается огнём или свежим уроном)
 	time_since_damage += delta
@@ -186,9 +191,9 @@ func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
 	if hitbox != null and (hitbox.damage_type == "fire" or hitbox.tags.has("fire")):
 		is_burning = true
 		burn_timer = 5.0
-		flame_fx.visible = true
 		regeneration_interrupted.emit()
 		EventBus.screen_shake_requested.emit(5.0, 0.15)
+		EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.5, 0.5, 0.1), 8)
 
 func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	time_since_damage = 0.0
@@ -223,11 +228,10 @@ func _flash_red() -> void:
 	tween.tween_property(visuals, "modulate", Color.WHITE, 0.12)
 
 func _flash_regen_pulse() -> void:
-	regen_fx.visible = true
+	EffectsHelper.spawn_shockwave(get_parent(), global_position, 55.0, 0.28, 0.025)
 	var tween: Tween = create_tween()
-	regen_fx.modulate = Color(0.2, 2.5, 0.6, 0.8)
-	tween.tween_property(regen_fx, "modulate:a", 0.0, 0.35)
-	tween.tween_callback(func(): regen_fx.visible = false)
+	visuals.modulate = Color(0.4, 1.8, 0.7, 1.0)
+	tween.tween_property(visuals, "modulate", Color.WHITE, 0.35)
 
 func _melee_club_smash(dir: Vector2) -> void:
 	attack_timer = 1.2 if current_phase == 1 else 0.9

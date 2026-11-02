@@ -37,25 +37,33 @@ offset_bottom = -2.0
 color = Color(0.2, 0.45, 0.75, 1)
 
 [node name="UI" type="Node2D" parent="."]
+z_index = 10
 position = Vector2(0, -38)
 
 [node name="HeroNameLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
-offset_left = -60.0
-offset_top = -16.0
-offset_right = 60.0
+offset_left = -120.0
+offset_top = -18.0
+offset_right = 120.0
+offset_bottom = 6.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 13
 text = "Воин"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="InteractionLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
-offset_left = -80.0
+offset_left = -150.0
 offset_top = 48.0
-offset_right = 80.0
-offset_bottom = 64.0
+offset_right = 150.0
+offset_bottom = 70.0
 theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 11
 text = "[F] Выбрать"
 horizontal_alignment = 1
+vertical_alignment = 1
 

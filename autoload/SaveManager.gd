@@ -39,6 +39,14 @@ func save_run() -> bool:
 	if not GameState.is_run_active:
 		return false
 	
+	var clean_inventory: Array[Dictionary] = []
+	for inv in GameState.inventory_items:
+		clean_inventory.append({
+			"id": inv.get("id", ""),
+			"name": inv.get("name", ""),
+			"rarity": inv.get("rarity", 0)
+		})
+	
 	var data: Dictionary = {
 		"version": CURRENT_SAVE_VERSION,
 		"seed": GameState.current_seed,
@@ -50,7 +58,7 @@ func save_run() -> bool:
 		"max_hp": GameState.max_hp,
 		"gold": GameState.gold,
 		"keys": GameState.keys,
-		"inventory": GameState.inventory_items,
+		"inventory": clean_inventory,
 		"stats": GameState.run_stats
 	}
 	return _atomic_write_json(RUN_SAVE_PATH, data)
@@ -81,7 +89,15 @@ func load_run() -> bool:
 	GameState.max_hp = dict_data.get("max_hp", 100)
 	GameState.gold = dict_data.get("gold", 0)
 	GameState.keys = dict_data.get("keys", 0)
-	GameState.inventory_items = Array(dict_data.get("inventory", []), TYPE_DICTIONARY, &"", null)
+	GameState.inventory_items.clear()
+	var raw_inv = dict_data.get("inventory", [])
+	for inv_entry in raw_inv:
+		var item_dict: Dictionary = Dictionary(inv_entry)
+		if item_dict.has("id"):
+			var it_path: String = "res://data/items/%s.tres" % item_dict["id"]
+			if ResourceLoader.exists(it_path):
+				item_dict["item_ref"] = load(it_path) as ItemData
+		GameState.inventory_items.append(item_dict)
 	GameState.run_stats = dict_data.get("stats", GameState.run_stats)
 	return true
 

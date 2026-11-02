@@ -34,6 +34,8 @@ var attack_timer: float = 0.0
 var special_timer: float = 3.0
 var teleport_timer: float = 6.0
 var is_acting: bool = false
+var _acting_watchdog: float = 0.0
+var _teleport_tween: Tween = null
 
 var phylactery_instance: Phylactery = null
 var active_pillars: Array[Node2D] = []
@@ -118,9 +120,20 @@ func _physics_process(delta: float) -> void:
 			break
 	
 	if is_acting:
+		_acting_watchdog += delta
+		if _acting_watchdog > 3.5:
+			# Аварийный сброс: предотвращает зависание Лича в невидимости или фазе атаки
+			if _teleport_tween != null and _teleport_tween.is_valid():
+				_teleport_tween.kill()
+			modulate.a = 1.0
+			visuals.modulate = Color.WHITE
+			is_acting = false
+			_acting_watchdog = 0.0
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
+	else:
+		_acting_watchdog = 0.0
 	
 	if attack_timer > 0.0:
 		attack_timer -= delta
@@ -187,6 +200,11 @@ func _flash_blue() -> void:
 
 func _enter_phase_2() -> void:
 	current_phase = 2
+	if _teleport_tween != null and _teleport_tween.is_valid():
+		_teleport_tween.kill()
+	is_acting = false
+	_acting_watchdog = 0.0
+	modulate.a = 1.0
 	phase_changed.emit(2)
 	
 	movement_component.max_speed *= 1.25
@@ -209,10 +227,17 @@ func _enter_phase_2() -> void:
 
 func _enter_phase_3() -> void:
 	current_phase = 3
+	if _teleport_tween != null and _teleport_tween.is_valid():
+		_teleport_tween.kill()
+	is_acting = false
+	_acting_watchdog = 0.0
+	modulate.a = 1.0
 	phase_changed.emit(3)
 	
 	# Лич становится бестелесным призраком, пока жива филактерия
 	health_component.set_invulnerable(true)
+	health_component.current_health = health_component.max_health
+	health_component.is_dead = false
 	visuals.modulate = Color(0.6, 1.5, 2.8, 0.65)
 	
 	EventBus.screen_shake_requested.emit(18.0, 0.8)
@@ -417,6 +442,15 @@ func _summon_frost_army() -> void:
 			enemy.setup_from_data(edata)
 
 func _teleport_away() -> void:
+	if is_acting:
+		return
+	is_acting = true
+	_acting_watchdog = 0.0
+	teleport_timer = 5.0
+	
+	if _teleport_tween != null and _teleport_tween.is_valid():
+		_teleport_tween.kill()
+	
 	var corners: Array[Vector2] = [
 		Vector2(400, 240),
 		Vector2(880, 240),
@@ -434,14 +468,19 @@ func _teleport_away() -> void:
 			max_dist = d
 			best_pos = pt
 	
-	var tween: Tween = create_tween()
-	tween.tween_property(self, "modulate:a", 0.0, 0.15)
-	tween.tween_callback(func():
+	_teleport_tween = create_tween()
+	_teleport_tween.tween_property(self, "modulate:a", 0.0, 0.15)
+	_teleport_tween.tween_callback(func():
 		global_position = best_pos
 		visuals.modulate = Color(2.5, 3.5, 4.0, 1.0)
 	)
-	tween.tween_property(self, "modulate:a", 1.0, 0.15)
-	tween.tween_property(visuals, "modulate", Color.WHITE, 0.2)
+	_teleport_tween.tween_property(self, "modulate:a", 1.0, 0.15)
+	_teleport_tween.tween_property(visuals, "modulate", Color.WHITE, 0.2)
+	_teleport_tween.tween_callback(func():
+		modulate.a = 1.0
+		is_acting = false
+		_acting_watchdog = 0.0
+	)
 
 func _spawn_blessing_choice() -> void:
 	var loot_table: LootTable = load("res://data/items/default_loot_table.tres") as LootTable

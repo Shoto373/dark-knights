@@ -14,29 +14,31 @@ script = ExtResource("1_ped")
 shape = SubResource("CircleShape2D_trig")
 
 [node name="UI" type="Node2D" parent="."]
-position = Vector2(0, -42)
+z_index = 10
 
 [node name="NameLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
-offset_left = -70.0
-offset_top = -14.0
-offset_right = 70.0
-offset_bottom = 4.0
+offset_left = -150.0
+offset_top = -80.0
+offset_right = 150.0
+offset_bottom = -58.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
 theme_override_constants/outline_size = 3
 theme_override_font_sizes/font_size = 12
 text = "Предмет"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CostLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
-offset_left = -60.0
-offset_top = 46.0
-offset_right = 60.0
-offset_bottom = 64.0
+offset_left = -150.0
+offset_top = 22.0
+offset_right = 150.0
+offset_bottom = 44.0
 theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
 theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 12
 text = "[F] Взять"
 horizontal_alignment = 1
+vertical_alignment = 1

@@ -65,6 +65,7 @@ disabled = true
 unique_name_in_owner = true
 
 [node name="Body" type="ColorRect" parent="Visuals"]
+visible = false
 offset_left = -24.0
 offset_top = -28.0
 offset_right = 24.0
@@ -72,6 +73,7 @@ offset_bottom = 28.0
 color = Color(0.35, 0.48, 0.32, 1)
 
 [node name="StoneSkin" type="ColorRect" parent="Visuals"]
+visible = false
 offset_left = -18.0
 offset_top = -14.0
 offset_right = 18.0
@@ -80,6 +82,7 @@ color = Color(0.24, 0.32, 0.22, 1)
 
 [node name="CrownRect" type="ColorRect" parent="Visuals"]
 unique_name_in_owner = true
+visible = false
 offset_left = -16.0
 offset_top = -34.0
 offset_right = 16.0
@@ -87,6 +90,7 @@ offset_bottom = -26.0
 color = Color(0.9, 0.75, 0.2, 1)
 
 [node name="Club" type="ColorRect" parent="Visuals"]
+visible = false
 offset_left = 22.0
 offset_top = -18.0
 offset_right = 34.0

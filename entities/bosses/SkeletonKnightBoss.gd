@@ -247,19 +247,12 @@ func _perform_dash_thrust(dir: Vector2) -> void:
 	is_acting = true
 	special_timer = 4.0
 	
-	# Линейный прямоугольный телеграф на полу
-	floor_telegraph.visible = true
-	floor_telegraph.position = Vector2.ZERO
-	floor_telegraph.rotation = dir.angle()
-	floor_telegraph.size = Vector2(240, 40)
-	floor_telegraph.position = -Vector2(0, 20)
-	floor_telegraph.color = Color(1.0, 0.2, 0.1, 0.5)
+	# Плавный рунический телеграф на полу
+	EffectsHelper.spawn_telegraph_circle(get_parent(), global_position + dir * 110.0, 50.0, 0.4, Color(1.0, 0.25, 0.15, 0.65))
 	
 	var tween: Tween = create_tween()
-	tween.tween_property(floor_telegraph, "color:a", 0.9, 0.4)
+	tween.tween_interval(0.4)
 	tween.tween_callback(func():
-		floor_telegraph.visible = false
-		floor_telegraph.rotation = 0
 		_execute_dash_thrust(dir)
 	)
 
