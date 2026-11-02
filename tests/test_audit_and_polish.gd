@@ -200,3 +200,36 @@ func test_telegraph_circle_and_shockwave_ring() -> void:
 	# Проверка ударной волны ShockwaveRing
 	EffectsHelper.spawn_shockwave(root, Vector2(100, 100), 75.0, 0.2, Color(1.5, 1.2, 0.5))
 	assert_gte(root.get_child_count(), 2, "В root спавнятся процедурные визуальные ноды")
+
+func test_hero_sprite_has_no_duplicate_static_weapons() -> void:
+	# 1. Проверяем SVG файлы на отсутствие запеченного статичного оружия
+	var mage_svg: String = FileAccess.get_file_as_string("res://assets/sprites/hero_mage.svg")
+	assert_false(mage_svg.contains('stroke="#5c2e14"'), "В hero_mage.svg нет запеченного статичного посоха")
+	assert_false(mage_svg.contains('cx="51" cy="7"'), "В hero_mage.svg нет запеченного кристалла на посохе")
+	
+	var warrior_svg: String = FileAccess.get_file_as_string("res://assets/sprites/hero_warrior.svg")
+	assert_false(warrior_svg.contains('stroke="#ecf0f1" stroke-width="3"'), "В hero_warrior.svg нет запеченного меча")
+	
+	var ranger_svg: String = FileAccess.get_file_as_string("res://assets/sprites/hero_ranger.svg")
+	assert_false(ranger_svg.contains('stroke="#8b5a2b" stroke-width="3.5"'), "В hero_ranger.svg нет запеченного лука")
+	
+	# 2. Проверяем создание игрока-мага: оружие монтируется только в WeaponPivot
+	var player_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var player: Node = player_scene.instantiate()
+	add_child_autofree(player)
+	
+	var mage_res: HeroData = load("res://data/heroes/mage.tres") as HeroData
+	player.call("apply_hero_data", mage_res)
+	
+	var visuals: Node2D = player.get_node_or_null("Visuals") as Node2D
+	assert_not_null(visuals, "Узел Visuals существует")
+	var char_sprite: Sprite2D = visuals.get_node_or_null("CharacterSprite") as Sprite2D
+	assert_not_null(char_sprite, "CharacterSprite существует")
+	assert_not_null(char_sprite.texture, "CharacterSprite имеет текстуру мага")
+	
+	var weapon_pivot: Node2D = player.get_node_or_null("WeaponPivot") as Node2D
+	assert_not_null(weapon_pivot, "WeaponPivot существует")
+	var weapon_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
+	assert_not_null(weapon_sprite, "WeaponSprite существует в WeaponPivot")
+	assert_true(weapon_sprite.visible, "WeaponSprite виден в WeaponPivot")
+	assert_not_null(weapon_sprite.texture, "WeaponSprite имеет текстуру посоха мага")

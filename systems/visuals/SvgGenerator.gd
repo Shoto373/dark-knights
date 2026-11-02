@@ -34,7 +34,7 @@ static func _get_svg_definitions() -> Dictionary:
 	# =====================
 	# ГЕРОИ И ИКОНКИ
 	# =====================
-	d["hero_warrior.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+	d["hero_warrior.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
   <path d="M 18 24 C 14 36, 12 50, 16 58 C 22 60, 42 60, 48 58 C 52 50, 50 36, 46 24 Z" fill="#1e3c72" stroke="#0b1320" stroke-width="2"/>
   <rect x="22" y="44" width="8" height="15" rx="3" fill="#2c3e50" stroke="#17202a" stroke-width="2"/>
   <rect x="34" y="44" width="8" height="15" rx="3" fill="#2c3e50" stroke="#17202a" stroke-width="2"/>
@@ -49,11 +49,11 @@ static func _get_svg_definitions() -> Dictionary:
   <rect x="30.5" y="15" width="3" height="8" fill="#111118"/>
   <ellipse cx="28" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
   <ellipse cx="36" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
-  <line x1="50" y1="18" x2="57" y2="46" stroke="#ecf0f1" stroke-width="3" stroke-linecap="round"/>
-  <line x1="47" y1="26" x2="57" y2="23" stroke="#f1c40f" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="18" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="46" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
 </svg>"""
 
-	d["hero_mage.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+	d["hero_mage.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
   <path d="M 24 22 L 40 22 L 46 58 L 18 58 Z" fill="#3b0764" stroke="#090114" stroke-width="2"/>
   <path d="M 31 24 L 31 58" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,2"/>
   <path d="M 32 4 C 20 8, 18 20, 20 25 C 26 26, 38 26, 44 25 C 46 20, 44 8, 32 4 Z" fill="#2c0b4d" stroke="#090114" stroke-width="2"/>
@@ -62,12 +62,11 @@ static func _get_svg_definitions() -> Dictionary:
   <circle cx="36" cy="17" r="2.2" fill="#38bdf8"/>
   <circle cx="28" cy="17" r="1" fill="#ffffff"/>
   <circle cx="36" cy="17" r="1" fill="#ffffff"/>
-  <line x1="50" y1="12" x2="52" y2="56" stroke="#5c2e14" stroke-width="3" stroke-linecap="round"/>
-  <circle cx="51" cy="7" r="5" fill="#a855f7"/>
-  <ellipse cx="51" cy="7" rx="7" ry="2" fill="none" stroke="#67e8f9" stroke-width="1.2"/>
+  <circle cx="20" cy="36" r="3.5" fill="#4c1d95" stroke="#1e1b4b" stroke-width="1.5"/>
+  <circle cx="44" cy="36" r="3.5" fill="#4c1d95" stroke="#1e1b4b" stroke-width="1.5"/>
 </svg>"""
 
-	d["hero_ranger.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+	d["hero_ranger.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
   <path d="M 20 22 C 16 34, 14 46, 18 56 C 24 58, 40 58, 46 56 C 50 46, 48 34, 44 22 Z" fill="#1e3a1e" stroke="#0b1b09" stroke-width="2"/>
   <rect x="24" y="24" width="16" height="18" rx="3" fill="#8b5a2b" stroke="#2b1a0a" stroke-width="1.5"/>
   <line x1="24" y1="26" x2="38" y2="40" stroke="#4a2e12" stroke-width="2"/>
@@ -78,8 +77,8 @@ static func _get_svg_definitions() -> Dictionary:
   <rect x="25" y="16" width="14" height="6" rx="2" fill="#4a2e12"/>
   <ellipse cx="28" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
   <ellipse cx="36" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
-  <path d="M 12 12 Q 8 30 12 48" stroke="#8b5a2b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-  <line x1="12" y1="12" x2="12" y2="48" stroke="#f8fafc" stroke-width="1.2"/>
+  <circle cx="18" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
+  <circle cx="46" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
 </svg>"""
 
 	d["icon_warrior.svg"] = """<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">

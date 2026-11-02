@@ -562,11 +562,9 @@ static func _draw_warrior_sprite(img: Image) -> void:
 	_fill_rect(img, 12, 24, 3, 6, Color(0.45, 0.5, 0.58))
 	_fill_rect(img, 17, 24, 3, 6, Color(0.45, 0.5, 0.58))
 	
-	# Меч в правой руке
-	_fill_rect(img, 24, 8, 2, 14, Color(0.9, 0.92, 0.98)) # Лезвие
-	_fill_rect(img, 22, 18, 6, 2, Color(0.85, 0.7, 0.2)) # Золотая гарда
-	_fill_rect(img, 24, 20, 2, 4, Color(0.4, 0.25, 0.15)) # Рукоять
-	_fill_rect(img, 24, 23, 2, 2, Color(0.85, 0.7, 0.2)) # Навершие
+	# Стальные латные наручи и рукавицы (оружие динамически управляется WeaponPivot)
+	_fill_rect(img, 8, 18, 3, 4, Color(0.55, 0.6, 0.7))
+	_fill_rect(img, 21, 18, 3, 4, Color(0.55, 0.6, 0.7))
 
 static func _draw_mage_sprite(img: Image) -> void:
 	# Фиолетовая мантия мага
@@ -585,13 +583,11 @@ static func _draw_mage_sprite(img: Image) -> void:
 	_set_p(img, 13, 10, Color(0.8, 0.4, 1.0))
 	_set_p(img, 18, 10, Color(0.8, 0.4, 1.0))
 	
-	# Посох в руке с парящим кристаллом
-	_fill_rect(img, 25, 10, 2, 18, Color(0.45, 0.28, 0.15)) # Деревянный посох
-	_fill_rect(img, 24, 8, 4, 3, Color(0.7, 0.5, 0.2)) # Золотое навершие
-	_fill_rect(img, 24, 4, 4, 4, Color(0.4, 0.85, 1.0)) # Светящийся кристалл
-	_set_p(img, 25, 5, Color(1, 1, 1)) # Блик кристалла
-	_set_p(img, 23, 6, Color(0.6, 0.3, 1.0)) # Аура магии
-	_set_p(img, 28, 6, Color(0.6, 0.3, 1.0))
+	# Рукава мантии и золотая кайма (оружие динамически управляется WeaponPivot)
+	_fill_rect(img, 8, 16, 3, 6, Color(0.3, 0.12, 0.5))
+	_fill_rect(img, 21, 16, 3, 6, Color(0.3, 0.12, 0.5))
+	_fill_rect(img, 8, 21, 3, 2, Color(0.85, 0.75, 0.25))
+	_fill_rect(img, 21, 21, 3, 2, Color(0.85, 0.75, 0.25))
 
 static func _draw_ranger_sprite(img: Image) -> void:
 	# Зеленый лесной плащ и колчан
@@ -618,12 +614,9 @@ static func _draw_ranger_sprite(img: Image) -> void:
 	_fill_rect(img, 12, 22, 3, 7, Color(0.2, 0.3, 0.2))
 	_fill_rect(img, 17, 22, 3, 7, Color(0.2, 0.3, 0.2))
 	
-	# Лук со стрелой в руке
-	_set_p(img, 6, 10, Color(0.6, 0.4, 0.2))
-	_set_p(img, 5, 12, Color(0.6, 0.4, 0.2))
-	_set_p(img, 5, 16, Color(0.6, 0.4, 0.2))
-	_set_p(img, 6, 18, Color(0.6, 0.4, 0.2))
-	_fill_rect(img, 7, 10, 1, 9, Color(0.9, 0.9, 0.95)) # Тетива
+	# Кожаные наручи (лук динамически управляется WeaponPivot)
+	_fill_rect(img, 8, 16, 3, 5, Color(0.38, 0.25, 0.15))
+	_fill_rect(img, 21, 16, 3, 5, Color(0.38, 0.25, 0.15))
 
 # ==========================================
 # ИКОНКИ ГЕРОЕВ (ПОРТРЕТЫ 40x40)

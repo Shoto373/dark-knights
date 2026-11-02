@@ -13,6 +13,6 @@
   <rect x="30.5" y="15" width="3" height="8" fill="#111118"/>
   <ellipse cx="28" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
   <ellipse cx="36" cy="16" rx="2" ry="1.2" fill="#00ffff"/>
-  <line x1="50" y1="18" x2="57" y2="46" stroke="#ecf0f1" stroke-width="3" stroke-linecap="round"/>
-  <line x1="47" y1="26" x2="57" y2="23" stroke="#f1c40f" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="18" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
+  <circle cx="46" cy="38" r="4" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
 </svg>

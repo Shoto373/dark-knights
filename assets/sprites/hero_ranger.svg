@@ -9,6 +9,6 @@
   <rect x="25" y="16" width="14" height="6" rx="2" fill="#4a2e12"/>
   <ellipse cx="28" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
   <ellipse cx="36" cy="14" rx="2" ry="1.2" fill="#fbbf24"/>
-  <path d="M 12 12 Q 8 30 12 48" stroke="#8b5a2b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-  <line x1="12" y1="12" x2="12" y2="48" stroke="#f8fafc" stroke-width="1.2"/>
+  <circle cx="18" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
+  <circle cx="46" cy="36" r="3.5" fill="#4a2e12" stroke="#2b1a0a" stroke-width="1.5"/>
 </svg>
