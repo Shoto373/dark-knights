@@ -196,9 +196,7 @@ func _on_damaged(_amount: int, current_hp: int, _max_hp: int) -> void:
 	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, enemy_data.color if enemy_data else Color.WHITE, 5)
 
 func _flash_red() -> void:
-	var tween: Tween = create_tween()
-	visuals.modulate = Color(2.5, 0.4, 0.4, 1.0)
-	tween.tween_property(visuals, "modulate", Color.WHITE, 0.12)
+	EffectsHelper.apply_hit_flash(visuals, 0.1, Color(1.0, 0.35, 0.35, 1.0))
 	visuals.scale.y = 0.8
 	var sq_tween: Tween = create_tween()
 	sq_tween.tween_property(visuals, "scale:y", 1.0, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

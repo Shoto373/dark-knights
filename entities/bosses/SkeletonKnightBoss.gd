@@ -337,22 +337,8 @@ func _spawn_fork_exit() -> void:
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
 	portal.global_position = global_position + Vector2(0, -90.0)
+	portal.is_fork_portal = true
+	if portal.has_method("set_portal_title"):
+		portal.set_portal_title("ВЕЛИКАЯ РАЗВИЛКА")
 	if portal.get_node_or_null("%PromptLabel") != null:
-		portal.prompt_label.text = "[F] Развилка Миров"
-	
-	portal.on_enter_callback = func():
-		var cutscene_scene: PackedScene = load("res://ui/CutsceneScreen.tscn")
-		if cutscene_scene != null:
-			var cutscene: CutsceneScreen = cutscene_scene.instantiate() as CutsceneScreen
-			get_tree().root.add_child(cutscene)
-			cutscene.show_victory_cutscene(func():
-				var branch_scene: PackedScene = load("res://ui/BranchChoiceDialog.tscn")
-				if branch_scene != null:
-					var branch_inst = branch_scene.instantiate()
-					get_tree().root.add_child(branch_inst)
-			)
-		else:
-			var branch_scene: PackedScene = load("res://ui/BranchChoiceDialog.tscn")
-			if branch_scene != null:
-				var branch_inst = branch_scene.instantiate()
-				get_tree().root.add_child(branch_inst)
+		portal.prompt_label.text = "[F] Великая развилка миров"

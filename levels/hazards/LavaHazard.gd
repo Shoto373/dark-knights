@@ -55,6 +55,7 @@ func _apply_lava_effects(body: Node2D) -> void:
 	var hc: HealthComponent = body.get_node_or_null("HealthComponent") as HealthComponent
 	if hc != null and not hc.is_dead:
 		hc.take_damage(tick_damage, true) # Игнорируем обычные iframes
+		EventBus.damage_dealt.emit(body, tick_damage, false)
 	
 	var sem: StatusEffectManager = body.get_node_or_null("StatusEffectManager") as StatusEffectManager
 	if sem != null:

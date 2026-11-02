@@ -36,6 +36,7 @@ var ability_1_timer: Timer
 var ability_2_timer: Timer
 var _walk_anim_phase: float = 0.0
 var _ghost_timer: float = 0.0
+var _facing_left: bool = false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -282,12 +283,17 @@ func _update_aim() -> void:
 	if not is_swinging:
 		weapon_pivot.rotation = aim_direction.angle()
 	
-	var is_aiming_left: bool = (aim_direction.x < 0.0)
-	visuals.scale.x = -1.0 if is_aiming_left else 1.0
+	# Дедзона по оси X для устранения мерцания переворота при прицеливании строго вверх/вниз
+	if aim_direction.x < -0.08:
+		_facing_left = true
+	elif aim_direction.x > 0.08:
+		_facing_left = false
+	
+	visuals.scale.x = -1.0 if _facing_left else 1.0
 	
 	var w_sprite: Sprite2D = weapon_pivot.get_node_or_null("WeaponSprite") as Sprite2D
 	if w_sprite != null:
-		w_sprite.flip_v = is_aiming_left
+		w_sprite.flip_v = _facing_left
 	
 	weapon_pivot.z_index = -1 if aim_direction.y < -0.3 else 0
 
@@ -361,9 +367,11 @@ func _swing_melee_weapon() -> void:
 	tween.tween_property(weapon_pivot, "rotation", end_angle, 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func():
 		attack_collision.disabled = true
-		is_swinging = false
 	)
 	tween.tween_property(weapon_pivot, "rotation", base_angle, 0.08)
+	tween.tween_callback(func():
+		is_swinging = false
+	)
 
 	var thrust_tween: Tween = visuals.create_tween()
 	thrust_tween.tween_property(visuals, "position", aim_direction * 6.0, 0.08)
@@ -511,9 +519,7 @@ func _on_health_damaged(amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.hit_stop_requested.emit(40.0)
 	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.0, 0.3, 0.3, 1.0), 6)
 	
-	var fl_tween: Tween = visuals.create_tween()
-	visuals.modulate = Color(2.5, 0.4, 0.4, 1.0)
-	fl_tween.tween_property(visuals, "modulate", Color.WHITE, 0.15)
+	EffectsHelper.apply_hit_flash(visuals, 0.14, Color(1.0, 0.3, 0.3, 1.0))
 	
 	if status_effect_manager == null or not status_effect_manager.is_processing_dot:
 		health_component.set_invulnerable(true)
@@ -523,12 +529,20 @@ func _on_health_healed(amount: int, current_hp: int, max_hp: int) -> void:
 	GameState.current_hp = current_hp
 	GameState.max_hp = max_hp
 	EventBus.player_health_changed.emit(current_hp, max_hp)
+	EventBus.player_healed.emit(amount)
 
 func _on_health_died() -> void:
 	GameState.current_hp = 0
 	EventBus.player_health_changed.emit(0, health_component.max_health)
 	EventBus.player_died.emit()
-	visuals.modulate = Color(0.8, 0.2, 0.2, 0.6)
+	
+	# Анимация поражения: распад искр души и падение
+	EffectsHelper.spawn_death_burst(get_parent(), global_position, Color(0.85, 0.2, 0.2, 1.0))
+	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.0, 0.8, 0.2, 1.0), 10)
+	var fall_tween: Tween = visuals.create_tween().set_parallel(true)
+	fall_tween.tween_property(visuals, "rotation", deg_to_rad(85.0), 0.3).set_ease(Tween.EASE_OUT)
+	fall_tween.tween_property(visuals, "position:y", 6.0, 0.3)
+	fall_tween.tween_property(visuals, "modulate", Color(0.6, 0.2, 0.2, 0.5), 0.3)
 
 var _blink_timer: float = 0.0
 func _update_iframes_blink(delta: float) -> void:

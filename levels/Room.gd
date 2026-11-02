@@ -47,7 +47,7 @@ func _ready() -> void:
 func setup(data: RoomData, biome: BiomeData = null) -> void:
 	room_data = data
 	current_biome = biome if biome != null else GameState.get_current_biome()
-	room_type_label.text = "[ %s ]" % room_data.get_type_name().to_upper()
+	room_type_label.visible = false
 	_apply_biome_theme()
 	_configure_doors()
 	
@@ -72,9 +72,24 @@ func _apply_biome_theme() -> void:
 		floor_tiles.modulate = current_biome.floor_theme_color.lightened(0.35)
 	var walls_node: Node2D = get_node_or_null("VisualWalls") as Node2D
 	if walls_node != null:
+		var brick_tex: Texture2D = preload("res://assets/sprites/dungeon_wall_brick.svg")
 		for wall in walls_node.get_children():
 			if wall is ColorRect:
 				wall.color = current_biome.wall_theme_color
+				if wall.get_node_or_null("BrickOverlay") == null and brick_tex != null:
+					var tex_rect: TextureRect = TextureRect.new()
+					tex_rect.name = "BrickOverlay"
+					tex_rect.texture = brick_tex
+					tex_rect.stretch_mode = TextureRect.STRETCH_TILE
+					tex_rect.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+					tex_rect.anchor_right = 1.0
+					tex_rect.anchor_bottom = 1.0
+					tex_rect.offset_left = 0
+					tex_rect.offset_top = 0
+					tex_rect.offset_right = 0
+					tex_rect.offset_bottom = 0
+					tex_rect.modulate = current_biome.wall_theme_color.lightened(0.28)
+					wall.add_child(tex_rect)
 	
 	# Биомный оттенок настенных факелов
 	var torches_node: Node2D = get_node_or_null("%Torches") as Node2D
@@ -337,17 +352,17 @@ func _setup_treasure_room() -> void:
 		chest.position = Vector2(640, 360)
 
 func _setup_shop_room() -> void:
-	var merchant: ColorRect = ColorRect.new()
-	merchant.size = Vector2(32, 40)
-	merchant.position = Vector2(624, 210)
-	merchant.color = Color(0.65, 0.45, 0.25, 1.0)
+	var merchant: Sprite2D = Sprite2D.new()
+	merchant.texture = SpriteGenerator.get_enemy_texture("necromancer")
+	merchant.modulate = Color(1.2, 1.0, 0.6)
+	merchant.position = Vector2(640, 220)
 	objects_container.add_child(merchant)
 	
 	var label: Label = Label.new()
-	label.text = "ТОРГОВЕЦ"
-	label.position = Vector2(600, 185)
+	label.text = "СТРАНСТВУЮЩИЙ ТОРГОВЕЦ"
+	label.position = Vector2(560, 185)
 	label.add_theme_font_size_override("font_size", 11)
-	label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.5))
+	label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
 	objects_container.add_child(label)
 	
 	var loot_table: LootTable = load("res://data/items/default_loot_table.tres") as LootTable

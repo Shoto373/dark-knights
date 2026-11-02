@@ -1,6 +1,10 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; but it can also be edited safely using any text editor.
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -20,30 +24,15 @@ AudioManager="*res://autoload/AudioManager.gd"
 SceneRouter="*res://autoload/SceneRouter.gd"
 SettingsManager="*res://autoload/SettingsManager.gd"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/gut/plugin.cfg")
-
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/resizable=true
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
 
-[rendering]
+[editor_plugins]
 
-textures/canvas_textures/default_texture_filter=0
-
-[layer_names]
-
-2d_physics/layer_1="world"
-2d_physics/layer_2="player"
-2d_physics/layer_3="enemies"
-2d_physics/layer_4="player_hitbox"
-2d_physics/layer_5="enemy_hitbox"
-2d_physics/layer_6="pickups"
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 [input]
 
@@ -118,3 +107,16 @@ pause={
 , Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":6,"pressure":0.0,"pressed":false,"script":null)
 ]
 }
+
+[layer_names]
+
+2d_physics/layer_1="world"
+2d_physics/layer_2="player"
+2d_physics/layer_3="enemies"
+2d_physics/layer_4="player_hitbox"
+2d_physics/layer_5="enemy_hitbox"
+2d_physics/layer_6="pickups"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0

@@ -35,6 +35,7 @@ texture = ExtResource("2_portal_tex")
 position = Vector2(0, -56)
 
 [node name="PortalTitle" type="Label" parent="UI"]
+unique_name_in_owner = true
 offset_left = -80.0
 offset_top = -10.0
 offset_right = 80.0

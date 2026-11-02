@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 32" width="36" height="32">
+  <defs>
+    <linearGradient id="pedStone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="40%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="runeGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+  </defs>
+  <!-- Floor Shadow -->
+  <ellipse cx="18" cy="30" rx="16" ry="2" fill="#000000" opacity="0.5"/>
+  <!-- Stepped Plinth Base -->
+  <polygon points="2,30 34,30 32,25 4,25" fill="#0f172a" stroke="#020617" stroke-width="0.8"/>
+  <polygon points="5,25 31,25 29,21 7,21" fill="url(#pedStone)" stroke="#090d16" stroke-width="0.8"/>
+  <!-- Fluted Column / Shaft -->
+  <rect x="9" y="10" width="18" height="11" fill="url(#pedStone)" stroke="#090d16" stroke-width="0.8"/>
+  <line x1="13" y1="10" x2="13" y2="21" stroke="#1e293b" stroke-width="1"/>
+  <line x1="18" y1="10" x2="18" y2="21" stroke="#64748b" stroke-width="0.8"/>
+  <line x1="23" y1="10" x2="23" y2="21" stroke="#1e293b" stroke-width="1"/>
+  <!-- Glowing Inscribed Rune on Shaft -->
+  <polygon points="18,12 21,15.5 18,19 15,15.5" fill="none" stroke="url(#runeGlow)" stroke-width="1.2" opacity="0.85"/>
+  <circle cx="18" cy="15.5" r="1" fill="#7dd3fc"/>
+  <!-- Capital / Top Basin -->
+  <polygon points="6,10 30,10 33,5 3,5" fill="url(#pedStone)" stroke="#090d16" stroke-width="0.8"/>
+  <!-- Top Flat Altar Plate -->
+  <ellipse cx="18" cy="5" rx="15" ry="3.5" fill="#1e293b" stroke="#475569" stroke-width="1"/>
+  <ellipse cx="18" cy="5" rx="11" ry="2" fill="#0f172a"/>
+</svg>

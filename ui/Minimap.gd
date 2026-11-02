@@ -73,6 +73,19 @@ func _draw() -> void:
 		var border_color: Color = Color.WHITE if pos == current_room_pos else Color(0.2, 0.25, 0.35, 1.0)
 		var border_width: float = 2.0 if pos == current_room_pos else 1.0
 		draw_rect(rect, border_color, false, border_width)
+		
+		# Значок типа комнаты
+		var sym: String = ""
+		match room.room_type:
+			RoomData.RoomType.BOSS: sym = "B"
+			RoomData.RoomType.TREASURE: sym = "T"
+			RoomData.RoomType.SHOP: sym = "$"
+			RoomData.RoomType.START: sym = "S"
+		if not sym.is_empty() and room.is_visited:
+			draw_string(ThemeDB.fallback_font, room_center + Vector2(-3, 4), sym, HORIZONTAL_ALIGNMENT_CENTER, -1, 10, Color(0.1, 0.12, 0.16, 0.9))
+		
+		if pos == current_room_pos:
+			draw_circle(room_center, 3.0, Color.WHITE)
 
 func _get_room_color(room: RoomData) -> Color:
 	if not room.is_visited:

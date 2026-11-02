@@ -4,12 +4,15 @@ extends Area2D
 ## Мистический портал перехода с вращающимся разломом пустоты, сиянием и частицами
 
 @onready var prompt_label: Label = %PromptLabel
+@onready var portal_title: Label = %PortalTitle
 @onready var portal_glow: CanvasItem = %PortalGlow
 @onready var portal_outer: CanvasItem = %PortalOuter
 @onready var light_glow: CanvasItem = %LightGlow
 
 @export var target_scene: String = "res://levels/DungeonFloor.tscn"
 @export var next_world_node_id: String = ""
+@export var portal_title_text: String = "НАЧАТЬ ПУТЬ"
+@export var is_fork_portal: bool = false
 
 var on_enter_callback: Callable = Callable()
 var is_player_inside: bool = false
@@ -22,6 +25,13 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	prompt_label.visible = false
+	if portal_title != null and not portal_title_text.is_empty():
+		portal_title.text = portal_title_text
+
+func set_portal_title(p_title: String) -> void:
+	portal_title_text = p_title
+	if portal_title != null:
+		portal_title.text = p_title
 
 func _process(delta: float) -> void:
 	_anim_time += delta
@@ -63,6 +73,10 @@ func _enter_portal() -> void:
 		on_enter_callback.call()
 		return
 	
+	if is_fork_portal or (GameState.current_world_node != null and GameState.current_world_node.id == "skeleton_castle"):
+		_open_fork_choice()
+		return
+
 	if not GameState.is_run_active:
 		GameState.start_new_run(GameState.selected_hero_id)
 		SceneRouter.change_scene(target_scene, 0.4)
@@ -73,6 +87,7 @@ func _enter_portal() -> void:
 			if target_node != null:
 				GameState.advance_to_world_node(target_node)
 				return
+		
 		var current_node: WorldNodeData = GameState.current_world_node
 		if current_node == null and not GameState.current_world_node_id.is_empty():
 			var world_graph: WorldGraph = WorldGraph.new()
@@ -91,6 +106,23 @@ func _enter_portal() -> void:
 				GameState.end_run(true)
 		else:
 			SceneRouter.change_scene(target_scene, 0.4)
+
+func _open_fork_choice() -> void:
+	var cutscene_scene: PackedScene = load("res://ui/CutsceneScreen.tscn")
+	if cutscene_scene != null:
+		var cutscene: CutsceneScreen = cutscene_scene.instantiate() as CutsceneScreen
+		get_tree().root.add_child(cutscene)
+		cutscene.show_victory_cutscene(func():
+			var branch_scene: PackedScene = load("res://ui/BranchChoiceDialog.tscn")
+			if branch_scene != null:
+				var branch_inst = branch_scene.instantiate()
+				get_tree().root.add_child(branch_inst)
+		)
+	else:
+		var branch_scene: PackedScene = load("res://ui/BranchChoiceDialog.tscn")
+		if branch_scene != null:
+			var branch_inst = branch_scene.instantiate()
+			get_tree().root.add_child(branch_inst)
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D and body.is_in_group("player"):

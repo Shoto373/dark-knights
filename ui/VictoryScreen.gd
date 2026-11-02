@@ -18,7 +18,9 @@ extends CanvasLayer
 var run_souls_awarded: int = 0
 
 func _ready() -> void:
-	layer = 20
+	layer = 90
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().paused = true
 	if return_button:
 		return_button.pressed.connect(_on_return_pressed)
 	
@@ -30,7 +32,7 @@ func _ready() -> void:
 		background.modulate.a = 0.0
 	if center_container:
 		center_container.modulate.a = 0.0
-	var tween: Tween = create_tween().set_parallel(true)
+	var tween: Tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_parallel(true)
 	if background:
 		tween.tween_property(background, "modulate:a", 1.0, 0.6)
 	if center_container:
@@ -80,5 +82,11 @@ func _update_display() -> void:
 		souls_earned_label.text = "+%d Душ передано в Хаб" % run_souls_awarded
 
 func _on_return_pressed() -> void:
+	get_tree().paused = false
 	queue_free()
 	SceneRouter.change_scene("res://levels/Hub.tscn", 0.5)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE:
+			get_viewport().set_input_as_handled()

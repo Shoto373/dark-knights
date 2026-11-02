@@ -1,27 +1,85 @@
-[gd_scene load_steps=2 format=3 uid="uid://branch_choice_dialog_001"]
+[gd_scene load_steps=8 format=3 uid="uid://branch_choice_dialog_001"]
 
 [ext_resource type="Script" path="res://ui/BranchChoiceDialog.gd" id="1_branch"]
+[ext_resource type="Texture2D" path="res://assets/sprites/boss_lich.svg" id="2_lich"]
+[ext_resource type="Texture2D" path="res://assets/sprites/boss_dragon.svg" id="3_dragon"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_boss_crest.svg" id="4_crest"]
 
-[node name="BranchChoiceDialog" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frost"]
+bg_color = Color(0.06, 0.09, 0.14, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.65, 0.95, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.1, 0.5, 0.8, 0.25)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fire"]
+bg_color = Color(0.13, 0.06, 0.05, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.45, 0.15, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.8, 0.3, 0.1, 0.25)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_frost"]
+bg_color = Color(0.12, 0.35, 0.55, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.8, 1, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_fire"]
+bg_color = Color(0.55, 0.2, 0.1, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.6, 0.2, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="BranchChoiceDialog" type="CanvasLayer"]
 process_mode = 3
+layer = 80
+script = ExtResource("1_branch")
+
+[node name="Root" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_branch")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="Root"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.05, 0.06, 0.08, 0.95)
+color = Color(0.03, 0.04, 0.06, 0.96)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="Root"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,106 +87,164 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Center"]
-custom_minimum_size = Vector2(880, 0)
+[node name="VBox" type="VBoxContainer" parent="Root/Center"]
+custom_minimum_size = Vector2(920, 0)
 layout_mode = 2
-theme_override_constants/separation = 30
+theme_override_constants/separation = 24
 
-[node name="HeaderTitle" type="Label" parent="Center/VBox"]
+[node name="HeaderHBox" type="HBoxContainer" parent="Root/Center/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+alignment = 1
+theme_override_constants/separation = 12
+
+[node name="CrestLeft" type="TextureRect" parent="Root/Center/VBox/HeaderHBox"]
+custom_minimum_size = Vector2(40, 24)
+layout_mode = 2
+texture = ExtResource("4_crest")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeaderTitle" type="Label" parent="Root/Center/VBox/HeaderHBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
 theme_override_font_sizes/font_size = 24
 text = "ВЕЛИКАЯ РАЗВИЛКА: ВЫБЕРИТЕ СВОЙ ПУТЬ"
 horizontal_alignment = 1
 
-[node name="CardsHBox" type="HBoxContainer" parent="Center/VBox"]
+[node name="CrestRight" type="TextureRect" parent="Root/Center/VBox/HeaderHBox"]
+custom_minimum_size = Vector2(40, 24)
 layout_mode = 2
-theme_override_constants/separation = 40
-alignment = 1
+texture = ExtResource("4_crest")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
 
-[node name="FrostCard" type="PanelContainer" parent="Center/VBox/CardsHBox"]
-custom_minimum_size = Vector2(400, 320)
+[node name="Subtitle" type="Label" parent="Root/Center/VBox"]
 layout_mode = 2
-
-[node name="Margin" type="MarginContainer" parent="Center/VBox/CardsHBox/FrostCard"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="VBox" type="VBoxContainer" parent="Center/VBox/CardsHBox/FrostCard/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 15
-
-[node name="Icon" type="Label" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 42
-text = "❄"
+theme_override_colors/font_color = Color(0.75, 0.8, 0.88, 1)
+theme_override_font_sizes/font_size = 13
+text = "Замок Рыцаря-скелета повержен. Впереди расходятся два первозданных мира стихий."
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+[node name="CardsHBox" type="HBoxContainer" parent="Root/Center/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.85, 1, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_constants/separation = 36
+alignment = 1
+
+[node name="FrostCard" type="PanelContainer" parent="Root/Center/VBox/CardsHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 360)
+layout_mode = 2
+pivot_offset = Vector2(210, 180)
+theme_override_styles/panel = SubResource("StyleBoxFlat_frost")
+
+[node name="Margin" type="MarginContainer" parent="Root/Center/VBox/CardsHBox/FrostCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="Root/Center/VBox/CardsHBox/FrostCard/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="IconHBox" type="HBoxContainer" parent="Root/Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="Root/Center/VBox/CardsHBox/FrostCard/Margin/VBox/IconHBox"]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+texture = ExtResource("2_lich")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Root/Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 21
 text = "МИР ХОЛОДА"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+[node name="Desc" type="Label" parent="Root/Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_colors/font_color = Color(0.85, 0.9, 0.96, 1)
 theme_override_font_sizes/font_size = 13
-text = "Царство вечной мерзлоты, метелей и ледяных штормов. Скользкий лёд уменьшает трение, а в цитадели правит бессмертный Король-лич."
+text = "Царство вечной мерзлоты, метелей и ледяных штормов. Скользкий лёд снижает сцепление, а на пике цитадели правит бессмертный Король-лич с филактерией."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="BtnFrost" type="Button" parent="Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+[node name="BossInfo" type="Label" parent="Root/Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.9, 1, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "💀 Владыка: Король-лич (3 фазы, магия льда)"
+horizontal_alignment = 1
+
+[node name="BtnFrost" type="Button" parent="Root/Center/VBox/CardsHBox/FrostCard/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_frost")
 text = "Войти в Мир холода"
 
-[node name="FireCard" type="PanelContainer" parent="Center/VBox/CardsHBox"]
-custom_minimum_size = Vector2(400, 320)
+[node name="FireCard" type="PanelContainer" parent="Root/Center/VBox/CardsHBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(420, 360)
 layout_mode = 2
+pivot_offset = Vector2(210, 180)
+theme_override_styles/panel = SubResource("StyleBoxFlat_fire")
 
-[node name="Margin" type="MarginContainer" parent="Center/VBox/CardsHBox/FireCard"]
+[node name="Margin" type="MarginContainer" parent="Root/Center/VBox/CardsHBox/FireCard"]
 layout_mode = 2
-theme_override_constants/margin_left = 20
+theme_override_constants/margin_left = 22
 theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
+theme_override_constants/margin_right = 22
 theme_override_constants/margin_bottom = 20
 
-[node name="VBox" type="VBoxContainer" parent="Center/VBox/CardsHBox/FireCard/Margin"]
+[node name="VBox" type="VBoxContainer" parent="Root/Center/VBox/CardsHBox/FireCard/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 15
+theme_override_constants/separation = 12
 
-[node name="Icon" type="Label" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+[node name="IconHBox" type="HBoxContainer" parent="Root/Center/VBox/CardsHBox/FireCard/Margin/VBox"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 42
-text = "🔥"
-horizontal_alignment = 1
+alignment = 1
 
-[node name="Title" type="Label" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+[node name="Icon" type="TextureRect" parent="Root/Center/VBox/CardsHBox/FireCard/Margin/VBox/IconHBox"]
+custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.45, 0.15, 1)
-theme_override_font_sizes/font_size = 20
+texture = ExtResource("3_dragon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Root/Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.15, 1)
+theme_override_font_sizes/font_size = 21
 text = "МИР ОГНЯ"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+[node name="Desc" type="Label" parent="Root/Center/VBox/CardsHBox/FireCard/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.95, 0.88, 0.85, 1)
+theme_override_colors/font_color = Color(0.96, 0.88, 0.84, 1)
 theme_override_font_sizes/font_size = 13
-text = "Раскалённые пустоши, реки кипящей лавы и вулканические шахты. Невыносимый жар и свирепый Древний Дракон ждут бросивших вызов."
+text = "Раскалённые пустоши, реки кипящей лавы и вулканические гейзеры. Пылающий жар и свирепый Древний Дракон в кальдере вулкана."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="BtnFire" type="Button" parent="Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+[node name="BossInfo" type="Label" parent="Root/Center/VBox/CardsHBox/FireCard/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.4, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "🔥 Владыка: Древний Дракон (3 фазы, дыхание огнем)"
+horizontal_alignment = 1
+
+[node name="BtnFire" type="Button" parent="Root/Center/VBox/CardsHBox/FireCard/Margin/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_fire")
 text = "Войти в Мир огня"
-

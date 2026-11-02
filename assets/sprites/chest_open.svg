@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 30" width="32" height="30">
+  <defs>
+    <linearGradient id="woodGradO" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#854d0e" />
+      <stop offset="50%" stop-color="#582a0b" />
+      <stop offset="100%" stop-color="#351605" />
+    </linearGradient>
+    <linearGradient id="metalGradO" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <radialGradient id="treasureGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#fde047" />
+      <stop offset="80%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#854d0e" />
+    </radialGradient>
+  </defs>
+  <!-- Shadow -->
+  <ellipse cx="16" cy="28" rx="14" ry="2" fill="#000000" opacity="0.45"/>
+  <!-- Open Lid Swung Backwards -->
+  <path d="M3 13 Q16 2 29 13 L27 8 Q16 0 5 8 Z" fill="url(#woodGradO)" stroke="#1a0c02" stroke-width="1.2"/>
+  <rect x="5.5" y="4" width="3" height="8" rx="0.5" fill="url(#metalGradO)"/>
+  <rect x="23.5" y="4" width="3" height="8" rx="0.5" fill="url(#metalGradO)"/>
+  <!-- Chest Body -->
+  <rect x="3" y="13" width="26" height="14" rx="2" fill="url(#woodGradO)" stroke="#1a0c02" stroke-width="1.2"/>
+  <!-- Inside Glow & Gold Coins -->
+  <ellipse cx="16" cy="15" rx="11" ry="4" fill="url(#treasureGlow)"/>
+  <ellipse cx="13" cy="14" rx="2" ry="1.2" fill="#fef08a"/>
+  <ellipse cx="18" cy="14" rx="2.5" ry="1.5" fill="#fde047"/>
+  <ellipse cx="15.5" cy="16" rx="2" ry="1.2" fill="#fef08a"/>
+  <!-- Metal Bands on Base -->
+  <rect x="5" y="13" width="3.5" height="14" rx="0.5" fill="url(#metalGradO)" stroke="#090d16" stroke-width="0.8"/>
+  <rect x="23.5" y="13" width="3.5" height="14" rx="0.5" fill="url(#metalGradO)" stroke="#090d16" stroke-width="0.8"/>
+  <!-- Rivets -->
+  <circle cx="6.7" cy="17" r="0.7" fill="#cbd5e1"/>
+  <circle cx="6.7" cy="24" r="0.7" fill="#cbd5e1"/>
+  <circle cx="25.2" cy="17" r="0.7" fill="#cbd5e1"/>
+  <circle cx="25.2" cy="24" r="0.7" fill="#cbd5e1"/>
+  <!-- Star Sparkles of Treasure -->
+  <polygon points="16,6 17,9 20,10 17,11 16,14 15,11 12,10 15,9" fill="#ffffff" opacity="0.9"/>
+  <polygon points="10,10 10.7,11.5 12,12 10.7,12.5 10,14 9.3,12.5 8,12 9.3,11.5" fill="#fef08a" opacity="0.8"/>
+  <polygon points="22,9 22.7,10.5 24,11 22.7,11.5 22,13 21.3,11.5 20,11 21.3,10.5" fill="#fde047" opacity="0.85"/>
+</svg>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 28" width="32" height="28">
+  <defs>
+    <linearGradient id="woodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#854d0e" />
+      <stop offset="50%" stop-color="#582a0b" />
+      <stop offset="100%" stop-color="#351605" />
+    </linearGradient>
+    <linearGradient id="metalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <radialGradient id="goldLock" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="60%" stop-color="#ca8a04" />
+      <stop offset="100%" stop-color="#713f12" />
+    </radialGradient>
+  </defs>
+  <!-- Shadow -->
+  <ellipse cx="16" cy="26" rx="14" ry="2" fill="#000000" opacity="0.45"/>
+  <!-- Chest Body -->
+  <rect x="3" y="11" width="26" height="14" rx="2" fill="url(#woodGrad)" stroke="#1a0c02" stroke-width="1.2"/>
+  <!-- Planks lines -->
+  <line x1="3" y1="18" x2="29" y2="18" stroke="#251004" stroke-width="1"/>
+  <!-- Chest Lid -->
+  <path d="M2 11 Q16 4 30 11 Z" fill="url(#woodGrad)" stroke="#1a0c02" stroke-width="1.2"/>
+  <!-- Metal Bands (Left, Right, Center) -->
+  <rect x="5" y="6" width="3.5" height="19" rx="0.5" fill="url(#metalGrad)" stroke="#090d16" stroke-width="0.8"/>
+  <rect x="23.5" y="6" width="3.5" height="19" rx="0.5" fill="url(#metalGrad)" stroke="#090d16" stroke-width="0.8"/>
+  <!-- Rivets -->
+  <circle cx="6.7" cy="8" r="0.7" fill="#cbd5e1"/>
+  <circle cx="6.7" cy="14" r="0.7" fill="#cbd5e1"/>
+  <circle cx="6.7" cy="22" r="0.7" fill="#cbd5e1"/>
+  <circle cx="25.2" cy="8" r="0.7" fill="#cbd5e1"/>
+  <circle cx="25.2" cy="14" r="0.7" fill="#cbd5e1"/>
+  <circle cx="25.2" cy="22" r="0.7" fill="#cbd5e1"/>
+  <!-- Golden Skull / Lock -->
+  <rect x="13.5" y="10" width="5" height="7" rx="1" fill="url(#goldLock)" stroke="#451a03" stroke-width="0.8"/>
+  <circle cx="16" cy="12.5" r="1.2" fill="#1a0c02"/>
+  <line x1="16" y1="13.5" x2="16" y2="15.5" stroke="#1a0c02" stroke-width="0.9"/>
+</svg>

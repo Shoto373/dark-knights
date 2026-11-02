@@ -9,6 +9,7 @@ extends Node2D
 @onready var visual_circle: ColorRect = %VisualCircle
 
 var radius: float = 80.0
+var blast_color: Color = Color(1.0, 0.45, 0.1, 0.8)
 
 func setup(
 	pos: Vector2,
@@ -20,6 +21,7 @@ func setup(
 ) -> void:
 	global_position = pos
 	radius = aoe_radius
+	blast_color = color
 	
 	circle_shape.radius = radius
 	hitbox.base_damage = damage
@@ -27,17 +29,22 @@ func setup(
 	hitbox.knockback_force = knockback
 	hitbox.source_owner = self
 	
-	visual_circle.offset_left = -radius
-	visual_circle.offset_top = -radius
-	visual_circle.offset_right = radius
-	visual_circle.offset_bottom = radius
-	visual_circle.color = color
+	if visual_circle != null:
+		visual_circle.visible = false
+	queue_redraw()
 
 func _ready() -> void:
-	# Анимация расширения и затухания взрыва
+	if visual_circle != null:
+		visual_circle.visible = false
 	scale = Vector2.ZERO
 	var tween: Tween = create_tween().set_parallel(true)
 	tween.tween_property(self, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(self, "modulate:a", 0.0, 0.25).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(queue_free)
 
+func _draw() -> void:
+	# Радиальная взрывная волна
+	draw_circle(Vector2.ZERO, radius, Color(blast_color.r, blast_color.g, blast_color.b, blast_color.a * 0.35))
+	draw_circle(Vector2.ZERO, radius * 0.7, Color(blast_color.r, blast_color.g, blast_color.b, blast_color.a * 0.7))
+	draw_circle(Vector2.ZERO, radius * 0.35, Color(1.0, 1.0, 1.0, blast_color.a * 0.9))
+	draw_arc(Vector2.ZERO, radius, 0.0, TAU, 36, blast_color.lightened(0.4), 2.5)

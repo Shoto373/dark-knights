@@ -1,5 +1,5 @@
 class_name WorldMap
-extends Control
+extends CanvasLayer
 
 ## Экран интерактивной карты мира: узлы, пройденный путь, текущая позиция и выбор развилок
 
@@ -23,6 +23,7 @@ var visited_nodes: Array[String] = []
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().paused = true
 	world_graph = GameState.world_graph if GameState.world_graph != null else WorldGraph.new()
 	current_node = GameState.current_world_node
 	visited_nodes = GameState.visited_world_nodes
@@ -71,8 +72,8 @@ func _build_node_widgets() -> void:
 func _create_node_widget(data: WorldNodeData) -> void:
 	var btn: Button = Button.new()
 	nodes_container.add_child(btn)
-	btn.custom_minimum_size = Vector2(90, 60)
-	btn.position = data.map_position - Vector2(45, 30)
+	btn.custom_minimum_size = Vector2(96, 64)
+	btn.position = data.map_position - Vector2(48, 32)
 	btn.text = "%s\n%s" % [data.icon_symbol, data.name]
 	btn.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	btn.add_theme_font_size_override("font_size", 10)
@@ -81,19 +82,34 @@ func _create_node_widget(data: WorldNodeData) -> void:
 	var is_visited: bool = visited_nodes.has(data.id)
 	var is_selectable: bool = (is_choice_mode and current_node != null and current_node.next_nodes.has(data))
 	
-	# Стилизация кнопки узла
+	# Стилизация кнопки узла в dark fantasy стиле
+	var box: StyleBoxFlat = StyleBoxFlat.new()
+	box.corner_radius_top_left = 6
+	box.corner_radius_top_right = 6
+	box.corner_radius_bottom_right = 6
+	box.corner_radius_bottom_left = 6
+	box.border_width_left = 2
+	box.border_width_top = 2
+	box.border_width_right = 2
+	box.border_width_bottom = 2
+	
 	if is_current:
-		btn.modulate = Color(1.3, 1.2, 0.4, 1.0) # Золотое свечение
+		box.bg_color = Color(0.2, 0.18, 0.08, 0.95)
+		box.border_color = Color(1.0, 0.85, 0.25, 1.0) # Золото
 		btn.text += "\n[ВЫ ЗДЕСЬ]"
 	elif is_visited:
-		btn.modulate = Color(0.5, 0.9, 0.6, 1.0) # Зеленый пройденный
+		box.bg_color = Color(0.08, 0.16, 0.1, 0.9)
+		box.border_color = Color(0.3, 0.85, 0.4, 0.9) # Зеленая рамка
 		btn.text += "\n✓"
 	elif is_selectable:
-		btn.modulate = Color(0.4, 0.8, 1.3, 1.0) # Голубое мерцание для выбора
+		box.bg_color = Color(0.08, 0.18, 0.28, 0.95)
+		box.border_color = Color(0.3, 0.8, 1.0, 1.0) # Лазурный выбор
 		btn.text += "\n[ВЫБРАТЬ]"
 	else:
-		btn.modulate = Color(0.6, 0.6, 0.65, 0.8) # Приглушенный будущий узел
+		box.bg_color = Color(0.08, 0.09, 0.12, 0.8)
+		box.border_color = Color(0.35, 0.38, 0.45, 0.6) # Приглушенный узел
 		
+	btn.add_theme_stylebox_override("normal", box)
 	btn.pressed.connect(func(): _select_node(data))
 
 func _select_node(data: WorldNodeData) -> void:
@@ -133,11 +149,13 @@ func _on_graph_canvas_draw() -> void:
 
 func _on_select_path_pressed() -> void:
 	if selected_node != null:
+		get_tree().paused = false
 		path_chosen.emit(selected_node)
 		GameState.advance_to_world_node(selected_node)
 		queue_free()
 
 func _on_close_pressed() -> void:
+	get_tree().paused = false
 	queue_free()
 
 func _input(event: InputEvent) -> void:
@@ -148,4 +166,3 @@ func _input(event: InputEvent) -> void:
 			if not is_choice_mode:
 				_on_close_pressed()
 				get_viewport().set_input_as_handled()
-

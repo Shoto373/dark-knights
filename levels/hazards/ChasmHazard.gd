@@ -68,6 +68,7 @@ func _trigger_fall(player: CharacterBody2D) -> void:
 	var hc: HealthComponent = player.get_node_or_null("HealthComponent") as HealthComponent
 	if hc != null:
 		hc.take_damage(fall_damage)
+		EventBus.damage_dealt.emit(player, fall_damage, false)
 	
 	EventBus.screen_shake_requested.emit(8.0, 0.3)
 	

@@ -456,5 +456,7 @@ func _spawn_portal_exit() -> void:
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
 	portal.global_position = global_position + Vector2(0, -90.0)
+	if portal.has_method("set_portal_title"):
+		portal.set_portal_title("ПОРТАЛ ВЫХОДА")
 	if portal.get_node_or_null("%PromptLabel") != null:
 		portal.prompt_label.text = "[F] Вперед"

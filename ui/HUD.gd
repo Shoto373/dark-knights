@@ -37,6 +37,7 @@ func _ready() -> void:
 	EventBus.player_health_changed.connect(_on_player_health_changed)
 	EventBus.player_died.connect(_on_player_died)
 	EventBus.damage_dealt.connect(_on_damage_dealt)
+	EventBus.player_healed.connect(_on_player_healed)
 	EventBus.currency_changed.connect(_on_currency_changed)
 	
 	EventBus.boss_spawned.connect(_on_boss_spawned)
@@ -143,19 +144,60 @@ func _on_respawn_pressed() -> void:
 	SceneRouter.change_scene("res://levels/Hub.tscn", 0.3)
 
 func _on_damage_dealt(target: Node2D, amount: int, is_crit: bool) -> void:
-	if not is_instance_valid(target):
+	if not is_instance_valid(target) or amount <= 0:
 		return
 	
+	var is_player_target: bool = (target is Player) or (target.is_in_group("player"))
 	var label: Label = Label.new()
-	label.text = str(amount) + ("!" if is_crit else "")
-	label.add_theme_font_size_override("font_size", 18 if is_crit else 14)
-	label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2) if is_crit else Color(1.0, 1.0, 1.0))
 	
-	var canvas_pos: Vector2 = target.get_global_transform_with_canvas().origin + Vector2(randf_range(-12, 12), -24)
+	if is_player_target:
+		label.text = "-%d" % amount
+		label.add_theme_font_size_override("font_size", 17)
+		label.add_theme_color_override("font_color", Color(1.0, 0.28, 0.28))
+		label.add_theme_color_override("font_outline_color", Color(0.12, 0.02, 0.02, 0.95))
+		label.add_theme_constant_override("outline_size", 4)
+	elif is_crit:
+		label.text = "%d! CRIT" % amount
+		label.add_theme_font_size_override("font_size", 20)
+		label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.2))
+		label.add_theme_color_override("font_outline_color", Color(0.2, 0.1, 0.02, 0.95))
+		label.add_theme_constant_override("outline_size", 5)
+	else:
+		label.text = str(amount)
+		label.add_theme_font_size_override("font_size", 15)
+		label.add_theme_color_override("font_color", Color(1.0, 1.0, 1.0))
+		label.add_theme_color_override("font_outline_color", Color(0.08, 0.08, 0.12, 0.95))
+		label.add_theme_constant_override("outline_size", 3)
+	
+	var canvas_pos: Vector2 = target.get_global_transform_with_canvas().origin + Vector2(randf_range(-14, 14), -26)
 	label.position = canvas_pos
+	label.scale = Vector2(1.5, 1.5) if is_crit else Vector2(1.2, 1.2)
 	damage_numbers_container.add_child(label)
 	
 	var tween: Tween = create_tween().set_parallel(true)
-	tween.tween_property(label, "position:y", canvas_pos.y - 30.0, 0.5).set_ease(Tween.EASE_OUT)
-	tween.tween_property(label, "modulate:a", 0.0, 0.5).set_ease(Tween.EASE_IN)
+	tween.tween_property(label, "scale", Vector2.ONE, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "position:y", canvas_pos.y - 36.0, 0.55).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 0.0, 0.55).set_ease(Tween.EASE_IN)
+	tween.chain().tween_callback(label.queue_free)
+
+func _on_player_healed(amount: int) -> void:
+	if not is_instance_valid(player_ref) or amount <= 0:
+		return
+	
+	var label: Label = Label.new()
+	label.text = "+%d HP" % amount
+	label.add_theme_font_size_override("font_size", 16)
+	label.add_theme_color_override("font_color", Color(0.25, 1.0, 0.45))
+	label.add_theme_color_override("font_outline_color", Color(0.02, 0.15, 0.04, 0.95))
+	label.add_theme_constant_override("outline_size", 4)
+	
+	var canvas_pos: Vector2 = player_ref.get_global_transform_with_canvas().origin + Vector2(randf_range(-10, 10), -32)
+	label.position = canvas_pos
+	label.scale = Vector2(1.3, 1.3)
+	damage_numbers_container.add_child(label)
+	
+	var tween: Tween = create_tween().set_parallel(true)
+	tween.tween_property(label, "scale", Vector2.ONE, 0.14).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "position:y", canvas_pos.y - 38.0, 0.6).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 0.0, 0.6).set_ease(Tween.EASE_IN)
 	tween.chain().tween_callback(label.queue_free)

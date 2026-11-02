@@ -1,33 +1,55 @@
 class_name TreasureChest
 extends Area2D
 
-## Сундук с сокровищами
+## Сундук с сокровищами в стиле Dark Fantasy
 
 const PEDESTAL_SCENE = preload("res://entities/loot/ItemPedestal.tscn")
 const PICKUP_SCENE = preload("res://entities/pickups/PickupBase.tscn")
+const CHEST_CLOSED_TEX: Texture2D = preload("res://assets/sprites/chest_closed.svg")
+const CHEST_OPEN_TEX: Texture2D = preload("res://assets/sprites/chest_open.svg")
 
 @export var requires_key: bool = false
 @export var is_opened: bool = false
 
-@onready var chest_lid: ColorRect = %ChestLid
+@onready var chest_lid: ColorRect = get_node_or_null("%ChestLid") as ColorRect
 @onready var interaction_label: Label = %InteractionLabel
 
 var is_player_inside: bool = false
 var player_ref: Player = null
+var chest_sprite: Sprite2D = null
 
 func _ready() -> void:
 	collision_layer = 0
 	collision_mask = 2
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	_init_sprite()
 	_update_display()
 
+func _init_sprite() -> void:
+	if chest_sprite == null:
+		chest_sprite = Sprite2D.new()
+		chest_sprite.name = "ChestSprite"
+		chest_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		chest_sprite.position = Vector2(0, 0)
+		add_child(chest_sprite)
+		
+		var b: Node = get_node_or_null("ChestBody")
+		if b is CanvasItem: b.visible = false
+		if chest_lid != null: chest_lid.visible = false
+		var l: Node = get_node_or_null("GoldLock")
+		if l is CanvasItem: l.visible = false
+
 func _update_display() -> void:
+	_init_sprite()
 	if is_opened:
 		interaction_label.visible = false
-		chest_lid.position.y = -22.0
+		if chest_lid != null:
+			chest_lid.position.y = -22.0
+		chest_sprite.texture = CHEST_OPEN_TEX
 		return
 	
+	chest_sprite.texture = CHEST_CLOSED_TEX
 	if is_player_inside:
 		interaction_label.visible = true
 		if requires_key:
@@ -51,13 +73,15 @@ func _try_open() -> void:
 	is_opened = true
 	_update_display()
 	
-	# Анимация открытия
+	AudioManager.play_sfx_named("coin")
+	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.0, 0.85, 0.2), 10)
+	
 	var tween: Tween = create_tween()
-	tween.tween_property(chest_lid, "position:y", -24.0, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(chest_sprite, "scale", Vector2(1.2, 0.85), 0.08)
+	tween.tween_property(chest_sprite, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(_spawn_reward)
 
 func _spawn_reward() -> void:
-	# Достаем случайный предмет из таблицы лута
 	var loot_table: LootTable = load("res://data/items/default_loot_table.tres") as LootTable
 	var item: ItemData = null
 	if loot_table != null:
@@ -72,7 +96,6 @@ func _spawn_reward() -> void:
 		pedestal.global_position = global_position + Vector2(0, -35)
 		pedestal.setup(item, 0, false)
 	else:
-		# Резервная награда: монеты и сердце
 		var coin: PickupBase = PICKUP_SCENE.instantiate() as PickupBase
 		coin.pickup_type = PickupBase.PickupType.GOLD
 		coin.amount = 15
@@ -80,12 +103,12 @@ func _spawn_reward() -> void:
 		coin.global_position = global_position + Vector2(20, -25)
 
 func _flash_no_keys() -> void:
-	interaction_label.text = "Нужен ключ!"
-	interaction_label.add_theme_color_override("font_color", Color(1.0, 0.2, 0.2))
+	interaction_label.text = "Требуется ключ!"
+	interaction_label.add_theme_color_override("font_color", Color(1, 0.2, 0.2))
 	var tween: Tween = create_tween()
 	tween.tween_interval(0.8)
 	tween.tween_callback(func():
-		interaction_label.add_theme_color_override("font_color", Color(1.0, 0.9, 0.3))
+		interaction_label.add_theme_color_override("font_color", Color(1, 0.9, 0.3))
 		_update_display()
 	)
 
@@ -100,4 +123,3 @@ func _on_body_exited(body: Node2D) -> void:
 		is_player_inside = false
 		player_ref = null
 		_update_display()
-

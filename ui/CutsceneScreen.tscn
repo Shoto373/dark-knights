@@ -1,27 +1,58 @@
-[gd_scene load_steps=2 format=3 uid="uid://cutscene_screen_001"]
+[gd_scene load_steps=6 format=3 uid="uid://cutscene_screen_001"]
 
 [ext_resource type="Script" path="res://ui/CutsceneScreen.gd" id="1_cutscene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/boss_skeleton.svg" id="2_skel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud_boss_crest.svg" id="3_crest"]
 
-[node name="CutsceneScreen" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_frame"]
+bg_color = Color(0.08, 0.07, 0.12, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.55, 0.3, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.18, 0.15, 0.22, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.7, 0.3, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="CutsceneScreen" type="CanvasLayer"]
 process_mode = 3
+layer = 85
+script = ExtResource("1_cutscene")
+
+[node name="Root" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_cutscene")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="Root"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.04, 0.05, 0.07, 0.96)
+color = Color(0.03, 0.03, 0.05, 0.97)
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="Center" type="CenterContainer" parent="Root"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,12 +60,24 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Center"]
-custom_minimum_size = Vector2(720, 0)
+[node name="VBox" type="VBoxContainer" parent="Root/Center"]
+custom_minimum_size = Vector2(760, 0)
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 18
 
-[node name="TitleLabel" type="Label" parent="Center/VBox"]
+[node name="CrestHeader" type="HBoxContainer" parent="Root/Center/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="CrestLeft" type="TextureRect" parent="Root/Center/VBox/CrestHeader"]
+custom_minimum_size = Vector2(36, 20)
+layout_mode = 2
+texture = ExtResource("3_crest")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="Root/Center/VBox/CrestHeader"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
@@ -42,56 +85,45 @@ theme_override_font_sizes/font_size = 22
 text = "ЗАГОЛОВОК СЮЖЕТА"
 horizontal_alignment = 1
 
-[node name="IllustrationRect" type="ColorRect" parent="Center/VBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 220)
+[node name="CrestRight" type="TextureRect" parent="Root/Center/VBox/CrestHeader"]
+custom_minimum_size = Vector2(36, 20)
 layout_mode = 2
-color = Color(0.18, 0.15, 0.25, 1)
+texture = ExtResource("3_crest")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
 
-[node name="FrameBorder" type="ReferenceRect" parent="Center/VBox/IllustrationRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-border_color = Color(0.65, 0.55, 0.4, 1)
-border_width = 2.0
-editor_only = false
+[node name="IllustrationRect" type="PanelContainer" parent="Root/Center/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_frame")
 
-[node name="SilhouetteLabel" type="Label" parent="Center/VBox/IllustrationRect"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -20.0
-offset_right = 100.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.6, 0.65, 0.75, 0.6)
-theme_override_font_sizes/font_size = 28
-text = "[ ⚔ 🏰 💀 ]"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="CenterBox" type="CenterContainer" parent="Root/Center/VBox/IllustrationRect"]
+layout_mode = 2
 
-[node name="NarrativeLabel" type="Label" parent="Center/VBox"]
+[node name="IllustrationIcon" type="TextureRect" parent="Root/Center/VBox/IllustrationRect/CenterBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+texture = ExtResource("2_skel")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NarrativeLabel" type="Label" parent="Root/Center/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.92, 1)
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
 theme_override_font_sizes/font_size = 14
 text = "Текст повествования..."
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="ContinueBtn" type="Button" parent="Center/VBox"]
+[node name="ContinueBtn" type="Button" parent="Root/Center/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(240, 42)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "Продолжить [Пробел]"
-

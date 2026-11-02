@@ -73,6 +73,7 @@ func process_effects(delta: float) -> void:
 				if health_component != null and not health_component.is_dead:
 					is_processing_dot = true
 					health_component.take_damage(tick_dmg, true)
+					EventBus.damage_dealt.emit(get_parent() as Node2D, tick_dmg, false)
 					is_processing_dot = false
 		
 		if entry["time_left"] <= 0.0:

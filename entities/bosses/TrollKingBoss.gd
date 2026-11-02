@@ -319,5 +319,7 @@ func _spawn_exit_portal() -> void:
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
 	portal.global_position = global_position + Vector2(0, -90.0)
+	if portal.has_method("set_portal_title"):
+		portal.set_portal_title("ЗАМОК СКЕЛЕТОВ")
 	portal.prompt_label.text = "[F] Перейти в Замок скелетов"
 

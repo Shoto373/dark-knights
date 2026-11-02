@@ -40,6 +40,17 @@ func _input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 					return
 			
+			# Не открываем меню паузы, если активны модальные окна (развилка, кат-сцена, победа, смерть)
+			for root_child in get_tree().root.get_children():
+				if root_child is BranchChoiceDialog or root_child is CutsceneScreen or root_child is VictoryScreen:
+					return
+				elif root_child.name in ["BranchChoiceDialog", "CutsceneScreen", "VictoryScreen"]:
+					return
+			
+			var death_screen: Node = get_tree().root.find_child("DeathScreen", true, false)
+			if death_screen != null and death_screen.visible:
+				return
+			
 			toggle_pause()
 			get_viewport().set_input_as_handled()
 
@@ -88,6 +99,18 @@ func _update_inventory_display() -> void:
 				item_ref = load(p) as ItemData
 		
 		var row: HBoxContainer = HBoxContainer.new()
+		row.theme_override_constants.separation = 8
+		
+		if item_ref != null:
+			var icon_tex: Texture2D = SpriteGenerator.get_item_texture(item_ref)
+			if icon_tex != null:
+				var icon_rect: TextureRect = TextureRect.new()
+				icon_rect.texture = icon_tex
+				icon_rect.custom_minimum_size = Vector2(22, 22)
+				icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				row.add_child(icon_rect)
+		
 		var name_lbl: Label = Label.new()
 		name_lbl.text = item_ref.name if item_ref else inv.get("name", "Предмет")
 		name_lbl.add_theme_font_size_override("font_size", 12)

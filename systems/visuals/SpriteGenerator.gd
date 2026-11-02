@@ -371,6 +371,143 @@ static func get_floor_crest_texture() -> Texture2D:
 			return t
 	return null
 
+static func get_item_texture(item_data: ItemData) -> Texture2D:
+	if item_data == null:
+		return null
+	if item_data.icon != null:
+		return item_data.icon
+	
+	var item_id: String = item_data.id if not item_data.id.is_empty() else item_data.name.to_lower()
+	var key: String = "item_" + item_id
+	if _cache.has(key):
+		return _cache[key]
+	
+	var img: Image = Image.create(24, 24, false, Image.FORMAT_RGBA8)
+	img.fill(C_TRANSPARENT)
+	
+	var r_col: Color = item_data.get_rarity_color()
+	_draw_item_icon(img, item_id, item_data.tags, r_col)
+	
+	var tex: ImageTexture = ImageTexture.create_from_image(img)
+	_cache[key] = tex
+	return tex
+
+static func _draw_item_icon(img: Image, item_id: String, tags: Array[String], r_col: Color) -> void:
+	var id_lower: String = item_id.to_lower()
+	if id_lower.contains("sword") or id_lower.contains("blade") or id_lower.contains("dagger") or id_lower.contains("axe"):
+		_draw_item_sword(img, r_col)
+	elif id_lower.contains("shield") or id_lower.contains("buckler") or tags.has("armor"):
+		_draw_item_shield(img, r_col)
+	elif id_lower.contains("ring"):
+		_draw_item_ring(img, r_col)
+	elif id_lower.contains("boots"):
+		_draw_item_boots(img, r_col)
+	elif id_lower.contains("amulet") or id_lower.contains("pendant") or id_lower.contains("heart") or id_lower.contains("core"):
+		_draw_item_amulet(img, r_col)
+	elif id_lower.contains("helmet") or id_lower.contains("cowl") or id_lower.contains("crown"):
+		_draw_item_helmet(img, r_col)
+	elif id_lower.contains("tome") or id_lower.contains("orb") or id_lower.contains("shard") or id_lower.contains("feather") or id_lower.contains("stone"):
+		_draw_item_tome(img, r_col)
+	elif id_lower.contains("apple") or id_lower.contains("potion") or id_lower.contains("fang"):
+		_draw_item_potion(img, r_col)
+	else:
+		_draw_item_relic(img, r_col)
+
+static func _draw_item_sword(img: Image, r_col: Color) -> void:
+	# Рукоять и гарда
+	_fill_rect(img, 4, 18, 4, 3, Color(0.4, 0.25, 0.1))
+	_set_p(img, 3, 20, Color(0.85, 0.7, 0.2)) # Навершие
+	_fill_rect(img, 6, 15, 6, 2, Color(0.7, 0.65, 0.6)) # Гарда
+	# Клинок по диагонали
+	for i in range(12):
+		var px: int = 8 + i
+		var py: int = 14 - i
+		_set_p(img, px, py, Color(0.85, 0.9, 0.95))
+		_set_p(img, px - 1, py, Color(0.65, 0.7, 0.75))
+		_set_p(img, px, py + 1, Color(0.5, 0.55, 0.6))
+	# Острие и руническое сияние
+	_set_p(img, 20, 2, Color(1, 1, 1))
+	_set_p(img, 9, 16, r_col)
+
+static func _draw_item_shield(img: Image, r_col: Color) -> void:
+	# Корпус щита
+	_draw_box(img, 5, 4, 14, 15, Color(0.2, 0.22, 0.26))
+	_fill_rect(img, 6, 5, 12, 13, Color(0.35, 0.38, 0.45))
+	# Нижнее сужение
+	_fill_rect(img, 7, 18, 10, 2, Color(0.2, 0.22, 0.26))
+	_fill_rect(img, 9, 20, 6, 2, Color(0.2, 0.22, 0.26))
+	_set_p(img, 11, 22, Color(0.2, 0.22, 0.26))
+	_set_p(img, 12, 22, Color(0.2, 0.22, 0.26))
+	# Геральдический крест
+	_fill_rect(img, 11, 7, 2, 9, r_col)
+	_fill_rect(img, 8, 10, 8, 2, r_col)
+
+static func _draw_item_ring(img: Image, r_col: Color) -> void:
+	# Золотой обод кольца
+	_draw_box(img, 6, 8, 12, 12, Color(0.85, 0.65, 0.15))
+	_fill_rect(img, 8, 10, 8, 8, C_TRANSPARENT)
+	# Драгоценный камень
+	_fill_rect(img, 10, 4, 4, 4, r_col)
+	_set_p(img, 11, 5, Color(1, 1, 1)) # Блик
+
+static func _draw_item_boots(img: Image, r_col: Color) -> void:
+	# Голенище
+	_fill_rect(img, 7, 5, 6, 10, Color(0.3, 0.25, 0.2))
+	# Подошва и носок
+	_fill_rect(img, 7, 15, 11, 4, Color(0.2, 0.15, 0.1))
+	_set_p(img, 18, 16, Color(0.2, 0.15, 0.1))
+	# Пряжка редкости
+	_fill_rect(img, 8, 9, 4, 2, r_col)
+
+static func _draw_item_amulet(img: Image, r_col: Color) -> void:
+	# Цепочка
+	_set_p(img, 8, 4, Color(0.85, 0.7, 0.2))
+	_set_p(img, 9, 6, Color(0.85, 0.7, 0.2))
+	_set_p(img, 15, 4, Color(0.85, 0.7, 0.2))
+	_set_p(img, 14, 6, Color(0.85, 0.7, 0.2))
+	# Медальон / Сердце
+	_fill_rect(img, 9, 8, 6, 7, r_col)
+	_draw_box(img, 8, 7, 8, 9, Color(0.85, 0.7, 0.2))
+	_set_p(img, 11, 10, Color(1, 1, 1))
+
+static func _draw_item_helmet(img: Image, r_col: Color) -> void:
+	# Шлем
+	_draw_box(img, 6, 6, 12, 13, Color(0.2, 0.22, 0.26))
+	_fill_rect(img, 7, 7, 10, 11, Color(0.4, 0.44, 0.5))
+	# Прорезь для глаз
+	_fill_rect(img, 8, 12, 8, 2, Color(0.08, 0.08, 0.12))
+	# Плюмаж / гребень
+	_fill_rect(img, 11, 3, 2, 4, r_col)
+
+static func _draw_item_tome(img: Image, r_col: Color) -> void:
+	# Обложка гримуара
+	_fill_rect(img, 5, 5, 14, 15, Color(0.25, 0.18, 0.35))
+	_draw_box(img, 5, 5, 14, 15, Color(0.85, 0.7, 0.2))
+	# Страницы
+	_fill_rect(img, 18, 6, 2, 13, Color(0.9, 0.85, 0.7))
+	# Рунический символ
+	_fill_rect(img, 9, 9, 5, 5, r_col)
+	_set_p(img, 11, 11, Color(1, 1, 1))
+
+static func _draw_item_potion(img: Image, r_col: Color) -> void:
+	# Пробка и горлышко
+	_fill_rect(img, 10, 4, 4, 3, Color(0.5, 0.35, 0.2))
+	_fill_rect(img, 11, 7, 2, 3, Color(0.7, 0.85, 0.9, 0.8))
+	# Колба с зельем
+	_draw_box(img, 7, 10, 10, 10, Color(0.6, 0.75, 0.85))
+	_fill_rect(img, 8, 12, 8, 7, r_col)
+	_set_p(img, 9, 14, Color(1, 1, 1))
+
+static func _draw_item_relic(img: Image, r_col: Color) -> void:
+	# Рунический камень
+	_draw_box(img, 6, 5, 12, 14, Color(0.3, 0.34, 0.4))
+	_fill_rect(img, 7, 6, 10, 12, Color(0.18, 0.2, 0.25))
+	# Светящаяся руна в центре
+	_fill_rect(img, 10, 9, 4, 6, r_col)
+	_set_p(img, 11, 8, r_col)
+	_set_p(img, 12, 8, r_col)
+	_set_p(img, 11, 11, Color(1, 1, 1))
+
 # ==========================================
 # ВСПОМОГАТЕЛЬНЫЕ ГРАФИЧЕСКИЕ ПРИМИТИВЫ
 # ==========================================
