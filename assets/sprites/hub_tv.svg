@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="52" height="46" viewBox="0 0 52 46">
+  <defs>
+    <linearGradient id="tvWood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#451a03"/>
+      <stop offset="50%" stop-color="#290e02"/>
+      <stop offset="100%" stop-color="#170600"/>
+    </linearGradient>
+    <linearGradient id="tvBezel" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <radialGradient id="crtGlass" cx="45%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="45%" stop-color="#0284c7"/>
+      <stop offset="85%" stop-color="#082f49"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Shadow under TV stand -->
+  <ellipse cx="26" cy="43" rx="20" ry="3" fill="#000000" opacity="0.6"/>
+
+  <!-- Antenna rabbit ears with brass tips -->
+  <line x1="24" y1="10" x2="14" y2="1" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="13" cy="1" r="2" fill="#eab308" stroke="#713f12" stroke-width="0.8"/>
+  <line x1="28" y1="10" x2="38" y2="1" stroke="#94a3b8" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="39" cy="1" r="2" fill="#eab308" stroke="#713f12" stroke-width="0.8"/>
+
+  <!-- TV Wooden Legs -->
+  <line x1="9" y1="36" x2="6" y2="43" stroke="#290e02" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="43" y1="36" x2="46" y2="43" stroke="#290e02" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="14" y1="36" x2="12" y2="42" stroke="#1c0700" stroke-width="2" stroke-linecap="round"/>
+  <line x1="38" y1="36" x2="40" y2="42" stroke="#1c0700" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Main Wooden Cabinet -->
+  <rect x="5" y="9" width="42" height="28" rx="4" fill="url(#tvWood)" stroke="#0f0501" stroke-width="1.5"/>
+  <rect x="7" y="11" width="38" height="24" rx="2.5" fill="none" stroke="#78350f" stroke-width="0.8" opacity="0.6"/>
+
+  <!-- CRT Bezel Inner Frame -->
+  <rect x="8" y="12" width="28" height="22" rx="3" fill="url(#tvBezel)" stroke="#020617" stroke-width="1"/>
+
+  <!-- Glowing Curved CRT Glass Screen -->
+  <rect id="screen_glow" x="10" y="14" width="24" height="18" rx="2.5" fill="url(#crtGlass)"/>
+  <!-- Scanlines & Curved Screen Glare -->
+  <line x1="10" y1="17" x2="34" y2="17" stroke="#ffffff" stroke-width="0.6" opacity="0.25"/>
+  <line x1="10" y1="21" x2="34" y2="21" stroke="#ffffff" stroke-width="0.6" opacity="0.15"/>
+  <line x1="10" y1="25" x2="34" y2="25" stroke="#ffffff" stroke-width="0.6" opacity="0.2"/>
+  <path d="M 12 15 Q 16 19 12 25" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.45"/>
+
+  <!-- Right Control Panel -->
+  <rect x="37" y="12" width="8" height="22" rx="1.5" fill="#1e293b" stroke="#090d16" stroke-width="0.8"/>
+  <!-- Dial 1 (Channel knob) -->
+  <circle cx="41" cy="16" r="2.5" fill="#475569" stroke="#090d16" stroke-width="0.8"/>
+  <line x1="41" y1="14" x2="41" y2="16" stroke="#f8fafc" stroke-width="0.8"/>
+  <!-- Dial 2 (Volume knob) -->
+  <circle cx="41" cy="23" r="2.5" fill="#475569" stroke="#090d16" stroke-width="0.8"/>
+  <line x1="39.5" y1="23" x2="41" y2="23" stroke="#f8fafc" stroke-width="0.8"/>
+  <!-- Speaker grille slots -->
+  <line x1="39" y1="28" x2="43" y2="28" stroke="#090d16" stroke-width="1"/>
+  <line x1="39" y1="30" x2="43" y2="30" stroke="#090d16" stroke-width="1"/>
+  <line x1="39" y1="32" x2="43" y2="32" stroke="#090d16" stroke-width="1"/>
+</svg>

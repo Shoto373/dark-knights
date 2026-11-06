@@ -1,0 +1,98 @@
+[gd_scene load_steps=6 format=3 uid="uid://hub_tv_001"]
+
+[ext_resource type="Script" path="res://levels/HubTV.gd" id="1_tv_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hub_tv.svg" id="2_tv_tex"]
+[ext_resource type="Texture2D" path="res://assets/sprites/light_halo.svg" id="3_halo"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
+radius = 48.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
+bg_color = Color(0.05, 0.07, 0.1, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.8, 1, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 8.0
+expand_margin_top = 4.0
+expand_margin_right = 8.0
+expand_margin_bottom = 4.0
+
+[node name="HubTV" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_tv_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_trigger")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="ObstacleShape" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(-22, -6, 22, -6, 22, 16, -22, 16)
+
+[node name="ScreenGlow" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+modulate = Color(0.2, 0.8, 1, 0.45)
+position = Vector2(0, 10)
+scale = Vector2(1.8, 1.4)
+texture = ExtResource("3_halo")
+
+[node name="TVSprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+position = Vector2(0, -6)
+scale = Vector2(1.15, 1.15)
+texture = ExtResource("2_tv_tex")
+
+[node name="UI" type="Node2D" parent="."]
+z_index = 10
+
+[node name="PromptLabel" type="Label" parent="UI"]
+unique_name_in_owner = true
+offset_left = -110.0
+offset_top = 22.0
+offset_right = 110.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_box")
+text = "[F] Переключить канал"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BroadcastPanel" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = -160.0
+offset_top = -86.0
+offset_right = 160.0
+offset_bottom = -38.0
+
+[node name="BroadcastLabel" type="Label" parent="UI/BroadcastPanel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 10
+theme_override_styles/normal = SubResource("StyleBoxFlat_box")
+text = "📺 ХРОНИКИ ПОДЗЕМЕЛЬЯ
+Новости эфира"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

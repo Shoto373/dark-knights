@@ -69,11 +69,10 @@ func _update_display() -> void:
 		if hero_sprite != null:
 			hero_sprite.modulate = Color(0.3, 0.3, 0.35, 0.8)
 		if is_player_inside:
-			interaction_label.text = "[F] Разблокировать (%d душ)" % hero_data.unlock_cost_souls
+			interaction_label.text = "[F] Открыть (%d душ)" % hero_data.unlock_cost_souls
 			interaction_label.visible = true
 		else:
-			interaction_label.text = "Закрыто (%d душ)" % hero_data.unlock_cost_souls
-			interaction_label.visible = true
+			interaction_label.visible = false
 	else:
 		if hero_sprite != null:
 			hero_sprite.modulate = Color.WHITE

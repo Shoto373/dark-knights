@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="66" viewBox="0 0 48 66">
+  <defs>
+    <linearGradient id="shelfWood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#451a03"/>
+      <stop offset="100%" stop-color="#1c0700"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="24" cy="64" rx="22" ry="2.5" fill="#000000" opacity="0.6"/>
+
+  <!-- Main Wooden Case -->
+  <rect x="4" y="4" width="40" height="58" rx="2" fill="url(#shelfWood)" stroke="#0f0501" stroke-width="1.5"/>
+  <rect x="6" y="6" width="36" height="54" fill="#240c01"/>
+
+  <!-- Shelves (3 dividers) -->
+  <rect x="6" y="22" width="36" height="3" fill="#522504" stroke="#170600" stroke-width="0.6"/>
+  <rect x="6" y="40" width="36" height="3" fill="#522504" stroke="#170600" stroke-width="0.6"/>
+
+  <!-- Top Shelf Items (Grimoires & Potions) -->
+  <rect x="9" y="10" width="4" height="12" fill="#7f1d1d"/>
+  <rect x="14" y="12" width="5" height="10" fill="#1e3a8a"/>
+  <rect x="20" y="9" width="4" height="13" fill="#047857"/>
+  <rect x="25" y="11" width="3" height="11" fill="#78350f"/>
+  <!-- Glowing Mana Flask -->
+  <rect x="34" y="13" width="5" height="8" rx="1.5" fill="#38bdf8" stroke="#0284c7" stroke-width="0.8"/>
+  <circle cx="36.5" cy="17" r="1" fill="#ffffff"/>
+
+  <!-- Middle Shelf Items (Ancient scrolls & skull trophy) -->
+  <!-- Skull trophy bookend -->
+  <circle cx="12" cy="33" r="4" fill="#e2e8f0" stroke="#090d16" stroke-width="0.8"/>
+  <circle cx="10.5" cy="33" r="0.8" fill="#090d16"/>
+  <circle cx="13.5" cy="33" r="0.8" fill="#090d16"/>
+  <!-- Leaning grimoire -->
+  <polygon points="18,39 24,31 28,33 22,40" fill="#4c1d95" stroke="#1e0538" stroke-width="0.8"/>
+  <!-- Gold coins / trophy chalice -->
+  <polygon points="33,32 39,32 37,39 35,39" fill="#eab308" stroke="#713f12" stroke-width="0.8"/>
+
+  <!-- Bottom Shelf Items (Heavy tomes & sealed scroll tubes) -->
+  <rect x="9" y="47" width="6" height="15" fill="#3b0764"/>
+  <rect x="16" y="46" width="7" height="16" fill="#831843"/>
+  <rect x="24" y="48" width="5" height="14" fill="#14532d"/>
+  <rect x="30" y="47" width="6" height="15" fill="#713f12"/>
+</svg>

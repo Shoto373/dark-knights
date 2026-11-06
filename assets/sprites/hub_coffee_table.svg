@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="30" viewBox="0 0 48 30">
+  <defs>
+    <linearGradient id="tableWood" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5c2b09"/>
+      <stop offset="50%" stop-color="#3b1904"/>
+      <stop offset="100%" stop-color="#1f0a00"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="24" cy="27" rx="22" ry="3" fill="#000000" opacity="0.5"/>
+
+  <!-- Legs -->
+  <rect x="5" y="16" width="4" height="11" rx="1" fill="#240c01" stroke="#0f0501" stroke-width="0.8"/>
+  <rect x="39" y="16" width="4" height="11" rx="1" fill="#240c01" stroke="#0f0501" stroke-width="0.8"/>
+  <line x1="7" y1="21" x2="41" y2="21" stroke="#1c0700" stroke-width="1.2"/>
+
+  <!-- Table Top Slab -->
+  <rect x="3" y="10" width="42" height="7" rx="2" fill="url(#tableWood)" stroke="#170600" stroke-width="1"/>
+  <rect x="5" y="11" width="38" height="2" fill="#78350f" opacity="0.6"/>
+
+  <!-- Items on Table -->
+  <!-- Rolled Parchment Map -->
+  <rect x="9" y="7" width="12" height="4" rx="1" fill="#fef08a" stroke="#713f12" stroke-width="0.8"/>
+  <line x1="12" y1="7" x2="12" y2="11" stroke="#ca8a04" stroke-width="0.6"/>
+
+  <!-- Steaming Ceramic Mug -->
+  <rect x="25" y="5" width="6" height="6" rx="1" fill="#e2e8f0" stroke="#475569" stroke-width="0.8"/>
+  <path d="M 31 6 Q 34 7.5 31 9" fill="none" stroke="#475569" stroke-width="0.8"/>
+  <!-- Steam curls -->
+  <path d="M 27 3 Q 26 1 28 0" fill="none" stroke="#e2e8f0" stroke-width="0.7" opacity="0.7"/>
+  <path d="M 29 4 Q 30 2 29 1" fill="none" stroke="#e2e8f0" stroke-width="0.7" opacity="0.7"/>
+
+  <!-- Glowing Arcane Crystal paperweight -->
+  <polygon points="36,4 39,7 36,10 33,7" fill="#38bdf8" stroke="#0284c7" stroke-width="0.8"/>
+  <circle cx="36" cy="7" r="0.8" fill="#ffffff"/>
+</svg>

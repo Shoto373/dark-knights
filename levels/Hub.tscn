@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://hub_scene_001"]
+[gd_scene load_steps=24 format=3 uid="uid://hub_scene_001"]
 
 [ext_resource type="Script" path="res://levels/Hub.gd" id="1_hub"]
 [ext_resource type="PackedScene" uid="uid://player_scene_001" path="res://entities/player/Player.tscn" id="2_player"]
@@ -16,12 +16,35 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/dungeon_wall_brick.svg" id="14_brick"]
 [ext_resource type="PackedScene" path="res://levels/Pillar.tscn" id="15_pillar"]
 [ext_resource type="PackedScene" path="res://levels/Torch.tscn" id="16_torch"]
+[ext_resource type="PackedScene" path="res://levels/HubTV.tscn" id="17_tv"]
+[ext_resource type="PackedScene" path="res://levels/HubSofa.tscn" id="18_sofa"]
+[ext_resource type="PackedScene" path="res://levels/HubFireplace.tscn" id="19_fireplace"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hub_carpet.svg" id="20_carpet"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hub_coffee_table.svg" id="21_table"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hub_armchair.svg" id="22_armchair"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hub_bookshelf.svg" id="23_bookshelf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
 size = Vector2(1360, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
 size = Vector2(40, 800)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header"]
+bg_color = Color(0.04, 0.06, 0.09, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.72, 0.35, 0.75)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
 
 [node name="Hub" type="Node2D"]
 script = ExtResource("1_hub")
@@ -167,26 +190,94 @@ position = Vector2(1200, 640)
 [node name="PedestalsSection" type="Node2D" parent="."]
 
 [node name="SectionLabel" type="Label" parent="PedestalsSection"]
-offset_left = 140.0
-offset_top = 130.0
-offset_right = 440.0
-offset_bottom = 150.0
-theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 14
-text = "ВЫБОР ГЕРОЯ"
+offset_left = 230.0
+offset_top = 135.0
+offset_right = 470.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(1.0, 0.9, 0.45, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_header")
+text = "⚔️ АЛТАРЬ ГЕРОЕВ ⚔️"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="PedestalWarrior" parent="PedestalsSection" instance=ExtResource("7_pedestal")]
-position = Vector2(180, 220)
+position = Vector2(180, 240)
 hero_data = ExtResource("8_warrior")
 
 [node name="PedestalMage" parent="PedestalsSection" instance=ExtResource("7_pedestal")]
-position = Vector2(290, 220)
+position = Vector2(350, 240)
 hero_data = ExtResource("9_mage")
 
 [node name="PedestalRanger" parent="PedestalsSection" instance=ExtResource("7_pedestal")]
-position = Vector2(400, 220)
+position = Vector2(520, 240)
 hero_data = ExtResource("10_ranger")
+
+[node name="LoungeSection" type="Node2D" parent="."]
+
+[node name="LoungeTitle" type="Label" parent="LoungeSection"]
+offset_left = 310.0
+offset_top = 390.0
+offset_right = 530.0
+offset_bottom = 414.0
+theme_override_colors/font_color = Color(0.9, 0.6, 0.6, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_header")
+text = "🛋️ ГОСТИНАЯ ОРДЕНА"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HubCarpet" type="Sprite2D" parent="LoungeSection"]
+position = Vector2(420, 520)
+scale = Vector2(1.85, 1.65)
+texture = ExtResource("20_carpet")
+
+[node name="HubFireplace" parent="LoungeSection" instance=ExtResource("19_fireplace")]
+position = Vector2(160, 480)
+
+[node name="HubBookshelf" type="Sprite2D" parent="LoungeSection"]
+texture_filter = 1
+position = Vector2(220, 470)
+scale = Vector2(1.15, 1.15)
+texture = ExtResource("23_bookshelf")
+
+[node name="HubArmchair" type="Sprite2D" parent="LoungeSection"]
+texture_filter = 1
+position = Vector2(300, 530)
+scale = Vector2(1.15, 1.15)
+texture = ExtResource("22_armchair")
+
+[node name="HubCoffeeTable" type="Sprite2D" parent="LoungeSection"]
+texture_filter = 1
+position = Vector2(420, 505)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("21_table")
+
+[node name="HubTV" parent="LoungeSection" instance=ExtResource("17_tv")]
+position = Vector2(420, 445)
+
+[node name="HubSofa" parent="LoungeSection" instance=ExtResource("18_sofa")]
+position = Vector2(420, 570)
+
+[node name="TrainingSection" type="Node2D" parent="."]
+
+[node name="TrainingLabel" type="Label" parent="TrainingSection"]
+offset_left = 940.0
+offset_top = 155.0
+offset_right = 1180.0
+offset_bottom = 180.0
+theme_override_colors/font_color = Color(0.7, 0.85, 1.0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_header")
+text = "🎯 АРЕНА ТРЕНИРОВОК"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Portal" parent="." instance=ExtResource("11_portal")]
 position = Vector2(640, 200)
@@ -201,10 +292,10 @@ is_room_locked = true
 room_center = Vector2(640, 360)
 
 [node name="Dummy" parent="." instance=ExtResource("3_dummy")]
-position = Vector2(980, 380)
+position = Vector2(1060, 270)
 
 [node name="TrapSpikes" parent="." instance=ExtResource("4_trap")]
-position = Vector2(980, 540)
+position = Vector2(1060, 440)
 
 [node name="InGameControlsInfo" type="CanvasLayer" parent="."]
 
@@ -213,7 +304,7 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -380.0
-offset_bottom = 140.0
+offset_bottom = 150.0
 grow_horizontal = 0
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
@@ -235,5 +326,5 @@ theme_override_font_sizes/font_size = 11
 text = "WASD — бег | ЛКМ / J — атака
 Shift / K — рывок | F / Enter — взаимодействие
 Q — Навык 1 | E — Навык 2
-Подойди к статуе и нажми F для выбора героя"
+В Хабе: диван лечит, телевизор вещает новости"
 horizontal_alignment = 2

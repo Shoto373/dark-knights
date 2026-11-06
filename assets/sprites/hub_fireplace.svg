@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="54" viewBox="0 0 60 54">
+  <defs>
+    <linearGradient id="hearthStone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="40%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+    <radialGradient id="hearthGlow" cx="50%" cy="80%" r="70%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="35%" stop-color="#f97316"/>
+      <stop offset="70%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Shadow -->
+  <ellipse cx="30" cy="51" rx="28" ry="3" fill="#000000" opacity="0.6"/>
+
+  <!-- Main Stone Chimney Body -->
+  <rect x="6" y="8" width="48" height="42" fill="url(#hearthStone)" stroke="#090d16" stroke-width="1.5"/>
+
+  <!-- Upper Stone Mantelpiece Shelf -->
+  <rect x="2" y="4" width="56" height="6" rx="2" fill="#64748b" stroke="#090d16" stroke-width="1.2"/>
+  <rect x="4" y="5" width="52" height="2" fill="#94a3b8"/>
+
+  <!-- Items on Mantelpiece -->
+  <!-- Skull Candle -->
+  <circle cx="14" cy="2" r="2.5" fill="#e2e8f0" stroke="#090d16" stroke-width="0.8"/>
+  <circle cx="14" cy="-1" r="1" fill="#facc15"/>
+  <!-- Ruby Potion Flask -->
+  <rect x="44" y="0" width="3.5" height="4.5" rx="1" fill="#dc2626" stroke="#450a0a" stroke-width="0.8"/>
+
+  <!-- Fireplace Inner Hearth Cave Arch -->
+  <path d="M 14 50 L 14 26 C 14 18 46 18 46 26 L 46 50 Z" fill="#090d16" stroke="#020617" stroke-width="1.5"/>
+
+  <!-- Burning Fire Radial Glow -->
+  <circle cx="30" cy="38" r="16" fill="url(#hearthGlow)" opacity="0.85"/>
+
+  <!-- Burning Firewood Logs -->
+  <line x1="18" y1="45" x2="42" y2="43" stroke="#451a03" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="20" y1="42" x2="40" y2="46" stroke="#78350f" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Roaring Flames (Sharp flickering tongues) -->
+  <polygon points="22,44 26,30 29,42" fill="#ef4444"/>
+  <polygon points="27,43 31,23 35,43" fill="#f97316"/>
+  <polygon points="33,44 36,29 40,43" fill="#ef4444"/>
+  <polygon points="28,42 31,27 33,42" fill="#fef08a"/>
+</svg>

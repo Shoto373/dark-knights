@@ -74,7 +74,8 @@ func _init_sprites() -> void:
 	
 	var ui_node: Node2D = get_node_or_null("UI") as Node2D
 	if ui_node != null:
-		ui_node.z_index = 10 # Текст всегда рисуется поверх всех спрайтов
+		ui_node.z_index = 10 # Текст всегда рисуется поверх всех спрайтов и декораций
+		ui_node.z_as_relative = false
 	
 	if rarity_glow != null:
 		rarity_glow.visible = false # Старый квадратный ColorRect навсегда выключен
@@ -96,19 +97,19 @@ func set_floating_only(val: bool) -> void:
 	
 	if name_label != null:
 		if floating_only:
-			name_label.offset_top = -74.0
-			name_label.offset_bottom = -50.0
+			name_label.offset_top = -68.0
+			name_label.offset_bottom = -46.0
 		else:
-			name_label.offset_top = -84.0
-			name_label.offset_bottom = -60.0
+			name_label.offset_top = -78.0
+			name_label.offset_bottom = -54.0
 	
 	if cost_label != null:
 		if floating_only:
-			cost_label.offset_top = 18.0
+			cost_label.offset_top = 20.0
 			cost_label.offset_bottom = 42.0
 		else:
-			cost_label.offset_top = 24.0
-			cost_label.offset_bottom = 48.0
+			cost_label.offset_top = 28.0
+			cost_label.offset_bottom = 50.0
 
 func setup(item: ItemData, price: int = 0, is_blessing: bool = false) -> void:
 	item_data = item

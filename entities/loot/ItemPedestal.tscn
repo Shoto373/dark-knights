@@ -50,13 +50,13 @@ z_index = 10
 
 [node name="NameLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
-offset_left = -150.0
-offset_top = -84.0
-offset_right = 150.0
-offset_bottom = -60.0
+offset_left = -60.0
+offset_top = -78.0
+offset_right = 60.0
+offset_bottom = -54.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
 theme_override_constants/outline_size = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 theme_override_styles/normal = SubResource("StyleBoxFlat_name")
 text = "Предмет"
 horizontal_alignment = 1
@@ -64,10 +64,10 @@ vertical_alignment = 1
 
 [node name="CostLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
-offset_left = -150.0
-offset_top = 24.0
-offset_right = 150.0
-offset_bottom = 48.0
+offset_left = -65.0
+offset_top = 28.0
+offset_right = 65.0
+offset_bottom = 50.0
 theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
 theme_override_constants/outline_size = 2

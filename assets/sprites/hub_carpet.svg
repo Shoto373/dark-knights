@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="84" viewBox="0 0 130 84">
+  <defs>
+    <linearGradient id="rugBase" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#450a0a"/>
+      <stop offset="50%" stop-color="#581010"/>
+      <stop offset="100%" stop-color="#2d0505"/>
+    </linearGradient>
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ca8a04"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#a16207"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Fringes (top and bottom) -->
+  <line x1="8" y1="3" x2="122" y2="3" stroke="#fef08a" stroke-width="1.5" stroke-dasharray="2,2"/>
+  <line x1="8" y1="81" x2="122" y2="81" stroke="#fef08a" stroke-width="1.5" stroke-dasharray="2,2"/>
+
+  <!-- Main Rug Body -->
+  <rect x="6" y="5" width="118" height="74" rx="3" fill="url(#rugBase)" stroke="#1a0202" stroke-width="1.5"/>
+
+  <!-- Gold Runic Double Border -->
+  <rect x="11" y="10" width="108" height="64" rx="2" fill="none" stroke="url(#goldBorder)" stroke-width="1.8"/>
+  <rect x="15" y="14" width="100" height="56" rx="1.5" fill="none" stroke="#713f12" stroke-width="0.8"/>
+
+  <!-- Corner Arcane Ornaments -->
+  <polygon points="12,11 18,11 12,17" fill="#eab308"/>
+  <polygon points="118,11 112,11 118,17" fill="#eab308"/>
+  <polygon points="12,73 18,73 12,67" fill="#eab308"/>
+  <polygon points="118,73 112,73 118,67" fill="#eab308"/>
+
+  <!-- Center Gothic Mandala Crest -->
+  <ellipse cx="65" cy="42" rx="28" ry="18" fill="#1c0404" stroke="url(#goldBorder)" stroke-width="1.2"/>
+  <polygon points="65,28 75,42 65,56 55,42" fill="none" stroke="#eab308" stroke-width="1"/>
+  <circle cx="65" cy="42" r="4.5" fill="#7f1d1d" stroke="#fef08a" stroke-width="0.8"/>
+  <circle cx="65" cy="42" r="1.8" fill="#eab308"/>
+</svg>

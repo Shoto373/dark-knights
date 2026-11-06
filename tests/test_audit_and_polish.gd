@@ -631,12 +631,12 @@ func test_pedestal_and_interaction_labels_formatting_and_z_index() -> void:
 	
 	var ui_node: Node2D = ped.get_node("UI") as Node2D
 	assert_not_null(ui_node, "Пьедестал имеет UI контейнер")
-	assert_eq(ui_node.z_index, 10, "UI пьедестала имеет z_index = 10 для отрисовки поверх спрайтов")
+	assert_gte(ui_node.z_index, 10, "UI пьедестала имеет z_index >= 10 для отрисовки поверх спрайтов")
 	
 	var name_lbl: Label = ped.get_node("%NameLabel") as Label
 	var cost_lbl: Label = ped.get_node("%CostLabel") as Label
-	assert_gte(name_lbl.size.x, 250.0, "NameLabel достаточно широкая (>= 250px), текст не обрезается")
-	assert_gte(cost_lbl.size.x, 250.0, "CostLabel достаточно широкая (>= 250px), текст не обрезается")
+	assert_gte(name_lbl.size.x, 120.0, "NameLabel компактная и не наезжает на соседние пьедесталы (>= 120px)")
+	assert_gte(cost_lbl.size.x, 120.0, "CostLabel компактная и не наезжает на соседние пьедесталы (>= 120px)")
 
 func test_troll_king_boss_no_legacy_colorrects() -> void:
 	var troll_scene: PackedScene = load("res://entities/bosses/TrollKingBoss.tscn")

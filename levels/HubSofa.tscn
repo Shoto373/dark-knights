@@ -1,0 +1,62 @@
+[gd_scene load_steps=5 format=3 uid="uid://hub_sofa_001"]
+
+[ext_resource type="Script" path="res://levels/HubSofa.gd" id="1_sofa_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hub_sofa.svg" id="2_sofa_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trigger"]
+radius = 42.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
+bg_color = Color(0.05, 0.07, 0.1, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.25, 0.25, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
+
+[node name="HubSofa" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_sofa_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_trigger")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="ObstacleShape" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(-36, -10, 36, -10, 36, 12, -36, 12)
+
+[node name="SofaSprite" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+texture_filter = 1
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_sofa_tex")
+
+[node name="UI" type="Node2D" parent="."]
+z_index = 10
+
+[node name="PromptLabel" type="Label" parent="UI"]
+unique_name_in_owner = true
+offset_left = -110.0
+offset_top = -42.0
+offset_right = 110.0
+offset_bottom = -20.0
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_pill")
+text = "[F] Присесть отдохнуть"
+horizontal_alignment = 1
+vertical_alignment = 1

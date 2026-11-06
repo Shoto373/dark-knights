@@ -47,6 +47,13 @@ var _weapon_sprite: Sprite2D = null
 var _is_attack_animating: bool = false
 
 func _ready() -> void:
+	if body_rect != null:
+		body_rect.visible = false
+	if visuals != null:
+		if visuals.has_node("EyeLeft"):
+			visuals.get_node("EyeLeft").visible = false
+		if visuals.has_node("EyeRight"):
+			visuals.get_node("EyeRight").visible = false
 	add_to_group("enemies")
 	collision_layer = 4 # Слой 3: enemies
 	collision_mask = 1 | 4 # Стены и другие враги
@@ -67,6 +74,13 @@ func _ready() -> void:
 		setup_from_data(enemy_data)
 
 func setup_from_data(data: EnemyData) -> void:
+	if body_rect != null:
+		body_rect.visible = false
+	if visuals != null:
+		if visuals.has_node("EyeLeft"):
+			visuals.get_node("EyeLeft").visible = false
+		if visuals.has_node("EyeRight"):
+			visuals.get_node("EyeRight").visible = false
 	enemy_data = data
 	health_component.max_health = enemy_data.max_hp
 	health_component.reset(enemy_data.max_hp)
