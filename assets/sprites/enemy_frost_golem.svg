@@ -1,6 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <rect x="18" y="24" width="28" height="26" rx="4" fill="#0284c7" stroke="#e0f2fe" stroke-width="2"/>
-  <polygon points="24,8 40,8 44,22 20,22" fill="#0369a1" stroke="#e0f2fe" stroke-width="2"/>
-  <circle cx="28" cy="15" r="3.5" fill="#f0f9ff"/>
-  <circle cx="36" cy="15" r="3.5" fill="#f0f9ff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="glacierCrystal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0f2fe"/>
+      <stop offset="45%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="deepIce" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#082f49"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Towering Crystal Shoulder Spires -->
+  <polygon points="3,20 11,4 22,16 18,32 5,30" fill="url(#glacierCrystal)" stroke="#082f49" stroke-width="1.6"/>
+  <polygon points="61,20 53,4 42,16 46,32 59,30" fill="url(#glacierCrystal)" stroke="#082f49" stroke-width="1.6"/>
+
+  <!-- Faceted Monolithic Glacier Torso -->
+  <polygon points="13,18 51,18 46,50 18,50" fill="url(#deepIce)" stroke="#082f49" stroke-width="1.8"/>
+  <!-- Geometric Ice Armor Plates -->
+  <polygon points="16,21 31,21 29,34 18,33" fill="url(#glacierCrystal)" stroke="#082f49" stroke-width="1.2"/>
+  <polygon points="48,21 33,21 35,34 46,33" fill="url(#glacierCrystal)" stroke="#082f49" stroke-width="1.2"/>
+
+  <!-- Blazing Cryo-Core in Chest -->
+  <polygon points="32,27 38,35 32,43 26,35" fill="#ffffff" stroke="#38bdf8" stroke-width="1.8"/>
+  <polygon points="32,30 35,35 32,40 29,35" fill="#7dd3fc"/>
+
+  <!-- Crushing Glacier Gauntlet Fists -->
+  <polygon points="2,31 15,30 16,47 3,46" fill="url(#glacierCrystal)" stroke="#082f49" stroke-width="1.6"/>
+  <polygon points="62,31 49,30 48,47 61,46" fill="url(#glacierCrystal)" stroke="#082f49" stroke-width="1.6"/>
+
+  <!-- Angular Faceted Ice Golem Head -->
+  <polygon points="20,8 32,3 44,8 43,23 32,26 21,23" fill="url(#glacierCrystal)" stroke="#082f49" stroke-width="1.7"/>
+  <rect x="22" y="13" width="20" height="4" rx="1" fill="#082f49"/>
+  <circle cx="27" cy="15" r="2" fill="#ffffff"/>
+  <circle cx="37" cy="15" r="2" fill="#ffffff"/>
 </svg>

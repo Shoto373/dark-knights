@@ -1,8 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <path d="M 24 16 C 24 8, 40 8, 40 16 C 42 24, 38 28, 32 28 C 26 28, 22 24, 24 16 Z" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
-  <path d="M 18 16 C 18 6, 46 6, 46 16 L 44 26 L 20 26 Z" fill="#334155" opacity="0.85"/>
-  <circle cx="28" cy="18" r="3" fill="#0f172a"/><circle cx="28" cy="18" r="1.5" fill="#f87171"/>
-  <circle cx="36" cy="18" r="3" fill="#0f172a"/><circle cx="36" cy="18" r="1.5" fill="#f87171"/>
-  <rect x="28" y="38" width="8" height="18" rx="2" fill="#78350f"/>
-  <path d="M 16 42 Q 32 46 48 42" stroke="#64748b" stroke-width="3" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="cbBone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f1f5f9"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="cbHelm" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748b"/>
+      <stop offset="50%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Bolt Quiver on Hip/Back -->
+  <rect x="41" y="18" width="6" height="16" rx="1.5" fill="#78350f" stroke="#090d16" stroke-width="1.2"/>
+  <circle cx="43" cy="17" r="1.5" fill="#fbbf24"/>
+  <circle cx="46" cy="17" r="1.5" fill="#fbbf24"/>
+
+  <!-- Armored Brigandine Vest over Ribcage -->
+  <path d="M 20 25 L 44 25 L 41 46 L 23 46 Z" fill="#1e293b" stroke="#090d16" stroke-width="1.6"/>
+  <path d="M 23 28 L 41 28 M 24 33 L 40 33 M 25 38 L 39 38" stroke="url(#cbBone)" stroke-width="2.2"/>
+  <!-- Crossed Leather Bolt Bandolier -->
+  <line x1="21" y1="26" x2="40" y2="44" stroke="#92400e" stroke-width="2.5"/>
+  <rect x="22" y="42" width="20" height="4" rx="1" fill="#451a03" stroke="#090d16" stroke-width="1"/>
+
+  <!-- Skeletal Arms with Iron Vambraces -->
+  <rect x="13" y="27" width="5" height="13" rx="1.5" fill="url(#cbBone)" stroke="#090d16" stroke-width="1.2"/>
+  <rect x="12" y="33" width="6" height="6" rx="1" fill="url(#cbHelm)" stroke="#090d16" stroke-width="1.1"/>
+  <rect x="46" y="27" width="5" height="13" rx="1.5" fill="url(#cbBone)" stroke="#090d16" stroke-width="1.2"/>
+  <rect x="46" y="33" width="6" height="6" rx="1" fill="url(#cbHelm)" stroke="#090d16" stroke-width="1.1"/>
+
+  <!-- Skull under Pointed Iron Kettle-Helm -->
+  <path d="M 21 13 L 43 13 L 40 26 L 24 26 Z" fill="url(#cbBone)" stroke="#090d16" stroke-width="1.5"/>
+  <!-- Pointed Gothic Kettle-Helm with Nasal Guard -->
+  <path d="M 14 15 L 32 3 L 50 15 Z" fill="url(#cbHelm)" stroke="#090d16" stroke-width="1.6"/>
+  <rect x="31" y="13" width="2.5" height="8" fill="url(#cbHelm)" stroke="#090d16" stroke-width="0.9"/>
+
+  <!-- Glowing Cyan Marksman Eyes -->
+  <circle cx="26" cy="18" r="2.5" fill="#090d16"/>
+  <circle cx="38" cy="18" r="2.5" fill="#090d16"/>
+  <circle cx="26" cy="18" r="1.5" fill="#38bdf8"/>
+  <circle cx="38" cy="18" r="1.5" fill="#38bdf8"/>
+
+  <!-- Skull Teeth -->
+  <line x1="28" y1="23" x2="28" y2="26" stroke="#090d16" stroke-width="1.2"/>
+  <line x1="32" y1="23" x2="32" y2="26" stroke="#090d16" stroke-width="1.2"/>
+  <line x1="36" y1="23" x2="36" y2="26" stroke="#090d16" stroke-width="1.2"/>
 </svg>

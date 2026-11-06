@@ -1,8 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <ellipse cx="32" cy="34" rx="20" ry="16" fill="#334155" stroke="#0f172a" stroke-width="2"/>
-  <ellipse cx="32" cy="20" rx="16" ry="13" fill="#475569" stroke="#0f172a" stroke-width="2"/>
-  <circle cx="26" cy="18" r="3.5" fill="#22c55e"/>
-  <circle cx="38" cy="18" r="3.5" fill="#22c55e"/>
-  <path d="M 28 26 Q 32 34 26 44" stroke="#22c55e" stroke-width="3" fill="none"/>
-  <path d="M 36 26 Q 32 34 38 44" stroke="#22c55e" stroke-width="3" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="regenHide" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#365314"/>
+      <stop offset="55%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <radialGradient id="bioGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#16a34a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Swamp-Stone Torso Infused with Bioluminescent Vines -->
+  <path d="M 11 20 L 53 20 L 47 49 L 17 49 Z" fill="url(#regenHide)" stroke="#090d16" stroke-width="1.8"/>
+
+  <!-- Glowing Regeneration Rune Carved in Chest -->
+  <circle cx="32" cy="34" r="9" fill="url(#bioGlow)"/>
+  <polygon points="32,25 38,34 32,43 26,34" fill="none" stroke="#4ade80" stroke-width="2"/>
+  <circle cx="32" cy="34" r="2.5" fill="#bbf7d0"/>
+  <!-- Spreading Emerald Veins -->
+  <path d="M 26 34 L 18 30 M 38 34 L 46 30 M 28 40 L 21 46 M 36 40 L 43 46" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round"/>
+
+  <!-- Living Moss Shoulder Spires -->
+  <polygon points="4,22 12,12 21,19 18,31 6,30" fill="#15803d" stroke="#090d16" stroke-width="1.5"/>
+  <polygon points="60,22 52,12 43,19 46,31 58,30" fill="#15803d" stroke="#090d16" stroke-width="1.5"/>
+  <circle cx="12" cy="21" r="2" fill="#86efac"/>
+  <circle cx="52" cy="21" r="2" fill="#86efac"/>
+
+  <!-- Vine-Wrapped Arms -->
+  <rect x="5" y="29" width="10" height="15" rx="3" fill="url(#regenHide)" stroke="#090d16" stroke-width="1.5"/>
+  <path d="M 5 33 L 15 36 M 5 39 L 15 42" stroke="#4ade80" stroke-width="1.5"/>
+  <rect x="49" y="29" width="10" height="15" rx="3" fill="url(#regenHide)" stroke="#090d16" stroke-width="1.5"/>
+  <path d="M 49 36 L 59 33 M 49 42 L 59 39" stroke="#4ade80" stroke-width="1.5"/>
+
+  <!-- Ancient Swamp-Troll Head with Moss Crown -->
+  <path d="M 17 10 C 17 3 47 3 47 10 L 45 26 L 19 26 Z" fill="url(#regenHide)" stroke="#090d16" stroke-width="1.7"/>
+  <path d="M 16 11 Q 32 1 48 11 L 42 15 L 32 11 L 22 15 Z" fill="#166534" stroke="#090d16" stroke-width="1.3"/>
+
+  <!-- Toxic Emerald Glowing Eyes -->
+  <circle cx="25" cy="17" r="3.2" fill="#4ade80" stroke="#090d16" stroke-width="1"/>
+  <circle cx="39" cy="17" r="3.2" fill="#4ade80" stroke="#090d16" stroke-width="1"/>
+  <circle cx="25" cy="17" r="1.2" fill="#ffffff"/>
+  <circle cx="39" cy="17" r="1.2" fill="#ffffff"/>
+
+  <!-- Mossy Beard & Tusks -->
+  <path d="M 20 23 L 44 23 L 39 31 L 32 28 L 25 31 Z" fill="#15803d" stroke="#090d16" stroke-width="1.2"/>
+  <polygon points="21,23 24,17 27,23" fill="#d9f99d" stroke="#090d16" stroke-width="1"/>
+  <polygon points="43,23 40,17 37,23" fill="#d9f99d" stroke="#090d16" stroke-width="1"/>
 </svg>

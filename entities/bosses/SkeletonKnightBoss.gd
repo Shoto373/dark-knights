@@ -66,10 +66,12 @@ func _ready() -> void:
 		if boss_sprite == null:
 			boss_sprite = Sprite2D.new()
 			boss_sprite.name = "BossSprite"
-			boss_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			boss_sprite.scale = Vector2(1.9, 1.9)
+			boss_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+			boss_sprite.scale = Vector2(1.05, 1.05)
 			visuals.add_child(boss_sprite)
 		boss_sprite.texture = boss_tex
+		if shield_rect != null:
+			shield_rect.self_modulate = Color(1, 1, 1, 0)
 		for child in visuals.get_children():
 			if child != boss_sprite and child != shield_rect and child is CanvasItem:
 				(child as CanvasItem).visible = false

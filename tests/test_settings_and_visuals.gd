@@ -55,7 +55,7 @@ func test_sprite_generator_enemies_textures() -> void:
 	for t in types:
 		var tex: Texture2D = SpriteGenerator.get_enemy_texture(t)
 		assert_not_null(tex, "Текстура врага '%s' сгенерирована" % t)
-		assert_eq(tex.get_width(), 32)
+		assert_eq(tex.get_width(), 48)
 
 func test_sprite_generator_bosses_textures() -> void:
 	var bosses: Array[String] = [
@@ -65,7 +65,7 @@ func test_sprite_generator_bosses_textures() -> void:
 	for b in bosses:
 		var tex: Texture2D = SpriteGenerator.get_boss_texture(b)
 		assert_not_null(tex, "Текстура босса '%s' сгенерирована" % b)
-		assert_eq(tex.get_width(), 48)
+		assert_eq(tex.get_width(), 64)
 
 func test_settings_dialog_instantiation() -> void:
 	var sd_scene: PackedScene = load("res://ui/SettingsDialog.tscn")

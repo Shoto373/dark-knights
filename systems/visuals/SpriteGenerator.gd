@@ -207,6 +207,201 @@ static func get_enemy_texture(enemy_type: String) -> Texture2D:
 	_cache[key] = tex
 	return tex
 
+static func get_enemy_foot_texture(enemy_type: String) -> Texture2D:
+	var clean: String = enemy_type.trim_prefix("enemy_")
+	match clean:
+		"boulder_thrower": clean = "stone_thrower"
+		"frost_wraith": clean = "ice_wraith"
+		"necromancer": clean = "necromancer_acolyte"
+		"crossbowman": clean = "skeleton_crossbowman"
+	
+	# Парящие, ползающие и бесформенные монстры не имеют отдельных двуногих стоп
+	if clean in ["ice_wraith", "void_specter", "fallen_archon", "necromancer_acolyte", "lich_apprentice", "flame_cultist", "ice_spider", "lava_slime", "fire_elemental", "magma_worm"]:
+		return null
+	
+	var key: String = "enemy_foot_" + clean
+	if _cache.has(key):
+		return _cache[key]
+	
+	var img: Image = Image.create(14, 14, false, Image.FORMAT_RGBA8)
+	img.fill(C_TRANSPARENT)
+	
+	if clean.begins_with("goblin"):
+		# Кожаный походный сапог гоблина с обмотками
+		_fill_rect(img, 4, 3, 6, 7, Color(0.22, 0.12, 0.06))
+		_fill_rect(img, 5, 4, 4, 5, Color(0.45, 0.25, 0.12))
+		_fill_rect(img, 3, 9, 8, 3, Color(0.14, 0.08, 0.04))
+		_set_p(img, 6, 5, Color(0.75, 0.6, 0.25))
+	elif clean.begins_with("troll") or clean == "stone_thrower":
+		# Тяжелая каменная лапа тролля с когтями
+		_fill_rect(img, 3, 3, 8, 8, Color(0.2, 0.24, 0.3))
+		_fill_rect(img, 4, 4, 6, 6, Color(0.42, 0.48, 0.56))
+		_fill_rect(img, 2, 9, 10, 3, Color(0.28, 0.33, 0.4))
+		_set_p(img, 3, 11, Color(0.85, 0.85, 0.8))
+		_set_p(img, 7, 11, Color(0.85, 0.85, 0.8))
+		_set_p(img, 10, 11, Color(0.85, 0.85, 0.8))
+	elif clean.begins_with("skeleton"):
+		# Костяная стопа скелета в поножах
+		_fill_rect(img, 5, 2, 4, 7, Color(0.55, 0.6, 0.68))
+		_fill_rect(img, 4, 9, 7, 3, Color(0.88, 0.9, 0.94))
+		_set_p(img, 5, 10, C_DARK_OUTLINE)
+		_set_p(img, 8, 10, C_DARK_OUTLINE)
+	elif clean == "knight_guard" or clean == "purgatory_executioner":
+		# Стальной латный сабатон
+		_fill_rect(img, 4, 3, 6, 7, Color(0.12, 0.15, 0.22))
+		_fill_rect(img, 5, 4, 4, 6, Color(0.5, 0.56, 0.66))
+		_fill_rect(img, 3, 9, 8, 3, Color(0.22, 0.26, 0.34))
+		_set_p(img, 6, 5, Color(0.95, 0.8, 0.25))
+	elif clean == "frost_golem":
+		# Глыба вечного льда
+		_fill_rect(img, 3, 3, 8, 9, Color(0.05, 0.25, 0.45))
+		_fill_rect(img, 4, 4, 6, 7, Color(0.35, 0.8, 1.0))
+		_set_p(img, 5, 5, Color(1, 1, 1))
+	else:
+		# Когтистая теневая лапа (химера и др.)
+		_fill_rect(img, 4, 4, 6, 7, Color(0.18, 0.08, 0.28))
+		_fill_rect(img, 3, 9, 8, 3, Color(0.32, 0.12, 0.48))
+		_set_p(img, 4, 11, Color(0.5, 1.0, 0.4))
+		_set_p(img, 9, 11, Color(0.5, 1.0, 0.4))
+	
+	var f_tex: ImageTexture = ImageTexture.create_from_image(img)
+	_cache[key] = f_tex
+	return f_tex
+
+static func get_enemy_weapon_texture(enemy_type: String) -> Texture2D:
+	var clean: String = enemy_type.trim_prefix("enemy_")
+	match clean:
+		"boulder_thrower": clean = "stone_thrower"
+		"frost_wraith": clean = "ice_wraith"
+		"necromancer": clean = "necromancer_acolyte"
+		"crossbowman": clean = "skeleton_crossbowman"
+	
+	if clean in ["troll_regenerator", "ice_wraith", "frost_golem", "ice_spider", "lava_slime", "fire_elemental", "magma_worm", "shadow_chimera", "void_specter"]:
+		return null
+	
+	var key: String = "enemy_weapon_" + clean
+	if _cache.has(key):
+		return _cache[key]
+	
+	var img: Image = Image.create(28, 28, false, Image.FORMAT_RGBA8)
+	img.fill(C_TRANSPARENT)
+	
+	match clean:
+		"goblin_slasher":
+			# Зазубренный тесак гоблина (ориентирован вправо вдоль оси X)
+			_fill_rect(img, 4, 12, 6, 4, Color(0.38, 0.2, 0.08))
+			_fill_rect(img, 9, 10, 2, 8, Color(0.25, 0.28, 0.32))
+			_fill_rect(img, 11, 9, 14, 7, C_DARK_OUTLINE)
+			_fill_rect(img, 11, 10, 13, 5, Color(0.65, 0.72, 0.8))
+			_fill_rect(img, 12, 10, 11, 2, Color(0.9, 0.94, 1.0))
+			_set_p(img, 15, 9, C_TRANSPARENT)
+			_set_p(img, 19, 9, C_TRANSPARENT)
+			_fill_rect(img, 20, 13, 4, 2, Color(0.75, 0.12, 0.12))
+		"goblin_archer":
+			# Изогнутый костяной лук со стрелой
+			_fill_rect(img, 10, 4, 3, 20, Color(0.55, 0.35, 0.16))
+			_fill_rect(img, 8, 3, 3, 4, Color(0.85, 0.82, 0.72))
+			_fill_rect(img, 8, 21, 3, 4, Color(0.85, 0.82, 0.72))
+			_fill_rect(img, 7, 5, 1, 18, Color(0.85, 0.9, 0.95))
+			_fill_rect(img, 7, 13, 16, 2, Color(0.65, 0.45, 0.22))
+			_fill_rect(img, 22, 12, 4, 4, Color(0.85, 0.2, 0.2))
+		"goblin_shaman":
+			# Шаманский посох с черепом и изумрудным пламенем
+			_fill_rect(img, 4, 13, 16, 3, Color(0.42, 0.25, 0.12))
+			_fill_rect(img, 19, 10, 6, 8, Color(0.92, 0.9, 0.82))
+			_fill_rect(img, 21, 11, 2, 2, Color(0.2, 0.95, 0.4))
+			_fill_rect(img, 21, 15, 2, 2, Color(0.2, 0.95, 0.4))
+		"goblin_brute":
+			# Огромная шипованная железная булава
+			_fill_rect(img, 3, 13, 12, 3, Color(0.45, 0.28, 0.14))
+			_fill_rect(img, 14, 8, 10, 12, C_DARK_OUTLINE)
+			_fill_rect(img, 15, 9, 8, 10, Color(0.35, 0.4, 0.48))
+			_fill_rect(img, 18, 5, 2, 3, Color(0.88, 0.92, 0.96))
+			_fill_rect(img, 18, 20, 2, 3, Color(0.88, 0.92, 0.96))
+			_fill_rect(img, 24, 13, 3, 2, Color(0.88, 0.92, 0.96))
+		"troll_brute":
+			# Каменная палица тролля, перетянутая ремнями
+			_fill_rect(img, 3, 12, 9, 4, Color(0.38, 0.24, 0.12))
+			_fill_rect(img, 11, 7, 15, 14, C_DARK_OUTLINE)
+			_fill_rect(img, 12, 8, 13, 12, Color(0.45, 0.5, 0.58))
+			_fill_rect(img, 14, 9, 9, 4, Color(0.65, 0.72, 0.8))
+			_fill_rect(img, 16, 8, 2, 12, Color(0.35, 0.2, 0.08))
+		"stone_thrower":
+			# Рунический метательный валун
+			_fill_rect(img, 8, 7, 14, 14, C_DARK_OUTLINE)
+			_fill_rect(img, 9, 8, 12, 12, Color(0.52, 0.48, 0.44))
+			_fill_rect(img, 11, 10, 8, 4, Color(0.72, 0.68, 0.62))
+			_fill_rect(img, 13, 13, 4, 2, Color(1.0, 0.75, 0.2))
+		"skeleton_swordsman":
+			# Древний зазубренный клинок нежити
+			_fill_rect(img, 3, 13, 5, 3, Color(0.35, 0.2, 0.12))
+			_fill_rect(img, 8, 9, 2, 11, Color(0.75, 0.62, 0.22))
+			_fill_rect(img, 10, 11, 16, 6, C_DARK_OUTLINE)
+			_fill_rect(img, 10, 12, 15, 4, Color(0.68, 0.76, 0.86))
+			_fill_rect(img, 11, 12, 13, 2, Color(0.92, 0.96, 1.0))
+		"skeleton_crossbowman":
+			# Тяжелый стальной арбалет
+			_fill_rect(img, 4, 13, 18, 3, Color(0.42, 0.26, 0.14))
+			_fill_rect(img, 16, 5, 3, 19, Color(0.55, 0.62, 0.72))
+			_fill_rect(img, 12, 12, 13, 2, Color(0.95, 0.82, 0.3))
+		"necromancer_acolyte":
+			# Посох некроманта с фиолетовым кристаллом души
+			_fill_rect(img, 3, 13, 16, 2, Color(0.25, 0.18, 0.32))
+			_fill_rect(img, 18, 9, 7, 10, Color(0.85, 0.72, 0.25))
+			_fill_rect(img, 20, 11, 4, 6, Color(0.78, 0.35, 1.0))
+			_set_p(img, 21, 13, Color(1, 1, 1))
+		"knight_guard":
+			# Рыцарское копье-протазан смерти
+			_fill_rect(img, 2, 13, 14, 3, Color(0.3, 0.34, 0.42))
+			_fill_rect(img, 15, 9, 12, 10, C_DARK_OUTLINE)
+			_fill_rect(img, 16, 10, 10, 8, Color(0.65, 0.74, 0.86))
+			_fill_rect(img, 17, 13, 9, 2, Color(0.3, 0.85, 1.0))
+		"lich_apprentice":
+			# Кристаллический ледяной скипетр
+			_fill_rect(img, 4, 13, 15, 2, Color(0.45, 0.7, 0.9))
+			_fill_rect(img, 18, 9, 8, 10, Color(0.2, 0.75, 1.0))
+			_fill_rect(img, 20, 11, 4, 6, Color(0.9, 0.98, 1.0))
+		"flame_cultist":
+			# Пламенный жертвенный крис-кинжал
+			_fill_rect(img, 5, 13, 5, 3, Color(0.4, 0.12, 0.08))
+			_fill_rect(img, 10, 10, 2, 9, Color(0.92, 0.75, 0.2))
+			_fill_rect(img, 12, 11, 13, 6, Color(0.95, 0.35, 0.1))
+			_fill_rect(img, 13, 12, 11, 3, Color(1.0, 0.88, 0.3))
+		"fallen_archon":
+			# Золотое астральное копье архонта
+			_fill_rect(img, 2, 13, 15, 2, Color(0.85, 0.7, 0.25))
+			_fill_rect(img, 17, 9, 10, 10, Color(0.98, 0.88, 0.4))
+			_fill_rect(img, 19, 12, 7, 4, Color(1.0, 1.0, 1.0))
+		"purgatory_executioner":
+			# Двуручная секира палача Чистилища
+			_fill_rect(img, 2, 13, 16, 3, Color(0.28, 0.18, 0.22))
+			_fill_rect(img, 14, 4, 12, 20, C_DARK_OUTLINE)
+			_fill_rect(img, 15, 5, 10, 18, Color(0.55, 0.6, 0.68))
+			_fill_rect(img, 21, 6, 4, 16, Color(0.95, 0.2, 0.35))
+			_fill_rect(img, 23, 7, 2, 14, Color(1.0, 0.75, 0.8))
+	
+	var w_tex: ImageTexture = ImageTexture.create_from_image(img)
+	_cache[key] = w_tex
+	return w_tex
+
+static func get_bone_pile_texture() -> Texture2D:
+	if _cache.has("bone_pile"):
+		return _cache["bone_pile"]
+	var img: Image = Image.create(36, 24, false, Image.FORMAT_RGBA8)
+	img.fill(C_TRANSPARENT)
+	# Груда костей, ребер и треснувший череп с мерцающим синим огоньком
+	_fill_rect(img, 4, 14, 28, 7, C_DARK_OUTLINE)
+	_fill_rect(img, 5, 15, 26, 5, Color(0.75, 0.78, 0.82))
+	_fill_rect(img, 8, 12, 20, 4, Color(0.88, 0.9, 0.94))
+	# Череп сверху кучи
+	_fill_rect(img, 13, 6, 10, 9, C_DARK_OUTLINE)
+	_fill_rect(img, 14, 7, 8, 7, Color(0.94, 0.96, 0.98))
+	_fill_rect(img, 15, 10, 2, 2, Color(0.2, 0.85, 1.0))
+	_fill_rect(img, 19, 10, 2, 2, Color(0.2, 0.85, 1.0))
+	var tex: ImageTexture = ImageTexture.create_from_image(img)
+	_cache["bone_pile"] = tex
+	return tex
+
 static func get_boss_texture(boss_id: String) -> Texture2D:
 	var key: String = "boss_" + boss_id
 	if _cache.has(key):

@@ -1,7 +1,42 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64">
-  <ellipse cx="32" cy="24" rx="16" ry="12" fill="#7c2d12" stroke="#ea580c" stroke-width="2"/>
-  <ellipse cx="32" cy="38" rx="14" ry="9" fill="#451a03" stroke="#ea580c" stroke-width="2"/>
-  <ellipse cx="32" cy="48" rx="10" ry="7" fill="#291103" stroke="#ea580c" stroke-width="2"/>
-  <circle cx="26" cy="22" r="3" fill="#facc15"/>
-  <circle cx="38" cy="22" r="3" fill="#facc15"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="wormArmor" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="50%" stop-color="#57534e"/>
+      <stop offset="100%" stop-color="#090d16"/>
+    </linearGradient>
+    <radialGradient id="wormMaw" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#facc15"/>
+      <stop offset="80%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Lava Eruption Pool & Cracked Earth -->
+  <ellipse cx="32" cy="53" rx="26" ry="7" fill="#ea580c" stroke="#450a0a" stroke-width="1.5"/>
+  <ellipse cx="32" cy="53" rx="20" ry="4.5" fill="#facc15"/>
+
+  <!-- Coiled Segmented Obsidian Carapace Rings -->
+  <path d="M 14 51 C 12 42 52 42 50 51 Z" fill="url(#wormArmor)" stroke="#090d16" stroke-width="1.6"/>
+  <path d="M 16 44 C 14 34 50 34 48 44 Z" fill="url(#wormArmor)" stroke="#f97316" stroke-width="1.4"/>
+  <path d="M 17 36 C 15 26 49 26 47 36 Z" fill="url(#wormArmor)" stroke="#f97316" stroke-width="1.4"/>
+
+  <!-- Lateral Chitin Spikes -->
+  <polygon points="15,42 6,38 14,47" fill="#fb923c" stroke="#090d16" stroke-width="1.1"/>
+  <polygon points="49,42 58,38 50,47" fill="#fb923c" stroke="#090d16" stroke-width="1.1"/>
+  <polygon points="16,33 7,28 15,38" fill="#fb923c" stroke="#090d16" stroke-width="1.1"/>
+  <polygon points="48,33 57,28 49,38" fill="#fb923c" stroke="#090d16" stroke-width="1.1"/>
+
+  <!-- Armored Head Segment & Ring of Razor Mandibles -->
+  <circle cx="32" cy="21" r="15" fill="url(#wormArmor)" stroke="#090d16" stroke-width="1.8"/>
+  <circle cx="32" cy="21" r="10.5" fill="url(#wormMaw)" stroke="#450a0a" stroke-width="1.2"/>
+
+  <!-- Ring of Inward-Pointing Teeth & Side Mandibles -->
+  <polygon points="32,9 29,15 35,15" fill="#fef9c3" stroke="#090d16" stroke-width="0.9"/>
+  <polygon points="32,33 29,27 35,27" fill="#fef9c3" stroke="#090d16" stroke-width="0.9"/>
+  <polygon points="20,21 26,18 26,24" fill="#fef9c3" stroke="#090d16" stroke-width="0.9"/>
+  <polygon points="44,21 38,18 38,24" fill="#fef9c3" stroke="#090d16" stroke-width="0.9"/>
+  <polygon points="16,13 7,5 12,18" fill="#e7e5e4" stroke="#090d16" stroke-width="1.3"/>
+  <polygon points="48,13 57,5 52,18" fill="#e7e5e4" stroke="#090d16" stroke-width="1.3"/>
 </svg>

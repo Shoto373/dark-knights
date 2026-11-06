@@ -733,3 +733,24 @@
     - `test_lich_king_boss_teleport_state_lock_and_watchdog`
     - `test_pause_menu_artifacts_inventory_cards_rendering`
   - Итог GUT: **16 тестовых скриптов, 135 тестов, 2335 проверок, 100% успех (0 ошибок)**.
+
+## Спринт 21: Полный редизайн всех 23 мобов и 6 боссов (HD SVG, шарнирные ноги, прицельное оружие и хореография атак) [ВЫПОЛНЕН]
+- [x] **Полный редизайн всех 23 SVG-спрайтов врагов (`assets/sprites/enemy_*.svg`, `48x48`, `viewBox="0 0 64 64"`)**:
+  - Заменены старые примитивные геометрические фигуры 32x32 на детализированную темную готическую векторную графику с многоступенчатыми линейными и радиальными градиентами, тенями, броней, костями, плащами и светящимися глазами:
+    - *Темница гоблинов*: `goblin_slasher`, `goblin_archer`, `goblin_shaman`, `goblin_brute`.
+    - *Ущелье троллей*: `troll_brute`, `stone_thrower`, `troll_regenerator`.
+    - *Замок Рыцаря-скелета*: `skeleton_swordsman`, `skeleton_crossbowman`, `necromancer_acolyte`, `knight_guard`.
+    - *Мир холода*: `ice_wraith`, `frost_golem`, `lich_apprentice`, `ice_spider`.
+    - *Мир огня*: `lava_slime`, `fire_elemental`, `flame_cultist`, `magma_worm`.
+    - *Чистилище*: `shadow_chimera`, `fallen_archon`, `void_specter`, `purgatory_executioner`.
+- [x] **Полный редизайн всех 6 SVG-спрайтов боссов (`assets/sprites/boss_*.svg`, `64x64`, `viewBox="0 0 96 96"`) и настройка фильтрации (`entities/bosses/*.gd`)**:
+  - Перерисованы `boss_goblin.svg`, `boss_troll.svg`, `boss_skeleton.svg`, `boss_lich.svg`, `boss_dragon.svg`, `boss_purgatory.svg` в высоком разрешении 64x64 с коронами, трофейными черепами, руническими клинками, расправленными крыльями и нимбами Чистилища.
+  - Во всех 6 скриптах боссов включена линейная фильтрация `TEXTURE_FILTER_LINEAR` и откалиброван масштаб под новые 64x64 текстуры.
+- [x] **Шарнирная анимация ног, оружия и кучи костей врагов (`systems/visuals/SpriteGenerator.gd`, `entities/enemies/EnemyBase.gd`)**:
+  - Добавлены генераторы процедурных стоп `get_enemy_foot_texture(enemy_type)` (14x14 сапоги/лапы по биомам для двуногих мобов), оружия `get_enemy_weapon_texture(enemy_type)` (28x28 тесаки, костяные луки, посохи шаманов и некромантов, шипованные палицы, рунические валуны, мечи нежити, арбалеты, алебарды, ледяные скипетры, пламенные крисы, астральные копья и секиры палача) и кучи костей `get_bone_pile_texture()` (36x24).
+  - В `EnemyBase.gd` создана система шарнирных ног (`LeftFoot`, `RightFoot`) с противофазным шагом и наклоном стопы, а также поворотный узел оружия (`EnemyWeaponPivot` + `EnemyWeaponSprite`), непрерывно целящийся в игрока.
+  - Переработана хореография всех ударов (`_melee_attack`, `_heavy_attack`, `_executioner_cleave`, стрелковые/магические атаки): 3 фазы (замах с отводом оружия назад -> резкий рубящий взмах с дугой `spawn_slash_arc` и ударной волной `spawn_shockwave` -> возврат в стойку) и отдача стрелкового/магического оружия (`_animate_ranged_weapon_recoil`).
+  - Добавлен физический наклон и сплющивание при получении урона (`_flash_red`), а также честная визуализация рассыпания скелета-мечника в дрожащую кучу костей (`_collapse_into_bones` / `_reassemble_skeleton`).
+- [x] **Тестирование**:
+  - Добавлен комплексный тест `test_enemy_visual_overhaul_and_articulated_combat` в `tests/test_audit_and_polish.gd` и обновлены проверки разрешения текстур в `tests/test_settings_and_visuals.gd`.
+  - Итог GUT: **16 тестовых скриптов, 136 тестов, 2357 проверок, 100% успех (0 ошибок)**.

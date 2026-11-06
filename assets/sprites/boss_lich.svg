@@ -1,9 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 96 96">
-  <path d="M 32 36 C 8 20, 2 54, 16 70 Z" fill="#0284c7" opacity="0.8"/>
-  <path d="M 64 36 C 88 20, 94 54, 80 70 Z" fill="#0284c7" opacity="0.8"/>
-  <path d="M 32 34 L 64 34 L 70 88 L 26 88 Z" fill="#075985" stroke="#082f49" stroke-width="3"/>
-  <polygon points="32,20 38,6 48,16 58,6 64,20" fill="#bae6fd" stroke="#0369a1" stroke-width="2"/>
-  <circle cx="48" cy="28" r="13" fill="#0369a1"/>
-  <circle cx="42" cy="28" r="3.5" fill="#e0f2fe"/>
-  <circle cx="54" cy="28" r="3.5" fill="#e0f2fe"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="lichWing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.9"/>
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="lichRegalia" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0c4a6e"/>
+      <stop offset="60%" stop-color="#082f49"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Crystalline Arch-Lich Spectral Ice Wings -->
+  <polygon points="28,34 2,12 6,36 16,40 4,56 26,52" fill="url(#lichWing)" stroke="#bae6fd" stroke-width="1.8"/>
+  <polygon points="68,34 94,12 90,36 80,40 92,56 70,52" fill="url(#lichWing)" stroke="#bae6fd" stroke-width="1.8"/>
+
+  <!-- Levitating Dark-Sapphire Arch-Lich Vestments -->
+  <path d="M 24 32 L 72 32 L 78 86 L 62 78 L 48 90 L 34 78 L 18 86 Z" fill="url(#lichRegalia)" stroke="#38bdf8" stroke-width="2"/>
+  <!-- Silver & Frost-Crystal Stole -->
+  <path d="M 38 34 L 34 80 M 58 34 L 62 80" stroke="#bae6fd" stroke-width="2.5"/>
+  <polygon points="48,38 56,50 48,62 40,50" fill="#38bdf8" stroke="#ffffff" stroke-width="1.8"/>
+  <circle cx="48" cy="50" r="3.5" fill="#ffffff"/>
+
+  <!-- Towering Glacial Spike Pauldrons -->
+  <polygon points="10,30 22,14 32,28 26,42 12,40" fill="url(#lichWing)" stroke="#082f49" stroke-width="1.8"/>
+  <polygon points="86,30 74,14 64,28 70,42 84,40" fill="url(#lichWing)" stroke="#082f49" stroke-width="1.8"/>
+
+  <!-- Staff of Absolute Zero Held on Right -->
+  <line x1="82" y1="14" x2="82" y2="88" stroke="#cbd5e1" stroke-width="4"/>
+  <polygon points="82,2 91,14 82,26 73,14" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.8"/>
+  <circle cx="82" cy="14" r="4" fill="#ffffff"/>
+
+  <!-- Arch-Lich Skull & Frozen Crown of Domination -->
+  <path d="M 30 18 C 30 8 66 8 66 18 L 62 36 L 34 36 Z" fill="#cbd5e1" stroke="#082f49" stroke-width="2.2"/>
+  <polygon points="26,18 30,3 40,13 48,0 56,13 66,3 70,18" fill="#bae6fd" stroke="#0369a1" stroke-width="2"/>
+  <polygon points="48,3 52,12 48,17 44,12" fill="#ffffff"/>
+
+  <!-- Blazing Cryo-Fire Eyes -->
+  <rect x="34" y="22" width="10" height="5" rx="1.5" fill="#082f49"/>
+  <rect x="52" y="22" width="10" height="5" rx="1.5" fill="#082f49"/>
+  <circle cx="39" cy="24.5" r="2.8" fill="#7dd3fc"/><circle cx="39" cy="24.5" r="1.2" fill="#ffffff"/>
+  <circle cx="57" cy="24.5" r="2.8" fill="#7dd3fc"/><circle cx="57" cy="24.5" r="1.2" fill="#ffffff"/>
 </svg>

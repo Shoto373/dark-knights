@@ -692,3 +692,48 @@ func test_pause_menu_artifacts_inventory_cards_rendering() -> void:
 	
 	# Очищаем за собой
 	GameState.inventory_items.clear()
+
+func test_enemy_visual_overhaul_and_articulated_combat() -> void:
+	# 1. Проверяем, что все SVG мобов обновлены до 48x48, а боссов — до 64x64
+	var slasher_tex: Texture2D = SpriteGenerator.get_enemy_texture("goblin_slasher")
+	assert_not_null(slasher_tex, "Текстура goblin_slasher загружена")
+	assert_eq(slasher_tex.get_width(), 48, "Ширина текстуры моба 48px (HD SVG)")
+	assert_eq(slasher_tex.get_height(), 48, "Высота текстуры моба 48px (HD SVG)")
+	
+	var boss_tex: Texture2D = SpriteGenerator.get_boss_texture("goblin_boss")
+	assert_not_null(boss_tex, "Текстура босса загружена")
+	assert_eq(boss_tex.get_width(), 64, "Ширина текстуры босса 64px (HD SVG)")
+	assert_eq(boss_tex.get_height(), 64, "Высота текстуры босса 64px (HD SVG)")
+	
+	# 2. Проверяем процедурные стопы, оружие и кучу костей
+	assert_not_null(SpriteGenerator.get_enemy_foot_texture("goblin_slasher"), "Двуногий моб получает текстуру стопы")
+	assert_null(SpriteGenerator.get_enemy_foot_texture("ice_wraith"), "Парящий дух не получает текстуру стоп")
+	assert_not_null(SpriteGenerator.get_enemy_weapon_texture("skeleton_swordsman"), "Вооружённый моб получает текстуру оружия")
+	assert_not_null(SpriteGenerator.get_bone_pile_texture(), "Текстура кучи костей генерируется корректно")
+	
+	# 3. Проверяем сборку вооружённого скелета-мечника и рассыпание в кости
+	var enemy_scene: PackedScene = load("res://entities/enemies/EnemyBase.tscn")
+	var skel: EnemyBase = enemy_scene.instantiate() as EnemyBase
+	add_child_autofree(skel)
+	var skel_data: EnemyData = load("res://data/enemies/skeleton_swordsman.tres") as EnemyData
+	skel.setup_from_data(skel_data)
+	
+	assert_not_null(skel._left_foot, "У скелета создана левая стопа LeftFoot")
+	assert_not_null(skel._right_foot, "У скелета создана правая стопа RightFoot")
+	assert_not_null(skel._weapon_pivot, "У скелета создан шарнир оружия EnemyWeaponPivot")
+	assert_not_null(skel._weapon_sprite, "У скелета создан спрайт меча EnemyWeaponSprite")
+	
+	# Вызываем рассыпание в кости
+	skel._collapse_into_bones()
+	assert_true(skel.is_collapsed, "Скелет перешёл в состояние кучи костей")
+	assert_false(skel._left_foot.visible, "При рассыпании в кости стопы скрываются")
+	assert_false(skel._weapon_pivot.visible, "При рассыпании в кости оружие скрывается")
+	var enemy_sprite: Sprite2D = skel.visuals.get_node_or_null("EnemySprite") as Sprite2D
+	assert_eq(enemy_sprite.texture, SpriteGenerator.get_bone_pile_texture(), "Спрайт скелета заменён на кучу костей")
+	
+	# Восстановление из костей
+	skel._reassemble_skeleton()
+	assert_false(skel.is_collapsed, "Скелет собрался обратно")
+	assert_true(skel._left_foot.visible, "Стопы снова видны")
+	assert_true(skel._weapon_pivot.visible, "Оружие снова видно")
+	assert_eq(enemy_sprite.texture, SpriteGenerator.get_enemy_texture("skeleton_swordsman"), "Спрайт скелета восстановлен")

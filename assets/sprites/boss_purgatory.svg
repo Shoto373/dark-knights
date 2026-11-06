@@ -1,9 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 96 96">
-  <path d="M 34 36 C 8 16, 4 56, 16 78 Z" fill="#2e1065" stroke="#7e22ce" stroke-width="2"/>
-  <path d="M 62 36 C 88 16, 92 56, 80 78 Z" fill="#2e1065" stroke="#7e22ce" stroke-width="2"/>
-  <path d="M 30 36 L 66 36 L 72 88 L 24 88 Z" fill="#18042b" stroke="#a855f7" stroke-width="3"/>
-  <polygon points="32,18 40,4 48,14 56,4 64,18" fill="#facc15" stroke="#7e22ce" stroke-width="2"/>
-  <circle cx="48" cy="28" r="14" fill="#090117" stroke="#c084fc" stroke-width="2"/>
-  <circle cx="41" cy="28" r="4.5" fill="#f97316"/>
-  <circle cx="55" cy="28" r="4.5" fill="#38bdf8"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="lordVoid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b0764"/>
+      <stop offset="55%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#030712"/>
+    </linearGradient>
+    <linearGradient id="eclipseGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="50%" stop-color="#eab308"/>
+      <stop offset="100%" stop-color="#713f12"/>
+    </linearGradient>
+    <radialGradient id="dualityCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="45%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#581c87" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 6 Grand Cosmic Seraph-Void Wings (Left Fire-Tinted, Right Frost-Tinted, Center Abyssal) -->
+  <polygon points="30,30 1,6 4,28 16,32 2,48 26,44" fill="#581c87" stroke="#f97316" stroke-width="1.8"/>
+  <polygon points="66,30 95,6 92,28 80,32 94,48 70,44" fill="#1e3a8a" stroke="#38bdf8" stroke-width="1.8"/>
+  <polygon points="28,44 6,58 14,72 30,58" fill="#3b0764" stroke="#c084fc" stroke-width="1.5"/>
+  <polygon points="68,44 90,58 82,72 66,58" fill="#3b0764" stroke="#c084fc" stroke-width="1.5"/>
+
+  <!-- Sovereign Robes & Astral Armor of Purgatory -->
+  <path d="M 24 30 L 72 30 L 78 88 L 60 80 L 48 92 L 36 80 L 18 88 Z" fill="url(#lordVoid)" stroke="url(#eclipseGold)" stroke-width="2.2"/>
+
+  <!-- Cosmic Heart of Duality in Chest -->
+  <circle cx="48" cy="48" r="14" fill="url(#dualityCore)"/>
+  <polygon points="48,35 58,48 48,61 38,48" fill="#1e0536" stroke="url(#eclipseGold)" stroke-width="2"/>
+  <polygon points="48,39 54,48 48,57 42,48" fill="#f3e8ff"/>
+
+  <!-- EclipsePauldrons -->
+  <polygon points="10,28 24,16 32,30 26,42 12,40" fill="url(#lordVoid)" stroke="url(#eclipseGold)" stroke-width="2"/>
+  <polygon points="86,28 72,16 64,30 70,42 84,40" fill="url(#lordVoid)" stroke="url(#eclipseGold)" stroke-width="2"/>
+
+  <!-- Sovereign Head & Crown of the Eclipse -->
+  <path d="M 30 16 C 30 6 66 6 66 16 L 62 35 L 34 35 Z" fill="#090414" stroke="url(#eclipseGold)" stroke-width="2.2"/>
+  <polygon points="25,16 30,1 40,12 48,0 56,12 66,1 71,16" fill="url(#eclipseGold)" stroke="#090d16" stroke-width="2"/>
+  <circle cx="48" cy="9" r="3.2" fill="#c084fc" stroke="#ffffff" stroke-width="1"/>
+
+  <!-- Heterochromatic Eyes of Fire (Left) & Frost (Right) -->
+  <polygon points="34,21 44,23 43,28 34,26" fill="#f97316"/>
+  <circle cx="39" cy="24.5" r="1.5" fill="#fef08a"/>
+  <polygon points="62,21 52,23 53,28 62,26" fill="#38bdf8"/>
+  <circle cx="57" cy="24.5" r="1.5" fill="#ffffff"/>
 </svg>

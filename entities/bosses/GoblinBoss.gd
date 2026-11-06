@@ -62,8 +62,8 @@ func _ready() -> void:
 		if boss_sprite == null:
 			boss_sprite = Sprite2D.new()
 			boss_sprite.name = "BossSprite"
-			boss_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-			boss_sprite.scale = Vector2(1.8, 1.8)
+			boss_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+			boss_sprite.scale = Vector2(1.0, 1.0)
 			visuals.add_child(boss_sprite)
 		boss_sprite.texture = boss_tex
 		for child in visuals.get_children():
