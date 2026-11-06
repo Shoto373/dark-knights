@@ -64,25 +64,34 @@ func setup(data: RoomData, biome: BiomeData = null, all_rooms: Dictionary = {}) 
 func _apply_biome_theme() -> void:
 	if current_biome == null:
 		return
+	
+	# 1. Цветовая палитра подложки пола под биом
 	var floor_node: ColorRect = get_node_or_null("Floor") as ColorRect
 	if floor_node != null:
 		floor_node.color = current_biome.floor_theme_color
 	var arena_floor: ColorRect = get_node_or_null("ArenaFloor") as ColorRect
 	if arena_floor != null:
 		arena_floor.color = current_biome.floor_theme_color.lightened(0.06)
+	
+	# 2. Уникальный детальный тайл пола для КАЖДОГО биома
 	var floor_tiles: TextureRect = get_node_or_null("%FloorTiles") as TextureRect
 	if floor_tiles != null:
-		floor_tiles.modulate = current_biome.floor_theme_color.lightened(0.35)
+		var b_tile: Texture2D = SpriteGenerator.get_biome_tile_texture(current_biome.id)
+		if b_tile != null:
+			floor_tiles.texture = b_tile
+		floor_tiles.modulate = Color(1.0, 1.0, 1.0, 0.92)
+	
+	# 3. Уникальная каменная кладка стен биома
 	var walls_node: Node2D = get_node_or_null("VisualWalls") as Node2D
 	if walls_node != null:
-		var brick_tex: Texture2D = preload("res://assets/sprites/dungeon_wall_brick.svg")
+		var b_wall: Texture2D = SpriteGenerator.get_biome_wall_texture(current_biome.id)
 		for wall in walls_node.get_children():
 			if wall is ColorRect:
 				wall.color = current_biome.wall_theme_color
-				if wall.get_node_or_null("BrickOverlay") == null and brick_tex != null:
-					var tex_rect: TextureRect = TextureRect.new()
+				var tex_rect: TextureRect = wall.get_node_or_null("BrickOverlay") as TextureRect
+				if tex_rect == null:
+					tex_rect = TextureRect.new()
 					tex_rect.name = "BrickOverlay"
-					tex_rect.texture = brick_tex
 					tex_rect.stretch_mode = TextureRect.STRETCH_TILE
 					tex_rect.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 					tex_rect.anchor_right = 1.0
@@ -91,10 +100,27 @@ func _apply_biome_theme() -> void:
 					tex_rect.offset_top = 0
 					tex_rect.offset_right = 0
 					tex_rect.offset_bottom = 0
-					tex_rect.modulate = current_biome.wall_theme_color.lightened(0.28)
 					wall.add_child(tex_rect)
+				if b_wall != null:
+					tex_rect.texture = b_wall
+				tex_rect.modulate = Color(1.0, 1.0, 1.0, 0.95)
 	
-	# Биомный оттенок настенных факелов
+	# 4. Уникальные угловые колонны биома
+	var pillars_node: Node2D = get_node_or_null("%Pillars") as Node2D
+	var b_pillar: Texture2D = SpriteGenerator.get_biome_pillar_texture(current_biome.id)
+	if pillars_node != null and b_pillar != null:
+		for p in pillars_node.get_children():
+			var spr: Sprite2D = p.get_node_or_null("Sprite2D") as Sprite2D
+			if spr != null:
+				spr.texture = b_pillar
+
+	# 5. Уникальный напольный герб биома (для всех комнат босса, сокровищниц и стартовых залов)
+	_setup_biome_floor_crest()
+
+	# 6. Уникальные архитектурные акценты биома (ковры, ручьи лавы, кристаллические осколки)
+	_setup_biome_environmental_decor()
+	
+	# 7. Биомный оттенок настенных факелов
 	var torches_node: Node2D = get_node_or_null("%Torches") as Node2D
 	if torches_node != null:
 		var flame_tint: Color = Color(1.0, 0.72, 0.3, 0.35)
@@ -120,13 +146,92 @@ func _apply_biome_theme() -> void:
 				t_light.name = "TorchLight"
 				t.add_child(t_light)
 
-	# Атмосферные частицы биома
+	# 8. Атмосферные частицы биома
 	var atmosphere: BiomeAtmosphere = get_node_or_null("BiomeAtmosphere") as BiomeAtmosphere
 	if atmosphere == null:
 		atmosphere = BiomeAtmosphere.new()
 		atmosphere.name = "BiomeAtmosphere"
 		add_child(atmosphere)
 	atmosphere.setup_biome(current_biome.id)
+
+func _setup_biome_floor_crest() -> void:
+	if current_biome == null or has_node("BiomeFloorCrest"):
+		return
+	var b_crest: Texture2D = SpriteGenerator.get_biome_crest_texture(current_biome.id)
+	if b_crest == null:
+		return
+	var crest_spr: Sprite2D = Sprite2D.new()
+	crest_spr.name = "BiomeFloorCrest"
+	crest_spr.texture = b_crest
+	crest_spr.position = Vector2(640, 360)
+	var is_boss: bool = (room_data != null and room_data.room_type == RoomData.RoomType.BOSS)
+	var scale_factor: float = 2.4 if is_boss else 1.8
+	crest_spr.scale = Vector2(scale_factor, scale_factor)
+	crest_spr.modulate = Color(1.0, 1.0, 1.0, 0.85 if is_boss else 0.5)
+	crest_spr.z_index = -1
+	add_child(crest_spr)
+
+func _setup_biome_environmental_decor() -> void:
+	if current_biome == null:
+		return
+	var decor_container: Node2D = get_node_or_null("BiomeDecorContainer") as Node2D
+	if decor_container == null:
+		decor_container = Node2D.new()
+		decor_container.name = "BiomeDecorContainer"
+		decor_container.z_index = -1
+		add_child(decor_container)
+	else:
+		return
+	
+	match current_biome.id:
+		"skeleton_castle":
+			# В замке скелетов расстилаем королевскую багровую ковровую дорожку с золотой каймой
+			var carpet_tex: Texture2D = SpriteGenerator.get_castle_carpet_texture()
+			if carpet_tex != null:
+				var carpet: TextureRect = TextureRect.new()
+				carpet.texture = carpet_tex
+				carpet.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
+				carpet.stretch_mode = TextureRect.STRETCH_TILE
+				carpet.position = Vector2(590, 60)
+				carpet.size = Vector2(100, 600)
+				carpet.modulate = Color(1.0, 1.0, 1.0, 0.88)
+				decor_container.add_child(carpet)
+		"fire_world", "fire_mines":
+			# В мире огня добавляем светящиеся прожилки раскаленной лавы
+			for pos in [Vector2(280, 220), Vector2(1000, 220), Vector2(280, 500), Vector2(1000, 500)]:
+				var lava_glow: Sprite2D = Sprite2D.new()
+				lava_glow.texture = EffectsHelper.get_spark_texture()
+				lava_glow.position = pos
+				lava_glow.scale = Vector2(4.5, 3.0)
+				lava_glow.modulate = Color(1.0, 0.4, 0.1, 0.35)
+				decor_container.add_child(lava_glow)
+		"frost_world", "frost_caves":
+			# В мире холода добавляем морозные пятна синего льда в углах
+			for pos in [Vector2(240, 180), Vector2(1040, 180), Vector2(240, 540), Vector2(1040, 540)]:
+				var ice_sheen: Sprite2D = Sprite2D.new()
+				ice_sheen.texture = EffectsHelper.get_spark_texture()
+				ice_sheen.position = pos
+				ice_sheen.scale = Vector2(5.0, 3.5)
+				ice_sheen.modulate = Color(0.2, 0.7, 1.0, 0.32)
+				decor_container.add_child(ice_sheen)
+		"goblin_dungeon":
+			# В темнице гоблинов добавляем пятна сырости и ядовитой плесени
+			for pos in [Vector2(320, 240), Vector2(960, 480)]:
+				var slime_spot: Sprite2D = Sprite2D.new()
+				slime_spot.texture = EffectsHelper.get_spark_texture()
+				slime_spot.position = pos
+				slime_spot.scale = Vector2(4.0, 2.5)
+				slime_spot.modulate = Color(0.1, 0.8, 0.3, 0.28)
+				decor_container.add_child(slime_spot)
+		"purgatory":
+			# В Чистилище добавляем сияющие эфирные пустотные пятна
+			for pos in [Vector2(340, 200), Vector2(940, 200), Vector2(340, 520), Vector2(940, 520)]:
+				var void_glow: Sprite2D = Sprite2D.new()
+				void_glow.texture = EffectsHelper.get_spark_texture()
+				void_glow.position = pos
+				void_glow.scale = Vector2(4.2, 3.2)
+				void_glow.modulate = Color(0.8, 0.3, 1.0, 0.35)
+				decor_container.add_child(void_glow)
 
 func _setup_biome_hazards() -> void:
 	if current_biome == null:

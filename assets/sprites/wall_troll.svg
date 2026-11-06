@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 64 32">
+  <!-- Canyon Rock Face Bed -->
+  <rect width="64" height="32" fill="#140b05"/>
+
+  <!-- Row 1: Jagged Boulder Blocks -->
+  <polygon points="1,1 30,2 29,15 1,14" fill="#362518" stroke="#120803" stroke-width="1"/>
+  <line x1="2" y1="2" x2="29" y2="3" stroke="#543c29" stroke-width="0.8"/>
+  <path d="M 12 3 L 18 9 L 14 15" stroke="#1c1007" stroke-width="0.8" fill="none"/>
+
+  <polygon points="32,2 62,1 61,15 32,14" fill="#3b291a" stroke="#120803" stroke-width="1"/>
+  <line x1="33" y1="3" x2="61" y2="2" stroke="#5c422c" stroke-width="0.8"/>
+  <circle cx="50" cy="7" r="1.3" fill="#854d0e"/>
+
+  <!-- Row 2: Staggered Strata Rock with Vine Root -->
+  <polygon points="1,17 15,16 14,31 1,30" fill="#2d1d11" stroke="#120803" stroke-width="1"/>
+  <line x1="2" y1="18" x2="14" y2="17" stroke="#4a311e" stroke-width="0.8"/>
+
+  <polygon points="17,16 47,17 46,31 16,31" fill="#382619" stroke="#120803" stroke-width="1"/>
+  <line x1="18" y1="17" x2="46" y2="18" stroke="#593e29" stroke-width="0.8"/>
+  <!-- Root hanging down rock -->
+  <path d="M 28 14 Q 32 22 26 31" stroke="#92400e" stroke-width="1.1" fill="none"/>
+  <path d="M 30 20 Q 36 26 34 31" stroke="#b45309" stroke-width="0.7" fill="none"/>
+
+  <polygon points="49,17 62,16 62,31 48,31" fill="#302013" stroke="#120803" stroke-width="1"/>
+  <line x1="50" y1="18" x2="61" y2="17" stroke="#4d3420" stroke-width="0.8"/>
+</svg>

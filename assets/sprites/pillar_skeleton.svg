@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">
+  <!-- Skeleton Castle Gothic Column -->
+  <defs>
+    <linearGradient id="skelPillarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f131c"/>
+      <stop offset="30%" stop-color="#1e2638"/>
+      <stop offset="70%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f131c"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="24" cy="60" rx="18" ry="4" fill="#000000" opacity="0.6"/>
+
+  <!-- Stepped Gothic Plinth -->
+  <rect x="5" y="54" width="38" height="7" rx="1.5" fill="#090c13" stroke="#040508" stroke-width="1.2"/>
+  <rect x="8" y="49" width="32" height="5" fill="#182030" stroke="#040508" stroke-width="1"/>
+  <!-- Gold trim band -->
+  <line x1="8" y1="50" x2="40" y2="50" stroke="#ca8a04" stroke-width="1"/>
+
+  <!-- Fluted Column Shaft -->
+  <rect x="12" y="18" width="24" height="31" fill="url(#skelPillarGrad)" stroke="#040508" stroke-width="1.2"/>
+  <line x1="16" y1="18" x2="16" y2="49" stroke="#090d14" stroke-width="1.2"/>
+  <line x1="20" y1="18" x2="20" y2="49" stroke="#475569" stroke-width="0.9"/>
+  <line x1="24" y1="18" x2="24" y2="49" stroke="#090d14" stroke-width="1.2"/>
+  <line x1="28" y1="18" x2="28" y2="49" stroke="#475569" stroke-width="0.9"/>
+  <line x1="32" y1="18" x2="32" y2="49" stroke="#090d14" stroke-width="1.2"/>
+
+  <!-- Carved Skull Capital -->
+  <polygon points="6,18 42,18 45,9 3,9" fill="#1b2333" stroke="#040508" stroke-width="1.2"/>
+  <!-- Skull face relief -->
+  <circle cx="24" cy="13" r="4.5" fill="#e2e8f0" stroke="#0f172a" stroke-width="0.8"/>
+  <circle cx="22" cy="12.5" r="1.1" fill="#090d16"/>
+  <circle cx="26" cy="12.5" r="1.1" fill="#090d16"/>
+  <line x1="23" y1="15" x2="23" y2="17" stroke="#090d16" stroke-width="0.8"/>
+  <line x1="25" y1="15" x2="25" y2="17" stroke="#090d16" stroke-width="0.8"/>
+
+  <!-- Top Crown Plate -->
+  <rect x="4" y="5" width="40" height="4" rx="1" fill="#090c13" stroke="#040508" stroke-width="1"/>
+  <line x1="5" y1="6" x2="43" y2="6" stroke="#eab308" stroke-width="0.8"/>
+</svg>

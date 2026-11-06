@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="lavaVein" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="50%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fde047"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Magma Lake Abyss Base -->
+  <rect width="64" height="64" fill="#180402"/>
+
+  <!-- Glowing Magma Channels Between Basalt Plates -->
+  <path d="M 0 31 Q 30 35 64 29" stroke="url(#lavaVein)" stroke-width="3" fill="none"/>
+  <path d="M 0 31 Q 30 35 64 29" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.75"/>
+
+  <path d="M 31 0 Q 28 32 33 64" stroke="url(#lavaVein)" stroke-width="3" fill="none"/>
+  <path d="M 31 0 Q 28 32 33 64" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.75"/>
+
+  <!-- Basalt Plate 1 (Top Left) -->
+  <polygon points="2,2 29,2 28,29 2,28" fill="#1c0f0e" stroke="#450a0a" stroke-width="1.3"/>
+  <line x1="3" y1="3" x2="28" y2="3" stroke="#2c1817" stroke-width="1"/>
+  <!-- Glowing Fissure inside plate -->
+  <path d="M 8 6 L 12 14 L 8 20" stroke="#f97316" stroke-width="1.1" fill="none"/>
+  <path d="M 12 14 L 18 16" stroke="#fde047" stroke-width="0.8" fill="none"/>
+  <circle cx="20" cy="10" r="1.2" fill="#ef4444" opacity="0.8"/>
+
+  <!-- Basalt Plate 2 (Top Right) -->
+  <polygon points="34,2 62,3 61,28 34,28" fill="#180c0b" stroke="#450a0a" stroke-width="1.3"/>
+  <line x1="35" y1="3" x2="61" y2="4" stroke="#2c1817" stroke-width="1"/>
+  <!-- Burning Coal Embers -->
+  <circle cx="44" cy="12" r="1.8" fill="#ef4444"/>
+  <circle cx="44" cy="12" r="0.9" fill="#fde047"/>
+  <circle cx="52" cy="18" r="1.3" fill="#ea580c"/>
+  <path d="M 46 22 L 56 16" stroke="#b91c1c" stroke-width="0.8"/>
+
+  <!-- Basalt Plate 3 (Bottom Left) -->
+  <polygon points="2,34 29,33 28,61 3,62" fill="#1a0d0c" stroke="#450a0a" stroke-width="1.3"/>
+  <line x1="3" y1="35" x2="28" y2="34" stroke="#2c1817" stroke-width="1"/>
+  <!-- Surface heat crack -->
+  <path d="M 14 38 L 18 48 L 12 56" stroke="#f97316" stroke-width="1.2" fill="none"/>
+  <circle cx="18" cy="48" r="1.4" fill="#fef08a"/>
+
+  <!-- Basalt Plate 4 (Bottom Right) -->
+  <polygon points="35,33 62,32 61,61 36,61" fill="#1f100f" stroke="#450a0a" stroke-width="1.3"/>
+  <line x1="36" y1="34" x2="61" y2="33" stroke="#331c1a" stroke-width="1"/>
+  <path d="M 44 42 L 50 46 L 56 42" stroke="#dc2626" stroke-width="1.0" fill="none"/>
+  <circle cx="50" cy="46" r="1.5" fill="#f97316"/>
+  <circle cx="50" cy="46" r="0.7" fill="#ffffff"/>
+</svg>

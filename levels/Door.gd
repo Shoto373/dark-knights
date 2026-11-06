@@ -132,18 +132,41 @@ func _draw_door_arch(sz: Vector2, is_horizontal: bool, theme_col: Color) -> void
 	var arch_bg: Color = Color(0.11, 0.12, 0.16)
 	var arch_rim: Color = Color(0.22, 0.24, 0.3)
 	
+	if Engine.has_singleton("GameState") or is_instance_valid(GameState):
+		var bio: BiomeData = GameState.get_current_biome()
+		if bio != null:
+			match bio.id:
+				"goblin_dungeon":
+					arch_bg = Color(0.08, 0.14, 0.11)
+					arch_rim = Color(0.16, 0.32, 0.24)
+				"troll_gorge":
+					arch_bg = Color(0.22, 0.14, 0.08)
+					arch_rim = Color(0.38, 0.26, 0.16)
+				"skeleton_castle":
+					arch_bg = Color(0.10, 0.12, 0.18)
+					arch_rim = Color(0.28, 0.34, 0.46)
+				"frost_world", "frost_caves":
+					arch_bg = Color(0.05, 0.22, 0.35)
+					arch_rim = Color(0.22, 0.65, 0.88)
+				"fire_world", "fire_mines":
+					arch_bg = Color(0.22, 0.08, 0.06)
+					arch_rim = Color(0.65, 0.25, 0.12)
+				"purgatory":
+					arch_bg = Color(0.14, 0.05, 0.25)
+					arch_rim = Color(0.55, 0.22, 0.85)
+
 	if target_room_type == RoomData.RoomType.BOSS:
-		arch_bg = Color(0.13, 0.07, 0.09)
-		arch_rim = Color(0.38, 0.14, 0.16)
+		arch_bg = arch_bg.blend(Color(0.2, 0.04, 0.06, 0.5))
+		arch_rim = Color(0.85, 0.2, 0.25)
 	elif target_room_type == RoomData.RoomType.TREASURE:
-		arch_bg = Color(0.16, 0.14, 0.08)
-		arch_rim = Color(0.55, 0.44, 0.18)
+		arch_bg = arch_bg.blend(Color(0.2, 0.16, 0.04, 0.5))
+		arch_rim = Color(0.95, 0.78, 0.2)
 	elif target_room_type == RoomData.RoomType.SHOP:
-		arch_bg = Color(0.14, 0.11, 0.08)
-		arch_rim = Color(0.42, 0.32, 0.16)
+		arch_bg = arch_bg.blend(Color(0.18, 0.12, 0.04, 0.5))
+		arch_rim = Color(0.4, 0.95, 0.55)
 	elif target_room_type == RoomData.RoomType.ELITE:
-		arch_bg = Color(0.12, 0.08, 0.16)
-		arch_rim = Color(0.42, 0.2, 0.5)
+		arch_bg = arch_bg.blend(Color(0.15, 0.04, 0.2, 0.5))
+		arch_rim = Color(0.75, 0.25, 0.95)
 
 	var full_r: Rect2 = Rect2(-sz / 2.0, sz)
 	draw_rect(full_r, arch_bg)

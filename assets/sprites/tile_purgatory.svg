@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="voidVein" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="50%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Cosmos Void Abyss Base -->
+  <rect width="64" height="64" fill="#090314"/>
+
+  <!-- Swirling Astral Energy Channels -->
+  <path d="M 0 32 Q 32 38 64 30" stroke="url(#voidVein)" stroke-width="2.2" fill="none" opacity="0.85"/>
+  <path d="M 32 0 Q 26 32 34 64" stroke="url(#voidVein)" stroke-width="2.2" fill="none" opacity="0.85"/>
+
+  <!-- Void Monolith Plate 1 (Top Left) -->
+  <polygon points="2,2 29,2 28,29 2,28" fill="#130a21" stroke="#2e1065" stroke-width="1.2"/>
+  <line x1="3" y1="3" x2="28" y2="3" stroke="#3b1d6e" stroke-width="1"/>
+  <!-- Arcane Rune Glyph -->
+  <circle cx="16" cy="15" r="7" fill="none" stroke="#a855f7" stroke-width="0.8" opacity="0.8"/>
+  <polygon points="16,10 20,18 12,18" fill="none" stroke="#e9d5ff" stroke-width="0.8"/>
+  <circle cx="16" cy="15" r="1.3" fill="#f472b6"/>
+
+  <!-- Void Monolith Plate 2 (Top Right) -->
+  <polygon points="35,2 62,3 61,28 35,29" fill="#11091e" stroke="#2e1065" stroke-width="1.2"/>
+  <line x1="36" y1="3" x2="61" y2="4" stroke="#371a66" stroke-width="1"/>
+  <!-- Constellation Dots & Lines -->
+  <line x1="42" y1="10" x2="54" y2="16" stroke="#9333ea" stroke-width="0.7"/>
+  <line x1="54" y1="16" x2="48" y2="24" stroke="#9333ea" stroke-width="0.7"/>
+  <circle cx="42" cy="10" r="1.5" fill="#e9d5ff"/>
+  <circle cx="54" cy="16" r="1.8" fill="#ffffff"/>
+  <circle cx="48" cy="24" r="1.4" fill="#c084fc"/>
+
+  <!-- Void Monolith Plate 3 (Bottom Left) -->
+  <polygon points="2,35 29,34 28,61 3,62" fill="#10081c" stroke="#2e1065" stroke-width="1.2"/>
+  <line x1="3" y1="36" x2="28" y2="35" stroke="#32175c" stroke-width="1"/>
+  <!-- Ethereal Fissure -->
+  <path d="M 8 40 L 16 48 L 12 56" stroke="#c084fc" stroke-width="1.1" fill="none"/>
+  <circle cx="16" cy="48" r="1.6" fill="#f472b6"/>
+
+  <!-- Void Monolith Plate 4 (Bottom Right) -->
+  <polygon points="35,34 62,33 61,61 36,62" fill="#140b24" stroke="#2e1065" stroke-width="1.2"/>
+  <line x1="36" y1="35" x2="61" y2="34" stroke="#3e2073" stroke-width="1"/>
+  <polygon points="48,40 56,48 48,56 40,48" fill="none" stroke="#a855f7" stroke-width="0.9"/>
+  <circle cx="48" cy="48" r="2" fill="#ffffff" opacity="0.9"/>
+</svg>

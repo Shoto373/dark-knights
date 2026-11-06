@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 64 32">
+  <!-- Goblin Prison Dungeon Wall Base -->
+  <rect width="64" height="32" fill="#040b08"/>
+
+  <!-- Row 1: Rough Damp Stones -->
+  <rect x="1" y="1" width="30" height="14" rx="1.5" fill="#13231e" stroke="#06140f" stroke-width="1"/>
+  <line x1="2" y1="2" x2="30" y2="2" stroke="#224238" stroke-width="0.8"/>
+  <circle cx="6" cy="7" r="1.5" fill="#166534" opacity="0.8"/>
+
+  <rect x="33" y="1" width="30" height="14" rx="1.5" fill="#152721" stroke="#06140f" stroke-width="1"/>
+  <line x1="34" y1="2" x2="62" y2="2" stroke="#26473c" stroke-width="0.8"/>
+  <!-- Iron Chain Ring embedded in wall -->
+  <circle cx="48" cy="8" r="4" fill="none" stroke="#78350f" stroke-width="1.2"/>
+  <circle cx="48" cy="8" r="2.5" fill="#080f0c"/>
+  <rect x="47" y="1" width="2" height="4" fill="#92400e"/>
+
+  <!-- Row 2: Staggered Prison Stones with Slime Streaks -->
+  <rect x="1" y="17" width="14" height="14" rx="1.5" fill="#11201b" stroke="#06140f" stroke-width="1"/>
+  <line x1="2" y1="18" x2="14" y2="18" stroke="#1d3b31" stroke-width="0.8"/>
+
+  <rect x="17" y="17" width="30" height="14" rx="1.5" fill="#172b24" stroke="#06140f" stroke-width="1"/>
+  <line x1="18" y1="18" x2="46" y2="18" stroke="#2a4f42" stroke-width="0.8"/>
+  <!-- Slime trickle down -->
+  <path d="M 28 17 L 27 23 L 30 27 L 29 31" stroke="#22c55e" stroke-width="0.9" fill="none" opacity="0.8"/>
+
+  <rect x="49" y="17" width="14" height="14" rx="1.5" fill="#12241e" stroke="#06140f" stroke-width="1"/>
+  <line x1="50" y1="18" x2="62" y2="18" stroke="#224238" stroke-width="0.8"/>
+</svg>

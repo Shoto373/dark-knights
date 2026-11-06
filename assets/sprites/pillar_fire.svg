@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">
+  <!-- Fire World Volcanic Brazier Pillar -->
+  <defs>
+    <linearGradient id="firePillarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#140605"/>
+      <stop offset="40%" stop-color="#24110f"/>
+      <stop offset="70%" stop-color="#361a17"/>
+      <stop offset="100%" stop-color="#120504"/>
+    </linearGradient>
+    <radialGradient id="coalGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="35%" stop-color="#fde047"/>
+      <stop offset="70%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </radialGradient>
+  </defs>
+
+  <ellipse cx="24" cy="60" rx="18" ry="4" fill="#000000" opacity="0.6"/>
+
+  <!-- Basalt Plinth -->
+  <rect x="5" y="52" width="38" height="8" rx="2" fill="#140605" stroke="#450a0a" stroke-width="1.2"/>
+  <rect x="8" y="48" width="32" height="5" fill="#1f0d0b" stroke="#450a0a" stroke-width="1"/>
+
+  <!-- Basalt Column with Magma Channels -->
+  <rect x="12" y="16" width="24" height="32" fill="url(#firePillarGrad)" stroke="#450a0a" stroke-width="1.2"/>
+  
+  <!-- Glowing Molten Lava Fissure running down column -->
+  <path d="M 24 16 L 22 24 L 26 32 L 20 40 L 25 48" stroke="#f97316" stroke-width="2.2" fill="none"/>
+  <path d="M 24 16 L 22 24 L 26 32 L 20 40 L 25 48" stroke="#fef08a" stroke-width="1.0" fill="none"/>
+
+  <!-- Heavy Brazier Bowl / Top Basin -->
+  <polygon points="4,16 44,16 40,8 8,8" fill="#29110f" stroke="#450a0a" stroke-width="1.2"/>
+  
+  <!-- Glowing Burning Embers & Flames in Bowl -->
+  <ellipse cx="24" cy="8" rx="16" ry="5" fill="url(#coalGlow)"/>
+  <polygon points="16,8 20,1 22,8" fill="#fde047"/>
+  <polygon points="22,8 25,0 27,8" fill="#ffffff"/>
+  <polygon points="27,8 31,2 33,8" fill="#f97316"/>
+</svg>

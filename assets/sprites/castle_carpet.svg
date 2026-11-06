@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Gothic Castle Crimson Velvet Runner -->
+  <defs>
+    <linearGradient id="carpetRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#450a0a"/>
+      <stop offset="15%" stop-color="#881337"/>
+      <stop offset="50%" stop-color="#9f1239"/>
+      <stop offset="85%" stop-color="#881337"/>
+      <stop offset="100%" stop-color="#450a0a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Crimson Velvet Center -->
+  <rect x="4" y="0" width="56" height="64" fill="url(#carpetRed)"/>
+  
+  <!-- Gold Embroidered Edge Borders -->
+  <rect x="4" y="0" width="4" height="64" fill="#ca8a04"/>
+  <rect x="56" y="0" width="4" height="64" fill="#ca8a04"/>
+  <line x1="8" y1="0" x2="8" y2="64" stroke="#fef08a" stroke-width="0.8"/>
+  <line x1="56" y1="0" x2="56" y2="64" stroke="#fef08a" stroke-width="0.8"/>
+
+  <!-- Ornate Golden Fleur-de-lis / Crest motif along center -->
+  <polygon points="32,12 36,20 32,24 28,20" fill="#eab308" opacity="0.85"/>
+  <circle cx="32" cy="20" r="1.5" fill="#fef08a"/>
+
+  <polygon points="32,44 36,52 32,56 28,52" fill="#eab308" opacity="0.85"/>
+  <circle cx="32" cy="52" r="1.5" fill="#fef08a"/>
+</svg>

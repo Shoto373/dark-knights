@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 64 32">
+  <defs>
+    <linearGradient id="wallVoid" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#581c87"/>
+      <stop offset="50%" stop-color="#9333ea"/>
+      <stop offset="100%" stop-color="#c084fc"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Void Bed -->
+  <rect width="64" height="32" fill="#0c0419"/>
+
+  <!-- Ethereal Void Seam -->
+  <line x1="0" y1="16" x2="64" y2="16" stroke="url(#wallVoid)" stroke-width="1.8" opacity="0.85"/>
+  <line x1="32" y1="0" x2="32" y2="16" stroke="url(#wallVoid)" stroke-width="1.5" opacity="0.85"/>
+  <line x1="16" y1="16" x2="16" y2="32" stroke="url(#wallVoid)" stroke-width="1.5" opacity="0.85"/>
+  <line x1="48" y1="16" x2="48" y2="32" stroke="url(#wallVoid)" stroke-width="1.5" opacity="0.85"/>
+
+  <!-- Row 1: Void Monolith Blocks -->
+  <rect x="1" y="1" width="30" height="14" rx="1" fill="#130826" stroke="#2e1065" stroke-width="1"/>
+  <line x1="2" y1="2" x2="30" y2="2" stroke="#3b1d6e" stroke-width="0.8"/>
+  <circle cx="15" cy="8" r="3" fill="none" stroke="#a855f7" stroke-width="0.7"/>
+  <circle cx="15" cy="8" r="1" fill="#f472b6"/>
+
+  <rect x="33" y="1" width="30" height="14" rx="1" fill="#150a29" stroke="#2e1065" stroke-width="1"/>
+  <line x1="34" y1="2" x2="62" y2="2" stroke="#412079" stroke-width="0.8"/>
+  <polygon points="48,4 52,11 44,11" fill="none" stroke="#c084fc" stroke-width="0.7"/>
+
+  <!-- Row 2: Lower Void Blocks -->
+  <rect x="1" y="17" width="14" height="14" rx="1" fill="#110722" stroke="#2e1065" stroke-width="1"/>
+  <line x1="2" y1="18" x2="14" y2="18" stroke="#351963" stroke-width="0.8"/>
+
+  <rect x="17" y="17" width="30" height="14" rx="1" fill="#160b2b" stroke="#2e1065" stroke-width="1"/>
+  <line x1="18" y1="18" x2="46" y2="18" stroke="#44217d" stroke-width="0.8"/>
+  <line x1="24" y1="24" x2="38" y2="24" stroke="#c084fc" stroke-width="0.8" opacity="0.7"/>
+  <circle cx="31" cy="24" r="1.5" fill="#ffffff"/>
+
+  <rect x="49" y="17" width="14" height="14" rx="1" fill="#120824" stroke="#2e1065" stroke-width="1"/>
+  <line x1="50" y1="18" x2="62" y2="18" stroke="#371a66" stroke-width="0.8"/>
+</svg>

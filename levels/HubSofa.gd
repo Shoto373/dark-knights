@@ -69,3 +69,4 @@ func _on_body_exited(body: Node2D) -> void:
 		is_player_resting = false
 		player_ref = null
 		prompt_label.visible = false
+

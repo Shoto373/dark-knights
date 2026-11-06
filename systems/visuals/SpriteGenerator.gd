@@ -563,6 +563,83 @@ static func get_trap_texture(extended: bool) -> Texture2D:
 			return t
 	return null
 
+static func _get_clean_biome_key(biome_id: String) -> String:
+	var b: String = biome_id.to_lower()
+	if b.contains("troll") or b.contains("gorge"):
+		return "troll"
+	elif b.contains("skeleton") or b.contains("castle"):
+		return "skeleton"
+	elif b.contains("frost") or b.contains("ice") or b.contains("cave"):
+		return "frost"
+	elif b.contains("fire") or b.contains("lava") or b.contains("mine"):
+		return "fire"
+	elif b.contains("purgatory") or b.contains("void"):
+		return "purgatory"
+	return "goblin"
+
+static func get_biome_tile_texture(biome_id: String) -> Texture2D:
+	var key: String = _get_clean_biome_key(biome_id)
+	var cache_key: String = "tile_" + key
+	if _cache.has(cache_key):
+		return _cache[cache_key]
+	var path: String = "res://assets/sprites/tile_%s.svg" % key
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache[cache_key] = t
+			return t
+	return get_dungeon_tile_texture()
+
+static func get_biome_wall_texture(biome_id: String) -> Texture2D:
+	var key: String = _get_clean_biome_key(biome_id)
+	var cache_key: String = "wall_" + key
+	if _cache.has(cache_key):
+		return _cache[cache_key]
+	var path: String = "res://assets/sprites/wall_%s.svg" % key
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache[cache_key] = t
+			return t
+	return get_wall_brick_texture()
+
+static func get_biome_pillar_texture(biome_id: String) -> Texture2D:
+	var key: String = _get_clean_biome_key(biome_id)
+	var cache_key: String = "pillar_" + key
+	if _cache.has(cache_key):
+		return _cache[cache_key]
+	var path: String = "res://assets/sprites/pillar_%s.svg" % key
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache[cache_key] = t
+			return t
+	return get_pillar_texture()
+
+static func get_biome_crest_texture(biome_id: String) -> Texture2D:
+	var key: String = _get_clean_biome_key(biome_id)
+	var cache_key: String = "crest_" + key
+	if _cache.has(cache_key):
+		return _cache[cache_key]
+	var path: String = "res://assets/sprites/crest_%s.svg" % key
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache[cache_key] = t
+			return t
+	return get_floor_crest_texture()
+
+static func get_castle_carpet_texture() -> Texture2D:
+	if _cache.has("castle_carpet"):
+		return _cache["castle_carpet"]
+	var path: String = "res://assets/sprites/castle_carpet.svg"
+	if ResourceLoader.exists(path):
+		var t: Texture2D = load(path)
+		if t:
+			_cache["castle_carpet"] = t
+			return t
+	return null
+
 static func get_pillar_texture() -> Texture2D:
 	if _cache.has("pillar_corner"):
 		return _cache["pillar_corner"]

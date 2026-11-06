@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="32" viewBox="0 0 64 32">
+  <defs>
+    <linearGradient id="wallIceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="35%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#03486b"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Blue Ice Wall Bed -->
+  <rect width="64" height="32" fill="#021c29"/>
+
+  <!-- Row 1: Ice Blocks with Icicles -->
+  <rect x="1" y="1" width="30" height="14" rx="2" fill="url(#wallIceGrad)" stroke="#0c4a6e" stroke-width="1"/>
+  <line x1="2" y1="2" x2="30" y2="2" stroke="#e0f2fe" stroke-width="1.1"/>
+  <!-- Hanging Icicles -->
+  <polygon points="6,15 9,15 7.5,23" fill="#bae6fd"/>
+  <polygon points="18,15 22,15 20,26" fill="#e0f2fe"/>
+  <polygon points="26,15 28,15 27,20" fill="#7dd3fc"/>
+
+  <rect x="33" y="1" width="30" height="14" rx="2" fill="url(#wallIceGrad)" stroke="#0c4a6e" stroke-width="1"/>
+  <line x1="34" y1="2" x2="62" y2="2" stroke="#e0f2fe" stroke-width="1.1"/>
+  <polygon points="42,15 45,15 43.5,22" fill="#bae6fd"/>
+  <polygon points="52,15 56,15 54,25" fill="#e0f2fe"/>
+
+  <!-- Row 2: Lower Glacier Shelf -->
+  <rect x="1" y="17" width="14" height="14" rx="2" fill="url(#wallIceGrad)" stroke="#0c4a6e" stroke-width="1"/>
+  <line x1="2" y1="18" x2="14" y2="18" stroke="#bae6fd" stroke-width="0.9"/>
+
+  <rect x="17" y="17" width="30" height="14" rx="2" fill="url(#wallIceGrad)" stroke="#0c4a6e" stroke-width="1"/>
+  <line x1="18" y1="18" x2="46" y2="18" stroke="#bae6fd" stroke-width="0.9"/>
+  <!-- Fracture in block -->
+  <path d="M 26 18 L 30 24 L 28 30" stroke="#f0f9ff" stroke-width="0.8" fill="none"/>
+
+  <rect x="49" y="17" width="14" height="14" rx="2" fill="url(#wallIceGrad)" stroke="#0c4a6e" stroke-width="1"/>
+  <line x1="50" y1="18" x2="62" y2="18" stroke="#bae6fd" stroke-width="0.9"/>
+</svg>

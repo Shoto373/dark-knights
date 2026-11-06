@@ -108,3 +108,4 @@ func _update_broadcast_text() -> void:
 	
 	broadcast_label.text = "%s\n%s" % [title_text, body_text]
 	broadcast_label.add_theme_color_override("font_color", ch["color"])
+

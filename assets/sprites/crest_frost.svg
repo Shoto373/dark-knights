@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <!-- Frost World Glacial Mandala Crest -->
+  <defs>
+    <radialGradient id="frostCrestAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#0284c7" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#082f49" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="48" cy="48" r="44" fill="url(#frostCrestAura)"/>
+  
+  <!-- Outer Crystalline Ice Ring -->
+  <circle cx="48" cy="48" r="40" fill="none" stroke="#0284c7" stroke-width="2.5"/>
+  <circle cx="48" cy="48" r="32" fill="none" stroke="#7dd3fc" stroke-width="1.2" stroke-dasharray="4,4"/>
+
+  <!-- 8-Pointed Snowflake Fractal Blades -->
+  <!-- 4 Cardinal Spikes -->
+  <polygon points="48,8 52,24 48,20 44,24" fill="#e0f2fe" stroke="#0369a1" stroke-width="0.8"/>
+  <polygon points="48,88 52,72 48,76 44,72" fill="#e0f2fe" stroke="#0369a1" stroke-width="0.8"/>
+  <polygon points="8,48 24,52 20,48 24,44" fill="#e0f2fe" stroke="#0369a1" stroke-width="0.8"/>
+  <polygon points="88,48 72,52 76,48 72,44" fill="#e0f2fe" stroke="#0369a1" stroke-width="0.8"/>
+  
+  <!-- 4 Diagonal Spikes -->
+  <polygon points="20,20 32,28 30,24 24,30" fill="#bae6fd" stroke="#0369a1" stroke-width="0.8"/>
+  <polygon points="76,76 64,68 66,72 72,66" fill="#bae6fd" stroke="#0369a1" stroke-width="0.8"/>
+  <polygon points="76,20 64,28 68,24 66,30" fill="#bae6fd" stroke="#0369a1" stroke-width="0.8"/>
+  <polygon points="20,76 32,68 28,72 30,66" fill="#bae6fd" stroke="#0369a1" stroke-width="0.8"/>
+
+  <!-- Center Diamond Sapphire Crystal -->
+  <polygon points="48,32 64,48 48,64 32,48" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="48,36 60,48 48,60 36,48" fill="#38bdf8" stroke="#e0f2fe" stroke-width="1.2"/>
+  <polygon points="48,40 56,48 48,56 40,48" fill="#ffffff" opacity="0.85"/>
+  <circle cx="48" cy="48" r="3" fill="#ffffff"/>
+</svg>

@@ -15,3 +15,4 @@ func _process(delta: float) -> void:
 	if light_glow != null:
 		var pulse: float = 0.85 + sin(_flicker_phase) * 0.12 + randf() * 0.05
 		light_glow.scale = Vector2(2.2, 1.8) * pulse
+

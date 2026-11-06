@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">
+  <!-- Goblin Chieftain Floor Crest -->
+  <defs>
+    <radialGradient id="gobCrestAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#15803d" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#052e16" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="48" cy="48" r="44" fill="url(#gobCrestAura)"/>
+  <!-- Jagged Spiked Iron Ring -->
+  <circle cx="48" cy="48" r="38" fill="none" stroke="#166534" stroke-width="2.5"/>
+  <circle cx="48" cy="48" r="32" fill="none" stroke="#22c55e" stroke-width="1.2" stroke-dasharray="6,4"/>
+
+  <!-- 8 Iron Spikes on Outer Ring -->
+  <polygon points="48,6 51,12 45,12" fill="#78350f"/>
+  <polygon points="48,90 51,84 45,84" fill="#78350f"/>
+  <polygon points="6,48 12,51 12,45" fill="#78350f"/>
+  <polygon points="90,48 84,51 84,45" fill="#78350f"/>
+  <polygon points="18,18 25,23 21,27" fill="#78350f"/>
+  <polygon points="78,78 71,73 75,69" fill="#78350f"/>
+  <polygon points="78,18 73,25 69,21" fill="#78350f"/>
+  <polygon points="18,78 23,71 27,75" fill="#78350f"/>
+
+  <!-- Crossed Bone Daggers -->
+  <line x1="24" y1="24" x2="72" y2="72" stroke="#d6d3d1" stroke-width="4"/>
+  <line x1="24" y1="72" x2="72" y2="24" stroke="#d6d3d1" stroke-width="4"/>
+
+  <!-- Tribal Goblin Skull in Center -->
+  <ellipse cx="48" cy="46" rx="14" ry="12" fill="#e2e8f0" stroke="#064e3b" stroke-width="1.8"/>
+  <polygon points="34,42 22,34 32,48" fill="#4ade80" stroke="#064e3b" stroke-width="1.2"/>
+  <polygon points="62,42 74,34 64,48" fill="#4ade80" stroke="#064e3b" stroke-width="1.2"/>
+  <!-- Eyes -->
+  <circle cx="43" cy="45" r="3" fill="#15803d"/>
+  <circle cx="53" cy="45" r="3" fill="#15803d"/>
+  <!-- Teeth -->
+  <rect x="42" y="54" width="3" height="4" fill="#fef08a"/>
+  <rect x="47" y="54" width="3" height="5" fill="#fef08a"/>
+  <rect x="52" y="54" width="3" height="4" fill="#fef08a"/>
+</svg>

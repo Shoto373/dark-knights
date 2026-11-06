@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="64" viewBox="0 0 48 64">
+  <!-- Purgatory Astral Void Pillar -->
+  <defs>
+    <radialGradient id="voidCrystalGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#f472b6"/>
+      <stop offset="70%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#581c87"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Void Portal Shadow -->
+  <ellipse cx="24" cy="60" rx="18" ry="4" fill="#000000" opacity="0.6"/>
+  <ellipse cx="24" cy="60" rx="12" ry="2.5" fill="#a855f7" opacity="0.3"/>
+
+  <!-- Lower Obsidian Monolith Base -->
+  <polygon points="6,56 42,56 38,44 10,44" fill="#140728" stroke="#3b0764" stroke-width="1.2"/>
+  <line x1="8" y1="45" x2="40" y2="45" stroke="#a855f7" stroke-width="1"/>
+
+  <!-- Mid Gap with Levitation Void Energy -->
+  <!-- Floating Central Void Crystal -->
+  <polygon points="24,20 32,32 24,44 16,32" fill="url(#voidCrystalGlow)" stroke="#c084fc" stroke-width="1.2"/>
+  <polygon points="24,24 28,32 24,40 20,32" fill="#ffffff" opacity="0.65"/>
+  <circle cx="24" cy="32" r="2" fill="#ffffff"/>
+
+  <!-- Floating Arcane Segment Left -->
+  <polygon points="8,26 13,24 13,40 8,38" fill="#1b0a33" stroke="#581c87" stroke-width="1"/>
+  <!-- Floating Arcane Segment Right -->
+  <polygon points="40,26 35,24 35,40 40,38" fill="#1b0a33" stroke="#581c87" stroke-width="1"/>
+
+  <!-- Floating Upper Obsidian Capital -->
+  <polygon points="10,20 38,20 42,8 6,8" fill="#140728" stroke="#3b0764" stroke-width="1.2"/>
+  <polygon points="8,8 40,8 34,2 14,2" fill="#240e44" stroke="#581c87" stroke-width="1"/>
+  <line x1="14" y1="3" x2="34" y2="3" stroke="#f472b6" stroke-width="1"/>
+</svg>

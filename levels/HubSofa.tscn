@@ -60,3 +60,4 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_pill")
 text = "[F] Присесть отдохнуть"
 horizontal_alignment = 1
 vertical_alignment = 1
+
