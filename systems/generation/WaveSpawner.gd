@@ -82,7 +82,8 @@ func spawn_room_enemies(room: DungeonRoom, room_data: RoomData, biome: BiomeData
 				
 				var enemy_inst: EnemyBase = ENEMY_BASE_SCENE.instantiate() as EnemyBase
 				room.enemies_container.add_child(enemy_inst)
-				enemy_inst.position = spawn_points[pt_idx % spawn_points.size()]
+				var raw_pt: Vector2 = spawn_points[pt_idx % spawn_points.size()]
+				enemy_inst.position = Vector2(clampf(raw_pt.x, 140.0, 1140.0), clampf(raw_pt.y, 140.0, 580.0))
 				pt_idx += 1
 				
 				enemy_inst.setup_from_data(candidate)

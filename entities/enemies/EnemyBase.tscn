@@ -93,6 +93,7 @@ unique_name_in_owner = true
 
 [node name="BodyRect" type="ColorRect" parent="Visuals"]
 unique_name_in_owner = true
+visible = false
 offset_left = -9.0
 offset_top = -12.0
 offset_right = 9.0
@@ -100,6 +101,7 @@ offset_bottom = 12.0
 color = Color(0.25, 0.7, 0.3, 1)
 
 [node name="EyeLeft" type="ColorRect" parent="Visuals"]
+visible = false
 offset_left = -6.0
 offset_top = -8.0
 offset_right = -2.0
@@ -107,6 +109,7 @@ offset_bottom = -5.0
 color = Color(0.9, 0.15, 0.15, 1)
 
 [node name="EyeRight" type="ColorRect" parent="Visuals"]
+visible = false
 offset_left = 2.0
 offset_top = -8.0
 offset_right = 6.0

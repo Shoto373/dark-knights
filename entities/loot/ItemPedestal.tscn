@@ -1,9 +1,41 @@
-[gd_scene load_steps=3 format=3 uid="uid://pedestal_item_001"]
+[gd_scene load_steps=5 format=3 uid="uid://pedestal_item_001"]
 
 [ext_resource type="Script" path="res://entities/loot/ItemPedestal.gd" id="1_ped"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_trig"]
 radius = 38.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_name"]
+bg_color = Color(0.05, 0.07, 0.1, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.45, 0.65, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 6.0
+expand_margin_top = 2.0
+expand_margin_right = 6.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost"]
+bg_color = Color(0.05, 0.07, 0.1, 0.94)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.85, 0.3, 0.85)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+expand_margin_left = 6.0
+expand_margin_top = 2.0
+expand_margin_right = 6.0
+expand_margin_bottom = 2.0
 
 [node name="ItemPedestal" type="Area2D"]
 collision_layer = 0
@@ -19,12 +51,13 @@ z_index = 10
 [node name="NameLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
 offset_left = -150.0
-offset_top = -80.0
+offset_top = -84.0
 offset_right = 150.0
-offset_bottom = -58.0
+offset_bottom = -60.0
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 3
+theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_name")
 text = "Предмет"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -32,13 +65,14 @@ vertical_alignment = 1
 [node name="CostLabel" type="Label" parent="UI"]
 unique_name_in_owner = true
 offset_left = -150.0
-offset_top = 22.0
+offset_top = 24.0
 offset_right = 150.0
-offset_bottom = 44.0
+offset_bottom = 48.0
 theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.95)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 12
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_cost")
 text = "[F] Взять"
 horizontal_alignment = 1
 vertical_alignment = 1

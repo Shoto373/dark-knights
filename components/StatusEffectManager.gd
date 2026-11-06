@@ -23,9 +23,14 @@ func _ready() -> void:
 		movement_component = get_parent().get_node_or_null("MovementComponent") as MovementComponent
 	if visuals == null:
 		visuals = get_parent().get_node_or_null("Visuals") as Node2D
+	
+	if health_component != null:
+		health_component.died.connect(clear_all_effects)
 
 func apply_effect(effect: StatusEffect, initial_stacks: int = 1) -> void:
 	if effect == null:
+		return
+	if is_instance_valid(health_component) and health_component.is_dead:
 		return
 	if immunities.has(effect.id):
 		return # Иммунитет к данному типу эффекта
@@ -56,6 +61,11 @@ func _physics_process(delta: float) -> void:
 	process_effects(delta)
 
 func process_effects(delta: float) -> void:
+	if is_instance_valid(health_component) and health_component.is_dead:
+		if not active_effects.is_empty():
+			clear_all_effects()
+		return
+	
 	var expired_ids: Array[String] = []
 	
 	for effect_id in active_effects.keys():

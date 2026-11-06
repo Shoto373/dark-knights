@@ -96,19 +96,19 @@ func set_floating_only(val: bool) -> void:
 	
 	if name_label != null:
 		if floating_only:
-			name_label.offset_top = -68.0
-			name_label.offset_bottom = -46.0
+			name_label.offset_top = -74.0
+			name_label.offset_bottom = -50.0
 		else:
-			name_label.offset_top = -80.0
-			name_label.offset_bottom = -58.0
+			name_label.offset_top = -84.0
+			name_label.offset_bottom = -60.0
 	
 	if cost_label != null:
 		if floating_only:
-			cost_label.offset_top = 10.0
-			cost_label.offset_bottom = 32.0
+			cost_label.offset_top = 18.0
+			cost_label.offset_bottom = 42.0
 		else:
-			cost_label.offset_top = 22.0
-			cost_label.offset_bottom = 44.0
+			cost_label.offset_top = 24.0
+			cost_label.offset_bottom = 48.0
 
 func setup(item: ItemData, price: int = 0, is_blessing: bool = false) -> void:
 	item_data = item
@@ -128,6 +128,10 @@ func _update_display() -> void:
 	var r_col: Color = item_data.get_rarity_color()
 	name_label.add_theme_color_override("font_color", r_col)
 	
+	var name_box: StyleBoxFlat = name_label.get_theme_stylebox("normal") as StyleBoxFlat
+	if name_box != null:
+		name_box.border_color = Color(r_col.r, r_col.g, r_col.b, 0.85)
+	
 	if rarity_glow != null:
 		rarity_glow.visible = false
 	
@@ -140,12 +144,17 @@ func _update_display() -> void:
 		item_sprite.texture = tex
 		item_sprite.scale = Vector2(1.25, 1.25)
 	
+	var cost_box: StyleBoxFlat = cost_label.get_theme_stylebox("normal") as StyleBoxFlat
 	if cost_gold > 0:
 		cost_label.text = "[F] Купить (%d з)" % cost_gold
 		cost_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2))
+		if cost_box != null:
+			cost_box.border_color = Color(1.0, 0.85, 0.2, 0.85)
 	else:
 		cost_label.text = "[F] Взять"
 		cost_label.add_theme_color_override("font_color", Color(0.4, 1.0, 0.5))
+		if cost_box != null:
+			cost_box.border_color = Color(0.4, 1.0, 0.5, 0.85)
 
 func _process(_delta: float) -> void:
 	if item_sprite != null and not is_collected:

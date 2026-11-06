@@ -448,17 +448,48 @@ func _setup_treasure_room() -> void:
 		chest.position = Vector2(640, 360)
 
 func _setup_shop_room() -> void:
+	# Ковер / рунический круг под торговцем
+	var shop_carpet: Sprite2D = Sprite2D.new()
+	shop_carpet.texture = EffectsHelper.get_spark_texture()
+	shop_carpet.scale = Vector2(5.5, 2.4)
+	shop_carpet.modulate = Color(0.85, 0.65, 0.2, 0.35)
+	shop_carpet.position = Vector2(640, 235)
+	objects_container.add_child(shop_carpet)
+	
 	var merchant: Sprite2D = Sprite2D.new()
 	merchant.texture = SpriteGenerator.get_enemy_texture("necromancer")
 	merchant.modulate = Color(1.2, 1.0, 0.6)
 	merchant.position = Vector2(640, 220)
 	objects_container.add_child(merchant)
 	
+	# Стилизованная плашка торговца по центру
 	var label: Label = Label.new()
 	label.text = "СТРАНСТВУЮЩИЙ ТОРГОВЕЦ"
-	label.position = Vector2(560, 185)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.size = Vector2(240, 24)
+	label.position = Vector2(640 - 120, 172)
 	label.add_theme_font_size_override("font_size", 11)
-	label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3))
+	label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.35))
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.95))
+	label.add_theme_constant_override("outline_size", 2)
+	
+	var style: StyleBoxFlat = StyleBoxFlat.new()
+	style.bg_color = Color(0.06, 0.08, 0.13, 0.94)
+	style.border_width_left = 1
+	style.border_width_top = 1
+	style.border_width_right = 1
+	style.border_width_bottom = 1
+	style.border_color = Color(1.0, 0.85, 0.3, 0.85)
+	style.corner_radius_top_left = 4
+	style.corner_radius_top_right = 4
+	style.corner_radius_bottom_right = 4
+	style.corner_radius_bottom_left = 4
+	style.expand_margin_left = 8.0
+	style.expand_margin_top = 2.0
+	style.expand_margin_right = 8.0
+	style.expand_margin_bottom = 2.0
+	label.add_theme_stylebox_override("normal", style)
 	objects_container.add_child(label)
 	
 	var loot_table: LootTable = load("res://data/items/default_loot_table.tres") as LootTable

@@ -22,16 +22,17 @@ func _ready() -> void:
 	collision_layer = 4 # Слой 3: enemies
 	collision_mask = 1  # Слой 1: world
 	
-	health_component.max_health = max_hp
-	health_component.reset(max_hp)
+	if health_component != null:
+		health_component.max_health = max_hp
+		health_component.reset(max_hp)
+		health_component.damaged.connect(_on_damaged)
+		health_component.died.connect(_on_died)
 	
-	hurtbox_component.health_component = health_component
-	hurtbox_component.movement_component = movement_component
-	hurtbox_component.armor = armor
-	hurtbox_component.is_player_hurtbox = false
-	
-	health_component.damaged.connect(_on_damaged)
-	health_component.died.connect(_on_died)
+	if hurtbox_component != null:
+		hurtbox_component.health_component = health_component
+		hurtbox_component.movement_component = movement_component
+		hurtbox_component.armor = armor
+		hurtbox_component.is_player_hurtbox = false
 	
 	var tex: Texture2D = SpriteGenerator.get_target_dummy_texture()
 	if tex != null and dummy_sprite != null:
@@ -40,14 +41,15 @@ func _ready() -> void:
 	_update_hp_bar()
 
 func _physics_process(delta: float) -> void:
-	if health_component.is_dead:
+	if is_instance_valid(health_component) and health_component.is_dead:
 		respawn_timer -= delta
 		if respawn_timer <= 0:
 			_respawn()
 		return
 	
 	# Применение затухания отталкивания
-	movement_component.move(self, Vector2.ZERO, delta)
+	if is_instance_valid(movement_component):
+		movement_component.move(self, Vector2.ZERO, delta)
 
 func _on_damaged(amount: int, current_hp: int, max_health: int) -> void:
 	_update_hp_bar()
@@ -69,9 +71,11 @@ func _flash_and_wobble() -> void:
 	tween.parallel().tween_property(visuals, "modulate", Color.WHITE, 0.15)
 
 func _update_hp_bar() -> void:
-	hp_bar.max_value = health_component.max_health
-	hp_bar.value = health_component.current_health
-	label_hp.text = "%d / %d" % [health_component.current_health, health_component.max_health]
+	if hp_bar != null and health_component != null:
+		hp_bar.max_value = health_component.max_health
+		hp_bar.value = health_component.current_health
+	if label_hp != null and health_component != null:
+		label_hp.text = "%d / %d" % [health_component.current_health, health_component.max_health]
 
 func _respawn() -> void:
 	global_position = initial_position

@@ -409,8 +409,8 @@ static func get_boss_texture(boss_id: String) -> Texture2D:
 		
 	var mapped_name: String = ""
 	match boss_id:
-		"goblin_boss", "boss_goblin": mapped_name = "boss_goblin"
-		"troll_king", "boss_troll": mapped_name = "boss_troll"
+		"goblin_boss", "boss_goblin", "goblin_chieftain", "boss_goblin_chieftain": mapped_name = "boss_goblin"
+		"troll_king", "boss_troll", "boss_troll_king": mapped_name = "boss_troll"
 		"skeleton_knight", "boss_skeleton_knight", "boss_skeleton": mapped_name = "boss_skeleton"
 		"lich_king", "boss_lich_king", "boss_lich": mapped_name = "boss_lich"
 		"dragon", "boss_dragon": mapped_name = "boss_dragon"
@@ -432,17 +432,17 @@ static func get_boss_texture(boss_id: String) -> Texture2D:
 	img.fill(C_TRANSPARENT)
 	
 	match boss_id:
-		"goblin_boss", "boss_goblin":
+		"goblin_boss", "boss_goblin", "goblin_chieftain", "boss_goblin_chieftain":
 			_draw_boss_goblin(img)
-		"troll_king", "boss_troll":
+		"troll_king", "boss_troll", "boss_troll_king":
 			_draw_boss_troll(img)
-		"skeleton_knight", "boss_skeleton_knight":
+		"skeleton_knight", "boss_skeleton_knight", "boss_skeleton":
 			_draw_boss_skeleton(img)
-		"lich_king", "boss_lich_king":
+		"lich_king", "boss_lich_king", "boss_lich":
 			_draw_boss_lich(img)
 		"dragon", "boss_dragon":
 			_draw_boss_dragon(img)
-		"purgatory_lord", "boss_purgatory_lord":
+		"purgatory_lord", "boss_purgatory_lord", "boss_purgatory":
 			_draw_boss_purgatory(img)
 		_:
 			_draw_boss_goblin(img)
@@ -753,19 +753,55 @@ static func _draw_item_shield(img: Image, r_col: Color) -> void:
 	_fill_rect(img, 11, 12, 10, 2, Color(1, 1, 1))
 
 static func _draw_item_ring(img: Image, r_col: Color) -> void:
-	# Внешнее золотое кольцо с объемами
-	_draw_box(img, 7, 9, 18, 18, Color(0.88, 0.7, 0.2))
-	_draw_box(img, 8, 10, 16, 16, Color(1.0, 0.85, 0.35))
-	_fill_rect(img, 10, 12, 12, 12, C_TRANSPARENT)
-	# Оправа и драгоценный камень
-	_fill_rect(img, 13, 5, 6, 5, r_col)
-	_draw_box(img, 12, 4, 8, 7, Color(0.85, 0.7, 0.2))
-	_set_p(img, 14, 6, Color(1, 1, 1)) # Ослепительный блик
-	_set_p(img, 15, 6, Color(1, 1, 1))
-	# Магические искорки вокруг кольца
-	_set_p(img, 5, 8, r_col)
-	_set_p(img, 26, 8, r_col)
-	_set_p(img, 16, 2, Color(1, 1, 1))
+	# Изящное круглое золотое кольцо с металлическими градиентами и ограненным самоцветом
+	var cx: float = 16.0
+	var cy: float = 18.0
+	var r_outer: float = 9.2
+	var r_inner: float = 5.2
+	
+	# Отрисовка круглого тела кольца с освещением
+	for py in range(7, 29):
+		for px in range(5, 27):
+			var dx: float = float(px) - cx
+			var dy: float = float(py) - cy
+			var dist: float = sqrt(dx * dx + dy * dy)
+			
+			if dist >= r_inner and dist <= r_outer:
+				var ang: float = atan2(dy, dx) # от -PI до PI
+				if dist >= r_outer - 0.7 or dist <= r_inner + 0.7:
+					# Внешний и внутренний темный контур
+					_set_p(img, px, py, Color(0.22, 0.14, 0.04, 1.0))
+				elif ang < -0.8 and ang > -2.4:
+					# Верхний левый блик на дуге
+					_set_p(img, px, py, Color(1.0, 0.96, 0.65, 1.0))
+				elif ang > 0.8:
+					# Нижняя теневая часть обода
+					_set_p(img, px, py, Color(0.68, 0.48, 0.12, 1.0))
+				else:
+					# Основной тон полированного золота
+					_set_p(img, px, py, Color(0.92, 0.76, 0.22, 1.0))
+	
+	# Инкрустированная коронка оправы (каст с лапками)
+	_fill_rect(img, 12, 6, 8, 3, Color(0.3, 0.2, 0.05))
+	_fill_rect(img, 13, 7, 6, 2, Color(0.95, 0.8, 0.25))
+	_set_p(img, 12, 5, Color(0.85, 0.7, 0.2)) # левая лапка
+	_set_p(img, 19, 5, Color(0.85, 0.7, 0.2)) # правая лапка
+	
+	# Ограненный сверкающий самоцвет (рубин или камень редкости)
+	_fill_rect(img, 13, 2, 6, 5, r_col.darkened(0.25))
+	_fill_rect(img, 14, 3, 4, 3, r_col)
+	_fill_rect(img, 14, 2, 4, 1, r_col.lightened(0.35))
+	_draw_box(img, 13, 2, 6, 5, Color(0.18, 0.04, 0.04))
+	
+	# Бриллиантовый ослепительный блик
+	_set_p(img, 14, 3, Color(1.0, 1.0, 1.0))
+	_set_p(img, 15, 3, Color(1.0, 1.0, 1.0))
+	_set_p(img, 14, 4, Color(0.95, 0.95, 1.0, 0.8))
+	
+	# Магические мерцающие искорки вокруг камня
+	_set_p(img, 10, 4, Color(r_col.r, r_col.g, r_col.b, 0.9))
+	_set_p(img, 21, 4, Color(r_col.r, r_col.g, r_col.b, 0.9))
+	_set_p(img, 16, 0, Color(1.0, 1.0, 1.0, 0.95))
 
 static func _draw_item_amulet(img: Image, r_col: Color) -> void:
 	# Золотая цепочка
@@ -866,36 +902,83 @@ static func _draw_item_fang(img: Image, r_col: Color) -> void:
 	_fill_rect(img, 15, 22, 2, 4, Color(0.85, 0.1, 0.1)) # Капли крови на кончике
 
 static func _draw_item_crown(img: Image, r_col: Color) -> void:
-	# Корона
-	_draw_box(img, 6, 12, 20, 10, Color(0.85, 0.7, 0.2))
-	_fill_rect(img, 7, 13, 18, 8, Color(0.95, 0.82, 0.25))
-	# Зубцы
-	_fill_rect(img, 7, 8, 3, 5, Color(0.95, 0.82, 0.25))
-	_fill_rect(img, 14, 6, 4, 7, Color(0.95, 0.82, 0.25))
-	_fill_rect(img, 22, 8, 3, 5, Color(0.95, 0.82, 0.25))
-	# Самоцветы на зубцах
-	_set_p(img, 8, 7, r_col)
-	_set_p(img, 15, 5, r_col)
-	_set_p(img, 16, 5, r_col)
-	_set_p(img, 23, 7, r_col)
+	# Готическая золотая корона с бархатной шапкой и ограненными самоцветами
+	_fill_rect(img, 7, 14, 18, 9, Color(0.28, 0.05, 0.08)) # Внутренний пурпурно-рубиновый бархат
+	_draw_box(img, 5, 13, 22, 11, Color(0.25, 0.16, 0.04))
+	_fill_rect(img, 6, 14, 20, 9, Color(0.9, 0.72, 0.2))
+	_fill_rect(img, 7, 15, 18, 2, Color(1.0, 0.9, 0.45)) # Блик на золотом ободе
+	_fill_rect(img, 6, 21, 20, 2, Color(0.65, 0.45, 0.1)) # Нижний теневой рант
+	
+	# Фигурные зубцы (5 зубцов: центр высокий, боковые средние, крайние)
+	_fill_rect(img, 5, 9, 3, 5, Color(0.9, 0.72, 0.2))
+	_fill_rect(img, 10, 7, 3, 7, Color(0.9, 0.72, 0.2))
+	_fill_rect(img, 14, 5, 4, 9, Color(1.0, 0.85, 0.3))
+	_fill_rect(img, 19, 7, 3, 7, Color(0.9, 0.72, 0.2))
+	_fill_rect(img, 24, 9, 3, 5, Color(0.9, 0.72, 0.2))
+	
+	# Верхушки зубцов с бликами
+	_set_p(img, 6, 8, Color(1, 1, 1))
+	_set_p(img, 11, 6, Color(1, 1, 1))
+	_set_p(img, 15, 4, Color(1, 1, 1))
+	_set_p(img, 16, 4, Color(1, 1, 1))
+	_set_p(img, 20, 6, Color(1, 1, 1))
+	_set_p(img, 25, 8, Color(1, 1, 1))
+	
+	# Камни редкости в венце
+	_fill_rect(img, 14, 16, 4, 4, r_col)
+	_set_p(img, 15, 17, Color(1, 1, 1))
+	_set_p(img, 9, 17, r_col)
+	_set_p(img, 22, 17, r_col)
 
 static func _draw_item_crystal(img: Image, r_col: Color) -> void:
-	# Осколок льда / кристалл
-	_fill_rect(img, 14, 5, 4, 22, r_col)
-	_fill_rect(img, 11, 10, 10, 12, r_col)
-	_fill_rect(img, 9, 13, 14, 6, r_col)
-	_set_p(img, 15, 6, Color(1, 1, 1))
-	_set_p(img, 16, 7, Color(1, 1, 1))
+	# Многогранный сверкающий кристалл души / осколок
+	var cx: int = 16
+	var cy: int = 16
+	# Центральный кристалл
+	_fill_rect(img, 14, 3, 4, 26, r_col.darkened(0.2))
+	_fill_rect(img, 12, 7, 8, 18, r_col)
+	_fill_rect(img, 10, 11, 12, 10, r_col.lightened(0.2))
+	
+	# Сколы граней
+	for i in range(7):
+		_set_p(img, 16 - i, 4 + i * 2, Color(0.1, 0.1, 0.15))
+		_set_p(img, 16 + i, 4 + i * 2, Color(0.1, 0.1, 0.15))
+		_set_p(img, 16 - i, 28 - i * 2, Color(0.1, 0.1, 0.15))
+		_set_p(img, 16 + i, 28 - i * 2, Color(0.1, 0.1, 0.15))
+	
+	# Яркие световые ребра
+	for y in range(6, 26):
+		_set_p(img, 15, y, r_col.lightened(0.45))
+		_set_p(img, 14, y, Color(1, 1, 1, 0.75))
+	_set_p(img, 16, 5, Color(1, 1, 1))
+	_set_p(img, 16, 6, Color(1, 1, 1))
+	
+	# Парящие микро-осколки
+	_set_p(img, 7, 12, r_col)
+	_set_p(img, 25, 20, r_col)
+	_set_p(img, 8, 22, Color(1, 1, 1))
 
 static func _draw_item_relic(img: Image, r_col: Color) -> void:
-	# Реликвия / древняя скрижаль
-	_draw_box(img, 7, 5, 18, 22, Color(0.25, 0.28, 0.35))
-	_fill_rect(img, 8, 6, 16, 20, Color(0.14, 0.16, 0.22))
-	# Светящаяся древняя руна
-	_fill_rect(img, 13, 10, 6, 11, r_col)
-	_fill_rect(img, 10, 13, 12, 3, r_col)
-	_set_p(img, 15, 12, Color(1, 1, 1))
-	_set_p(img, 15, 18, Color(1, 1, 1))
+	# Древняя резная руническая скрижаль с золотыми инкрустациями
+	_draw_box(img, 6, 4, 20, 24, Color(0.1, 0.12, 0.16))
+	_fill_rect(img, 7, 5, 18, 22, Color(0.22, 0.25, 0.32))
+	_fill_rect(img, 8, 6, 16, 20, Color(0.15, 0.17, 0.23))
+	
+	# Золоченые скошенные уголки
+	_fill_rect(img, 7, 5, 3, 3, Color(0.85, 0.7, 0.2))
+	_fill_rect(img, 22, 5, 3, 3, Color(0.85, 0.7, 0.2))
+	_fill_rect(img, 7, 24, 3, 3, Color(0.85, 0.7, 0.2))
+	_fill_rect(img, 22, 24, 3, 3, Color(0.85, 0.7, 0.2))
+	
+	# Пульсирующая руна силы по центру
+	_fill_rect(img, 15, 9, 2, 14, r_col)
+	_fill_rect(img, 11, 14, 10, 2, r_col)
+	_set_p(img, 13, 11, r_col)
+	_set_p(img, 18, 11, r_col)
+	_set_p(img, 13, 19, r_col)
+	_set_p(img, 18, 19, r_col)
+	_set_p(img, 15, 14, Color(1, 1, 1))
+	_set_p(img, 16, 14, Color(1, 1, 1))
 
 # ==========================================
 # ВСПОМОГАТЕЛЬНЫЕ ГРАФИЧЕСКИЕ ПРИМИТИВЫ

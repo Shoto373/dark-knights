@@ -840,6 +840,10 @@ func _on_health_healed(amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.player_healed.emit(amount)
 
 func _on_health_died() -> void:
+	is_dashing = false
+	velocity = Vector2.ZERO
+	if dash_timer != null and not dash_timer.is_stopped():
+		dash_timer.stop()
 	GameState.current_hp = 0
 	EventBus.player_health_changed.emit(0, health_component.max_health)
 	EventBus.player_died.emit()
