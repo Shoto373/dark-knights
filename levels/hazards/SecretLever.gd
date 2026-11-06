@@ -45,9 +45,9 @@ func activate_lever() -> void:
 func _reveal_secret_cache() -> void:
 	# Появление тайного сундука или редкого артефакта рядом с рычагом
 	var chest: TreasureChest = TREASURE_CHEST_SCENE.instantiate() as TreasureChest
+	chest.requires_key = false # Награда за нахождение секрета не требует ключа!
 	get_parent().add_child(chest)
 	chest.global_position = global_position + Vector2(60, 0)
-	chest.requires_key = false # Награда за нахождение секрета не требует ключа!
 
 func _on_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D and body.is_in_group("player") and not is_activated:

@@ -250,6 +250,19 @@ func _on_player_health_changed(current_hp: int, max_hp: int) -> void:
 	hp_bar.max_value = max_hp
 	hp_bar.value = current_hp
 	hp_label.text = "%d / %d HP" % [current_hp, max_hp]
+	
+	if ghost_hp_bar != null:
+		ghost_hp_bar.max_value = max_hp
+		if current_hp >= ghost_hp_bar.value:
+			if _hp_ghost_tween != null and _hp_ghost_tween.is_valid():
+				_hp_ghost_tween.kill()
+			ghost_hp_bar.value = current_hp
+		else:
+			if _hp_ghost_tween != null and _hp_ghost_tween.is_valid():
+				_hp_ghost_tween.kill()
+			_hp_ghost_tween = create_tween()
+			_hp_ghost_tween.tween_interval(0.18)
+			_hp_ghost_tween.tween_property(ghost_hp_bar, "value", float(current_hp), 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _on_currency_changed(gold: int, souls: int) -> void:
 	gold_label.text = "%d" % gold
@@ -260,13 +273,33 @@ func _on_boss_spawned(boss_name: String, max_hp: int) -> void:
 	boss_name_label.text = boss_name.to_upper()
 	boss_hp_bar.max_value = max_hp
 	boss_hp_bar.value = max_hp
+	if boss_ghost_hp_bar != null:
+		if _boss_ghost_tween != null and _boss_ghost_tween.is_valid():
+			_boss_ghost_tween.kill()
+		boss_ghost_hp_bar.max_value = max_hp
+		boss_ghost_hp_bar.value = max_hp
 	boss_bar_container.visible = true
 	boss_bar_container.modulate.a = 0.0
 	var tween: Tween = create_tween()
 	tween.tween_property(boss_bar_container, "modulate:a", 1.0, 0.4)
 
-func _on_boss_health_changed(current_hp: int, _max_hp: int) -> void:
+func _on_boss_health_changed(current_hp: int, max_hp: int) -> void:
+	if max_hp > 0:
+		boss_hp_bar.max_value = max_hp
 	boss_hp_bar.value = current_hp
+	if boss_ghost_hp_bar != null:
+		if max_hp > 0:
+			boss_ghost_hp_bar.max_value = max_hp
+		if current_hp >= boss_ghost_hp_bar.value:
+			if _boss_ghost_tween != null and _boss_ghost_tween.is_valid():
+				_boss_ghost_tween.kill()
+			boss_ghost_hp_bar.value = current_hp
+		else:
+			if _boss_ghost_tween != null and _boss_ghost_tween.is_valid():
+				_boss_ghost_tween.kill()
+			_boss_ghost_tween = create_tween()
+			_boss_ghost_tween.tween_interval(0.18)
+			_boss_ghost_tween.tween_property(boss_ghost_hp_bar, "value", float(current_hp), 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 func _on_boss_defeated(_boss_name: String) -> void:
 	var tween: Tween = create_tween()

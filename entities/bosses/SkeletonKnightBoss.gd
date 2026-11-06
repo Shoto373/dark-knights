@@ -146,6 +146,31 @@ func _physics_process(delta: float) -> void:
 	
 	var breath: float = sin(_walk_anim_phase) * 0.035
 	visuals.scale = Vector2(1.0 - breath * 0.5, 1.0 + breath)
+	_clamp_to_room()
+
+func _get_room_origin() -> Vector2:
+	var p: Node = get_parent()
+	if p is Node2D:
+		return (p as Node2D).global_position
+	return Vector2.ZERO
+
+func _is_in_dungeon_room() -> bool:
+	var p: Node = get_parent()
+	return p != null and (p.name == "EnemiesContainer" or p is DungeonRoom)
+
+func _clamp_to_room() -> void:
+	if _is_in_dungeon_room():
+		position.x = clampf(position.x, 90.0, 1190.0)
+		position.y = clampf(position.y, 90.0, 630.0)
+
+func _get_safe_reward_center() -> Vector2:
+	if _is_in_dungeon_room():
+		var room_origin: Vector2 = _get_room_origin()
+		return room_origin + Vector2(
+			clampf(position.x, 260.0, 1020.0),
+			clampf(position.y, 220.0, 540.0)
+		)
+	return global_position
 
 func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.boss_health_changed.emit(current_hp, max_hp)
@@ -361,11 +386,12 @@ func _spawn_blessing_choice() -> void:
 	
 	var choices: Array[ItemData] = loot_table.roll_multiple_unique(3, GameState.rng)
 	var x_offsets: Array[float] = [-140.0, 0.0, 140.0]
+	var center: Vector2 = _get_safe_reward_center()
 	
 	for i in range(choices.size()):
 		var ped: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
 		get_parent().add_child(ped)
-		ped.global_position = global_position + Vector2(x_offsets[i], 30.0)
+		ped.global_position = center + Vector2(x_offsets[i], 30.0)
 		ped.setup(choices[i], 0, true)
 
 func _spawn_fork_exit() -> void:
@@ -374,7 +400,7 @@ func _spawn_fork_exit() -> void:
 		return
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
-	portal.global_position = global_position + Vector2(0, -90.0)
+	portal.global_position = _get_safe_reward_center() + Vector2(0, -90.0)
 	portal.is_fork_portal = true
 	if portal.has_method("set_portal_title"):
 		portal.set_portal_title("ВЕЛИКАЯ РАЗВИЛКА")

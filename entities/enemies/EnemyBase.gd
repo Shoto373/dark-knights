@@ -379,21 +379,45 @@ func _physics_process(delta: float) -> void:
 	
 	if _eye_light != null:
 		_eye_light.energy = _base_eye_energy + sin(_walk_anim_phase * 2.0) * 0.12
+	_clamp_to_room()
 
-func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
-	# Проверка щита рыцаря-стража: блок спереди, уязвим со спины
-	if enemy_data != null and enemy_data.has_front_shield and is_instance_valid(hitbox):
+func _is_in_dungeon_room() -> bool:
+	var p: Node = get_parent()
+	return p != null and (p.name == "EnemiesContainer" or p is DungeonRoom)
+
+func _clamp_to_room() -> void:
+	if _is_in_dungeon_room():
+		position.x = clampf(position.x, 85.0, 1195.0)
+		position.y = clampf(position.y, 85.0, 635.0)
+
+func _clamp_local_pos(pos: Vector2) -> Vector2:
+	if _is_in_dungeon_room():
+		return Vector2(clampf(pos.x, 85.0, 1195.0), clampf(pos.y, 85.0, 635.0))
+	return pos
+
+func can_block_frontal_hit(hitbox: HitboxComponent) -> bool:
+	if enemy_data != null and enemy_data.has_front_shield and is_instance_valid(hitbox) and not is_collapsed:
 		var hit_dir: Vector2 = (hitbox.global_position - global_position).normalized()
 		var facing_dir: Vector2 = Vector2.RIGHT
 		if is_instance_valid(player_target):
 			facing_dir = (player_target.global_position - global_position).normalized()
-		
-		# Если удар нанесён спереди (угол меньше 80 градусов к направлению взгляда)
 		if hit_dir.dot(facing_dir) > 0.15:
-			health_component.heal(_dmg) # Поглощаем урон щитом
-			hp_bar.value = health_component.current_health
-			_flash_shield_block()
-			return
+			return true
+	return false
+
+func try_block_frontal_hit(hitbox: HitboxComponent) -> bool:
+	if can_block_frontal_hit(hitbox):
+		_flash_shield_block()
+		return true
+	return false
+
+func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
+	# Проверка щита рыцаря-стража: блок спереди, уязвим со спины
+	if can_block_frontal_hit(hitbox):
+		health_component.heal(_dmg) # Поглощаем урон щитом при прямом вызове
+		hp_bar.value = health_component.current_health
+		_flash_shield_block()
+		return
 	
 	time_since_damage = 0.0
 	if hitbox != null and (hitbox.damage_type == "fire" or hitbox.tags.has("fire")):
@@ -834,7 +858,7 @@ func _lich_apprentice_cast() -> void:
 	_animate_ranged_weapon_recoil(6.0, 0.16)
 	if global_position.distance_to(player_target.global_position) < 100.0:
 		var teleport_offset: Vector2 = -dir * 110.0 + Vector2(randf_range(-20, 20), randf_range(-20, 20))
-		global_position += teleport_offset
+		position = _clamp_local_pos(position + teleport_offset)
 		var flash: Tween = create_tween()
 		visuals.modulate = Color(2.0, 2.5, 3.0, 1.0)
 		flash.tween_property(visuals, "modulate", Color.WHITE, 0.2)
@@ -866,7 +890,7 @@ func _ice_spider_leap() -> void:
 	attack_hitbox.tags = ["frost", "freeze"]
 	attack_hitbox.reset_hits()
 	
-	var leap_target: Vector2 = position + dir * 85.0
+	var leap_target: Vector2 = _clamp_local_pos(position + dir * 85.0)
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(1.8, 2.5, 3.0, 1.0)
 	tween.tween_callback(func(): attack_shape.disabled = false)
@@ -893,11 +917,12 @@ func _lava_slime_bounce_attack() -> void:
 	attack_hitbox.tags = ["fire"]
 	attack_hitbox.reset_hits()
 	
+	var bounce_target: Vector2 = _clamp_local_pos(position + dir * 65.0)
 	var tween: Tween = create_tween()
 	visuals.scale = Vector2(1.3, 0.7)
 	tween.tween_property(visuals, "scale", Vector2(0.8, 1.3), 0.12)
 	tween.tween_callback(func(): attack_shape.disabled = false)
-	tween.tween_property(self, "position", position + dir * 65.0, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "position", bounce_target, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func():
 		attack_shape.disabled = true
 		visuals.scale = Vector2.ONE
@@ -937,10 +962,11 @@ func _shadow_chimera_strike() -> void:
 	attack_hitbox.applied_effect = poison_res
 	attack_hitbox.reset_hits()
 	
+	var strike_target: Vector2 = _clamp_local_pos(position + dir * 75.0)
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(0.4, 2.5, 0.6, 1.0)
 	tween.tween_callback(func(): attack_shape.disabled = false)
-	tween.tween_property(self, "position", position + dir * 75.0, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(self, "position", strike_target, 0.16).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.tween_callback(func():
 		attack_shape.disabled = true
 		visuals.modulate = Color.WHITE
@@ -982,6 +1008,7 @@ func _void_specter_phase_pulse() -> void:
 	tween.tween_property(visuals, "modulate:a", 0.0, 0.12)
 	tween.tween_callback(func():
 		global_position = player_target.global_position + dir * 60.0
+		_clamp_to_room()
 		visuals.modulate = Color(2.0, 1.0, 3.5, 1.0)
 		EventBus.screen_shake_requested.emit(4.0, 0.15)
 		var stun_res: StatusEffect = load("res://data/status_effects/stun.tres") as StatusEffect

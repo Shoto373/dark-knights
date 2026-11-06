@@ -47,6 +47,13 @@ func _on_area_entered(area: Area2D) -> void:
 				hitbox.register_hit(parent_node)
 		return
 	
+	# Проверка лобового блока щитом (например, Рыцарь-страж) ДО нанесения смертельного урона
+	if parent_node != null and parent_node.has_method("try_block_frontal_hit"):
+		if parent_node.call("try_block_frontal_hit", hitbox):
+			AudioManager.play_sfx_named("shield_block")
+			hitbox.register_hit(parent_node)
+			return
+	
 	var is_crit: bool = DamageCalculator.roll_crit(hitbox.crit_chance)
 	var final_damage: int = DamageCalculator.calculate_damage(
 		hitbox.base_damage,

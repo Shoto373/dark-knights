@@ -22,7 +22,11 @@ func setup(
 	radius = aoe_radius
 	blast_color = color
 	
-	circle_shape.radius = radius
+	if collision_shape != null and collision_shape.shape is CircleShape2D:
+		circle_shape = collision_shape.shape.duplicate() as CircleShape2D
+		collision_shape.shape = circle_shape
+	if circle_shape != null:
+		circle_shape.radius = radius
 	hitbox.base_damage = damage
 	hitbox.is_player_hitbox = is_player
 	hitbox.knockback_force = knockback

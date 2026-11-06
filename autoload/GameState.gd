@@ -63,6 +63,8 @@ func start_new_run(hero_id: String = "warrior", custom_seed: int = 0) -> void:
 	visited_world_nodes = ["goblin_dungeon"]
 	current_floor_index = 1
 	has_seen_castle_cutscene = false
+	current_hp = 0
+	max_hp = 0
 	gold = 0
 	keys = 0
 	inventory_items.clear()

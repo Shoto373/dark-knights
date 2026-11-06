@@ -347,6 +347,8 @@ func _on_enemy_child_entered(node: Node) -> void:
 func _check_and_register_child(node: Node) -> void:
 	if not is_instance_valid(node):
 		return
+	if node is IcePillar or node is Phylactery:
+		return
 	if node is CharacterBody2D or node.is_in_group("enemies") or node.is_in_group("bosses"):
 		_register_enemy(node as Node2D)
 
@@ -361,16 +363,20 @@ func _register_enemy(enemy: Node2D) -> void:
 		var eb: EnemyBase = enemy as EnemyBase
 		if not eb.permanently_died.is_connected(_on_enemy_died):
 			eb.permanently_died.connect(func(_e): _on_enemy_died(enemy))
+	elif enemy.has_signal("boss_defeated"):
+		enemy.connect("boss_defeated", func(): _on_enemy_died(enemy))
 	else:
 		var hc: HealthComponent = enemy.get_node_or_null("HealthComponent") as HealthComponent
 		if hc != null:
 			hc.died.connect(func(): _on_enemy_died(enemy))
-		else:
-			enemy.tree_exited.connect(func(): _on_enemy_died(enemy))
+	
+	if not enemy.tree_exited.is_connected(_on_enemy_died):
+		enemy.tree_exited.connect(func(): _on_enemy_died(enemy))
 
 func _on_enemy_died(enemy: Node2D) -> void:
 	if enemy in active_enemies:
 		active_enemies.erase(enemy)
+	active_enemies = active_enemies.filter(func(e): return is_instance_valid(e) and not e.is_queued_for_deletion())
 	if active_enemies.is_empty():
 		_finish_combat()
 
@@ -379,7 +385,8 @@ func _finish_combat() -> void:
 		enemies_container.child_entered_tree.disconnect(_on_enemy_child_entered)
 	room_data.is_cleared = true
 	_unlock_all_doors()
-	_spawn_room_clear_reward()
+	if room_data.room_type != RoomData.RoomType.BOSS:
+		_spawn_room_clear_reward()
 	EventBus.room_cleared.emit()
 	room_cleared.emit()
 	SaveManager.save_run()
@@ -481,7 +488,6 @@ func _setup_shop_room() -> void:
 	key_item.name = "Ключ"
 	key_item.rarity = "common"
 	key_ped.setup(key_item, 10, false)
-	key_ped.item_picked.connect(func(_it): GameState.add_keys(1))
 
 func _on_door_entered(direction: Vector2i) -> void:
 	door_entered.emit(direction)

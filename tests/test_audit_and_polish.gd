@@ -737,3 +737,131 @@ func test_enemy_visual_overhaul_and_articulated_combat() -> void:
 	assert_true(skel._left_foot.visible, "Стопы снова видны")
 	assert_true(skel._weapon_pivot.visible, "Оружие снова видно")
 	assert_eq(enemy_sprite.texture, SpriteGenerator.get_enemy_texture("skeleton_swordsman"), "Спрайт скелета восстановлен")
+
+func test_boss_room_coordinates_and_lich_phase3_room_clear_guard() -> void:
+	var room_scene: PackedScene = load("res://levels/Room.tscn")
+	var room: DungeonRoom = room_scene.instantiate() as DungeonRoom
+	add_child_autofree(room)
+	room.global_position = Vector2(2560, -1440)
+	
+	var rdata: RoomData = RoomData.new()
+	rdata.room_type = RoomData.RoomType.BOSS
+	room.setup(rdata)
+	
+	var lich_scene: PackedScene = load("res://entities/bosses/LichKingBoss.tscn")
+	var lich: LichKingBoss = lich_scene.instantiate() as LichKingBoss
+	room.enemies_container.add_child(lich)
+	lich.position = Vector2(640, 360)
+	
+	room.active_enemies.clear()
+	room._register_enemy(lich)
+	
+	# 1. Проверяем спавн ледяных колонн относительно координат комнаты босса
+	lich._spawn_ice_pillars()
+	assert_gt(lich.active_pillars.size(), 0, "Колонны льда заспавнены")
+	var first_pillar: Node2D = lich.active_pillars[0]
+	assert_gt(first_pillar.global_position.x, 2560.0, "Колонна заспавнена внутри комнаты босса по X, а не в (0,0)")
+	assert_lt(first_pillar.global_position.y, -720.0, "Колонна заспавнена внутри комнаты босса по Y, а не в (0,0)")
+	
+	# 2. Переход в Фазу 3 (0 HP) НЕ должен преждевременно зачищать комнату босса!
+	lich.health_component.take_damage(700)
+	assert_eq(lich.current_phase, 3, "Король-лич перешёл в Фазу 3")
+	assert_false(room.room_data.is_cleared, "Комната босса НЕ считается зачищенной при переходе в 3 фазу")
+	assert_not_null(lich.phylactery_instance, "Филактерия создана")
+	assert_eq(lich.phylactery_instance.global_position, Vector2(2560 + 640, -1440 + 360), "Филактерия создана строго в центре комнаты босса")
+	assert_eq(lich.global_position, Vector2(2560 + 640, -1440 + 200), "Лич телепортировался внутри комнаты босса")
+	
+	# 3. Проверяем безопасное ограничение координат наград при гибели босса у самого края стены
+	lich.position = Vector2(90, 90)
+	var safe_center: Vector2 = lich._get_safe_reward_center()
+	assert_gte(safe_center.x - 2560.0, 260.0, "Центр спавна наград отодвинут от левой стены")
+	assert_gte(safe_center.y - (-1440.0), 220.0, "Центр спавна наград отодвинут от верхней стены")
+	
+	# 4. Уничтожение Филактерии окончательно побеждает босса и открывает комнату
+	lich.phylactery_instance.health_component.take_damage(200)
+	assert_true(room.room_data.is_cleared, "Комната босса зачищена только после уничтожения Филактерии")
+
+func test_ranged_hero_item_damage_scaling_and_new_run_hp_reset() -> void:
+	# 1. Сброс HP при старте нового забега за Воина (130 HP) после ранения в прошлом забеге
+	GameState.current_hp = 45
+	GameState.start_new_run("warrior", 12345)
+	assert_eq(GameState.current_hp, 0, "start_new_run сбрасывает старое значение current_hp")
+	
+	var player_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var warrior: Player = player_scene.instantiate() as Player
+	add_child_autofree(warrior)
+	assert_eq(warrior.health_component.current_health, warrior.health_component.max_health, "Воин начинает новый забег с полным запасом здоровья (130/130)")
+	
+	# 2. Масштабирование урона дальних атак Мага от собранных артефактов
+	var mage_data: HeroData = load("res://data/heroes/mage.tres") as HeroData
+	var base_mage_dmg: int = mage_data.attack_damage
+	var sword_item: ItemData = load("res://data/items/rusty_sword.tres") as ItemData
+	GameState.inventory_items.clear()
+	GameState.inventory_items.append({"id": sword_item.id, "item_ref": sword_item})
+	
+	warrior.apply_hero_data(mage_data)
+	assert_gt(warrior.weapon_hitbox.base_damage, base_mage_dmg, "Урон в weapon_hitbox увеличен предметом")
+	
+	warrior._shoot_basic_projectile()
+	var spawned_proj: Projectile = null
+	for child in get_children():
+		if child is Projectile:
+			spawned_proj = child as Projectile
+	assert_not_null(spawned_proj, "Снаряд мага выпущен")
+	if spawned_proj != null:
+		assert_eq(spawned_proj.hitbox.base_damage, warrior.weapon_hitbox.base_damage, "Снаряд мага получает полный бонусный урон от предметов")
+		spawned_proj.queue_free()
+	
+	GameState.inventory_items.clear()
+	GameState.end_run(false)
+
+func test_shop_key_single_increment_and_lethal_frontal_shield_block() -> void:
+	# 1. Покупка ключа в магазине даёт ровно 1 ключ (без дублирования сигнала)
+	GameState.start_new_run("warrior", 54321)
+	GameState.gold = 50
+	GameState.keys = 0
+	
+	var room_scene: PackedScene = load("res://levels/Room.tscn")
+	var shop_room: DungeonRoom = room_scene.instantiate() as DungeonRoom
+	add_child_autofree(shop_room)
+	var rdata: RoomData = RoomData.new()
+	rdata.room_type = RoomData.RoomType.SHOP
+	shop_room.setup(rdata)
+	
+	var key_ped: ItemPedestal = null
+	for child in shop_room.objects_container.get_children():
+		if child is ItemPedestal and (child as ItemPedestal).item_data != null and (child as ItemPedestal).item_data.id == "shop_key":
+			key_ped = child as ItemPedestal
+			break
+	assert_not_null(key_ped, "Пьедестал с ключом создан в магазине")
+	
+	var player_scene: PackedScene = load("res://entities/player/Player.tscn")
+	var player: Player = player_scene.instantiate() as Player
+	add_child_autofree(player)
+	key_ped.player_ref = player
+	key_ped._try_collect()
+	assert_eq(GameState.keys, 1, "Покупка 1 ключа в магазине начисляет ровно 1 ключ, а не 2")
+	
+	# 2. Рыцарь-страж с 5 HP блокирует смертельный лобовой удар на 50 урона через HurtboxComponent
+	var enemy_scene: PackedScene = load("res://entities/enemies/EnemyBase.tscn")
+	var guard: EnemyBase = enemy_scene.instantiate() as EnemyBase
+	add_child_autofree(guard)
+	var guard_data: EnemyData = load("res://data/enemies/knight_guard.tres") as EnemyData
+	guard.setup_from_data(guard_data)
+	guard.global_position = Vector2(200, 200)
+	guard.health_component.current_health = 5
+	
+	player.global_position = Vector2(320, 200)
+	guard.player_target = player
+	
+	var lethal_hitbox: HitboxComponent = HitboxComponent.new()
+	add_child_autofree(lethal_hitbox)
+	lethal_hitbox.is_player_hitbox = true
+	lethal_hitbox.base_damage = 50
+	lethal_hitbox.global_position = Vector2(280, 200)
+	
+	guard.hurtbox_component._on_area_entered(lethal_hitbox)
+	assert_false(guard.health_component.is_dead, "Рыцарь-страж НЕ умирает от заблокированного лобового удара")
+	assert_eq(guard.health_component.current_health, 5, "Здоровье Рыцаря-стража полностью сохранено при лобовом блоке")
+	
+	GameState.end_run(false)

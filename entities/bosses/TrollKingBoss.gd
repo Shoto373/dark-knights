@@ -184,6 +184,31 @@ func _physics_process(delta: float) -> void:
 		visuals.position.y = move_toward(visuals.position.y, 0.0, delta * 15.0)
 		visuals.rotation = move_toward(visuals.rotation, 0.0, delta * 2.0)
 		visuals.scale.y = 1.0 + sin(_walk_anim_phase) * 0.03
+	_clamp_to_room()
+
+func _get_room_origin() -> Vector2:
+	var p: Node = get_parent()
+	if p is Node2D:
+		return (p as Node2D).global_position
+	return Vector2.ZERO
+
+func _is_in_dungeon_room() -> bool:
+	var p: Node = get_parent()
+	return p != null and (p.name == "EnemiesContainer" or p is DungeonRoom)
+
+func _clamp_to_room() -> void:
+	if _is_in_dungeon_room():
+		position.x = clampf(position.x, 90.0, 1190.0)
+		position.y = clampf(position.y, 90.0, 630.0)
+
+func _get_safe_reward_center() -> Vector2:
+	if _is_in_dungeon_room():
+		var room_origin: Vector2 = _get_room_origin()
+		return room_origin + Vector2(
+			clampf(position.x, 260.0, 1020.0),
+			clampf(position.y, 220.0, 540.0)
+		)
+	return global_position
 
 func _on_hit_received(_dmg: int, _crit: bool, hitbox: HitboxComponent) -> void:
 	time_since_damage = 0.0
@@ -353,18 +378,19 @@ func _spawn_blessing_choice() -> void:
 	
 	var choices: Array[ItemData] = loot_table.roll_multiple_unique(3, GameState.rng)
 	var x_offsets: Array[float] = [-140.0, 0.0, 140.0]
+	var center: Vector2 = _get_safe_reward_center()
 	
 	for i in range(choices.size()):
 		var ped: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
 		get_parent().add_child(ped)
-		ped.global_position = global_position + Vector2(x_offsets[i], 30.0)
+		ped.global_position = center + Vector2(x_offsets[i], 30.0)
 		ped.setup(choices[i], 0, true)
 
 func _spawn_exit_portal() -> void:
 	var portal_scene = load("res://levels/Portal.tscn")
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
-	portal.global_position = global_position + Vector2(0, -90.0)
+	portal.global_position = _get_safe_reward_center() + Vector2(0, -90.0)
 	if portal.has_method("set_portal_title"):
 		portal.set_portal_title("ЗАМОК СКЕЛЕТОВ")
 	portal.prompt_label.text = "[F] Перейти в Замок скелетов"

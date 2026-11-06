@@ -38,8 +38,9 @@ func _physics_process(delta: float) -> void:
 	if shards_pivot != null:
 		shards_pivot.rotation += rotation_speed * delta
 
-func _on_damaged(_amount: int, current_hp: int, _max_hp: int) -> void:
+func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	hp_bar.value = current_hp
+	EventBus.boss_health_changed.emit(current_hp, max_hp)
 	var tween: Tween = create_tween()
 	visuals.modulate = Color(2.5, 3.5, 4.0, 1.0)
 	tween.tween_property(visuals, "modulate", Color.WHITE, 0.12)

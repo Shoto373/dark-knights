@@ -175,6 +175,7 @@ func _physics_process(delta: float) -> void:
 					movement_component.stop(self)
 
 	# Левитация и покачивание ледяного владыки
+	_clamp_to_room()
 	_float_phase += delta * 2.8
 	var hover_y: float = sin(_float_phase) * 6.5 - 6.0
 	visuals.position.y = hover_y
@@ -184,6 +185,30 @@ func _physics_process(delta: float) -> void:
 		_shadow_sprite.scale = Vector2(4.2 * s_shrink, 1.3 * s_shrink)
 	if _eye_light != null:
 		_eye_light.energy = 0.85 + sin(_float_phase * 2.0) * 0.15
+
+func _get_room_origin() -> Vector2:
+	var p: Node = get_parent()
+	if p is Node2D:
+		return (p as Node2D).global_position
+	return Vector2.ZERO
+
+func _is_in_dungeon_room() -> bool:
+	var p: Node = get_parent()
+	return p != null and (p.name == "EnemiesContainer" or p is DungeonRoom)
+
+func _clamp_to_room() -> void:
+	if _is_in_dungeon_room():
+		position.x = clampf(position.x, 90.0, 1190.0)
+		position.y = clampf(position.y, 90.0, 630.0)
+
+func _get_safe_reward_center() -> Vector2:
+	if _is_in_dungeon_room():
+		var room_origin: Vector2 = _get_room_origin()
+		return room_origin + Vector2(
+			clampf(position.x, 260.0, 1020.0),
+			clampf(position.y, 220.0, 540.0)
+		)
+	return global_position
 
 func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.boss_health_changed.emit(current_hp, max_hp)
@@ -243,14 +268,16 @@ func _enter_phase_3() -> void:
 	EventBus.screen_shake_requested.emit(18.0, 0.8)
 	
 	# Спавним Филактерию в центре арены
+	var room_origin: Vector2 = _get_room_origin()
 	var phyl: Phylactery = PHYLACTERY_SCENE.instantiate() as Phylactery
 	get_parent().add_child(phyl)
-	phyl.global_position = Vector2(640, 360)
+	phyl.global_position = room_origin + Vector2(640, 360)
 	phyl.destroyed.connect(_on_phylactery_destroyed)
 	phylactery_instance = phyl
+	EventBus.boss_spawned.emit("Филактерия Короля-лича", phyl.health_component.max_health)
 	
 	# Телепортируем самого Лича к северному краю арены
-	global_position = Vector2(640, 200)
+	global_position = room_origin + Vector2(640, 200)
 
 func _on_health_depleted() -> void:
 	if current_phase < 3:
@@ -344,11 +371,12 @@ func _spawn_ice_pillars() -> void:
 	if active_pillars.size() >= 4:
 		return
 	
+	var room_origin: Vector2 = _get_room_origin()
 	var pillar_positions: Array[Vector2] = [
-		Vector2(440, 240),
-		Vector2(840, 240),
-		Vector2(440, 480),
-		Vector2(840, 480)
+		room_origin + Vector2(440, 240),
+		room_origin + Vector2(840, 240),
+		room_origin + Vector2(440, 480),
+		room_origin + Vector2(840, 480)
 	]
 	
 	for pos in pillar_positions:
@@ -451,17 +479,18 @@ func _teleport_away() -> void:
 	if _teleport_tween != null and _teleport_tween.is_valid():
 		_teleport_tween.kill()
 	
+	var room_origin: Vector2 = _get_room_origin()
 	var corners: Array[Vector2] = [
-		Vector2(400, 240),
-		Vector2(880, 240),
-		Vector2(400, 480),
-		Vector2(880, 480),
-		Vector2(640, 220)
+		room_origin + Vector2(400, 240),
+		room_origin + Vector2(880, 240),
+		room_origin + Vector2(400, 480),
+		room_origin + Vector2(880, 480),
+		room_origin + Vector2(640, 220)
 	]
 	# Выбираем точку, наиболее далекую от игрока
 	var best_pos: Vector2 = corners[0]
 	var max_dist: float = -1.0
-	var p_pos: Vector2 = player_target.global_position if is_instance_valid(player_target) else Vector2(640, 360)
+	var p_pos: Vector2 = player_target.global_position if is_instance_valid(player_target) else (room_origin + Vector2(640, 360))
 	for pt in corners:
 		var d: float = pt.distance_to(p_pos)
 		if d > max_dist:
@@ -489,18 +518,19 @@ func _spawn_blessing_choice() -> void:
 	
 	var choices: Array[ItemData] = loot_table.roll_multiple_unique(3, GameState.rng)
 	var x_offsets: Array[float] = [-140.0, 0.0, 140.0]
+	var center: Vector2 = _get_safe_reward_center()
 	
 	for i in range(choices.size()):
 		var ped: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
 		get_parent().add_child(ped)
-		ped.global_position = global_position + Vector2(x_offsets[i], 40.0)
+		ped.global_position = center + Vector2(x_offsets[i], 40.0)
 		ped.setup(choices[i], 0, true)
 
 func _spawn_portal_exit() -> void:
 	var portal_scene = load("res://levels/Portal.tscn")
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
-	portal.global_position = global_position + Vector2(0, -90.0)
+	portal.global_position = _get_safe_reward_center() + Vector2(0, -90.0)
 	if portal.has_method("set_portal_title"):
 		portal.set_portal_title("ПОРТАЛ ВЫХОДА")
 	portal.prompt_label.text = "[F] Вперед"

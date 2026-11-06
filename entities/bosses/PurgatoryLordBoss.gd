@@ -184,6 +184,7 @@ func _physics_process(delta: float) -> void:
 				movement_component.stop(self)
 
 	# Космическая левитация и дыхание пустоты
+	_clamp_to_room()
 	_float_phase += delta * 2.5
 	var hover_y: float = sin(_float_phase) * 7.0 - 6.0
 	visuals.position.y = hover_y
@@ -193,6 +194,21 @@ func _physics_process(delta: float) -> void:
 		_shadow_sprite.scale = Vector2(4.8 * s_shrink, 1.45 * s_shrink)
 	if _eye_light != null:
 		_eye_light.energy = 0.9 + sin(_float_phase * 1.8) * 0.2
+
+func _get_room_origin() -> Vector2:
+	var p: Node = get_parent()
+	if p is Node2D:
+		return (p as Node2D).global_position
+	return Vector2.ZERO
+
+func _is_in_dungeon_room() -> bool:
+	var p: Node = get_parent()
+	return p != null and (p.name == "EnemiesContainer" or p is DungeonRoom)
+
+func _clamp_to_room() -> void:
+	if _is_in_dungeon_room():
+		position.x = clampf(position.x, 90.0, 1190.0)
+		position.y = clampf(position.y, 90.0, 630.0)
 
 func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.boss_health_changed.emit(current_hp, max_hp)
@@ -409,7 +425,7 @@ func _summon_echoes() -> void:
 func _spawn_center_rift() -> void:
 	var rift: VoidRiftTrap = VOID_RIFT_SCENE.instantiate() as VoidRiftTrap
 	get_parent().add_child(rift)
-	rift.global_position = Vector2(640, 360)
+	rift.global_position = _get_room_origin() + Vector2(640, 360)
 	active_rifts.append(rift)
 
 func _teleport_with_flash() -> void:
@@ -418,16 +434,17 @@ func _teleport_with_flash() -> void:
 	is_acting = true
 	teleport_timer = 5.0
 	
+	var room_origin: Vector2 = _get_room_origin()
 	var corners: Array[Vector2] = [
-		Vector2(380, 220),
-		Vector2(900, 220),
-		Vector2(380, 500),
-		Vector2(900, 500),
-		Vector2(640, 200)
+		room_origin + Vector2(380, 220),
+		room_origin + Vector2(900, 220),
+		room_origin + Vector2(380, 500),
+		room_origin + Vector2(900, 500),
+		room_origin + Vector2(640, 200)
 	]
 	var best_pos: Vector2 = corners[0]
 	var max_dist: float = -1.0
-	var p_pos: Vector2 = player_target.global_position if is_instance_valid(player_target) else Vector2(640, 360)
+	var p_pos: Vector2 = player_target.global_position if is_instance_valid(player_target) else (room_origin + Vector2(640, 360))
 	for pt in corners:
 		var d: float = pt.distance_to(p_pos)
 		if d > max_dist:

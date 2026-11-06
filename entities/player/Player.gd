@@ -582,10 +582,11 @@ func _shoot_basic_projectile() -> void:
 	elif weapon_hitbox.damage_type == "freeze" or weapon_hitbox.tags.has("frost"):
 		p_type = "frost"
 
+	var proj_damage: int = weapon_hitbox.base_damage if weapon_hitbox.base_damage > 0 else (hero_data.attack_damage if hero_data else 20)
 	proj.setup(
 		aim_direction,
 		hero_data.projectile_speed if hero_data else 500.0,
-		hero_data.attack_damage if hero_data else 20,
+		proj_damage,
 		true,
 		hero_data.attack_range if hero_data else 500.0,
 		180.0,
@@ -594,6 +595,9 @@ func _shoot_basic_projectile() -> void:
 		weapon_hitbox.tags,
 		p_type
 	)
+	if proj.hitbox != null:
+		proj.hitbox.crit_chance = weapon_hitbox.crit_chance
+		proj.hitbox.crit_multiplier = weapon_hitbox.crit_multiplier
 
 func _trigger_ability(ability: AbilityData, timer: Timer) -> void:
 	if not timer.is_stopped() or is_dashing:
@@ -684,12 +688,19 @@ func _apply_dash_ability(ability: AbilityData) -> void:
 		visuals.modulate = Color.WHITE
 	)
 
+func _get_ability_scaled_damage(base_ability_damage: int) -> int:
+	if hero_data == null or hero_data.attack_damage <= 0 or weapon_hitbox == null or weapon_hitbox.base_damage <= 0:
+		return base_ability_damage
+	var dmg_mult: float = float(weapon_hitbox.base_damage) / float(hero_data.attack_damage)
+	return maxi(base_ability_damage, int(round(base_ability_damage * dmg_mult)))
+
 func _apply_aoe_ability(ability: AbilityData) -> void:
 	var target_pos: Vector2 = get_global_mouse_position()
 	var dist: float = (target_pos - global_position).length()
 	if dist > 350.0:
 		target_pos = global_position + (target_pos - global_position).normalized() * 350.0
 	
+	var scaled_dmg: int = _get_ability_scaled_damage(ability.base_damage)
 	var is_fire: bool = ability.id == "fireball" or ability.name.to_lower().contains("огн") or ability.name.to_lower().contains("fire")
 	
 	if is_fire:
@@ -698,7 +709,9 @@ func _apply_aoe_ability(ability: AbilityData) -> void:
 		var fly_dir: Vector2 = (target_pos - global_position).normalized()
 		proj.global_position = global_position + fly_dir * 20.0
 		var fly_time: float = clampf(dist / 650.0, 0.12, 0.42)
-		proj.setup(fly_dir, 650.0, 0, true, dist, 0.0, Color(1.4, 0.6, 0.1))
+		proj.setup(fly_dir, 650.0, 0, true, dist + 60.0, 0.0, Color(1.4, 0.6, 0.1), "fire", ["fire"], "fireball")
+		if proj.collision_shape != null:
+			proj.collision_shape.disabled = true
 		
 		var fly_tween: Tween = create_tween()
 		fly_tween.tween_interval(fly_time)
@@ -707,16 +720,20 @@ func _apply_aoe_ability(ability: AbilityData) -> void:
 				proj.queue_free()
 			var aoe: AreaOfEffect = AOE_SCENE.instantiate() as AreaOfEffect
 			get_parent().add_child(aoe)
-			aoe.setup(target_pos, ability.range_or_radius, ability.base_damage, true, 400.0, Color(1.3, 0.45, 0.1, 0.85))
+			aoe.setup(target_pos, ability.range_or_radius, scaled_dmg, true, 400.0, Color(1.3, 0.45, 0.1, 0.85))
 			aoe.hitbox.damage_type = "fire"
 			aoe.hitbox.tags = ["fire"]
+			aoe.hitbox.crit_chance = weapon_hitbox.crit_chance
+			aoe.hitbox.crit_multiplier = weapon_hitbox.crit_multiplier
 			EffectsHelper.spawn_shockwave(get_parent(), target_pos, ability.range_or_radius * 1.3, 0.28, 0.045)
 			EffectsHelper.spawn_hit_sparks(get_parent(), target_pos, Color(1.0, 0.65, 0.15), 14)
 		)
 	else:
 		var aoe: AreaOfEffect = AOE_SCENE.instantiate() as AreaOfEffect
 		get_parent().add_child(aoe)
-		aoe.setup(target_pos, ability.range_or_radius, ability.base_damage, true, 400.0)
+		aoe.setup(target_pos, ability.range_or_radius, scaled_dmg, true, 400.0)
+		aoe.hitbox.crit_chance = weapon_hitbox.crit_chance
+		aoe.hitbox.crit_multiplier = weapon_hitbox.crit_multiplier
 		EffectsHelper.spawn_shockwave(get_parent(), target_pos, ability.range_or_radius * 1.2, 0.25, 0.035)
 
 func _apply_teleport_ability(ability: AbilityData) -> void:
@@ -766,6 +783,7 @@ func _apply_projectile_ability(ability: AbilityData) -> void:
 	var count: int = ability.projectile_count
 	var half_spread: float = deg_to_rad(ability.spread_angle_deg) / 2.0
 	var base_angle: float = aim_direction.angle()
+	var scaled_dmg: int = _get_ability_scaled_damage(ability.base_damage)
 	
 	for i in range(count):
 		var angle_offset: float = 0.0
@@ -779,12 +797,17 @@ func _apply_projectile_ability(ability: AbilityData) -> void:
 		proj.setup(
 			dir,
 			ability.speed,
-			ability.base_damage,
+			scaled_dmg,
 			true,
 			ability.range_or_radius,
 			220.0,
-			hero_data.color if hero_data else Color.WHITE
+			hero_data.color if hero_data else Color.WHITE,
+			weapon_hitbox.damage_type,
+			weapon_hitbox.tags
 		)
+		if proj.hitbox != null:
+			proj.hitbox.crit_chance = weapon_hitbox.crit_chance
+			proj.hitbox.crit_multiplier = weapon_hitbox.crit_multiplier
 
 func _on_attack_cooldown_finished() -> void:
 	can_attack = true

@@ -174,6 +174,31 @@ func _physics_process(delta: float) -> void:
 	
 	var breath: float = sin(_walk_anim_phase) * 0.04
 	visuals.scale = Vector2((1.0 - breath * 0.5) * cur_facing, 1.0 + breath)
+	_clamp_to_room()
+
+func _get_room_origin() -> Vector2:
+	var p: Node = get_parent()
+	if p is Node2D:
+		return (p as Node2D).global_position
+	return Vector2.ZERO
+
+func _is_in_dungeon_room() -> bool:
+	var p: Node = get_parent()
+	return p != null and (p.name == "EnemiesContainer" or p is DungeonRoom)
+
+func _clamp_to_room() -> void:
+	if _is_in_dungeon_room():
+		position.x = clampf(position.x, 90.0, 1190.0)
+		position.y = clampf(position.y, 90.0, 630.0)
+
+func _get_safe_reward_center() -> Vector2:
+	if _is_in_dungeon_room():
+		var room_origin: Vector2 = _get_room_origin()
+		return room_origin + Vector2(
+			clampf(position.x, 260.0, 1020.0),
+			clampf(position.y, 220.0, 540.0)
+		)
+	return global_position
 
 func _on_damaged(_amount: int, current_hp: int, max_hp: int) -> void:
 	EventBus.boss_health_changed.emit(current_hp, max_hp)
@@ -340,14 +365,15 @@ func _take_flight() -> void:
 	tween.chain().tween_callback(_start_meteor_barrage)
 
 func _start_meteor_barrage() -> void:
+	var room_origin: Vector2 = _get_room_origin()
 	var meteor_points: Array[Vector2] = [
-		Vector2(420, 240),
-		Vector2(860, 240),
-		Vector2(640, 360),
-		Vector2(420, 480),
-		Vector2(860, 480),
-		Vector2(520, 360),
-		Vector2(760, 360)
+		room_origin + Vector2(420, 240),
+		room_origin + Vector2(860, 240),
+		room_origin + Vector2(640, 360),
+		room_origin + Vector2(420, 480),
+		room_origin + Vector2(860, 480),
+		room_origin + Vector2(520, 360),
+		room_origin + Vector2(760, 360)
 	]
 	
 	for i in range(meteor_points.size()):
@@ -403,9 +429,10 @@ func _land_from_flight() -> void:
 	is_acting = false
 	health_component.set_invulnerable(false)
 	
+	var room_origin: Vector2 = _get_room_origin()
 	# Дракон пикирует в центр комнаты
 	var tween: Tween = create_tween().set_parallel(true)
-	tween.tween_property(self, "global_position", Vector2(640, 360), 0.3)
+	tween.tween_property(self, "global_position", room_origin + Vector2(640, 360), 0.3)
 	tween.tween_property(visuals, "position:y", 0.0, 0.3)
 	tween.tween_property(visuals, "scale", Vector2.ONE, 0.3)
 	tween.tween_property(shadow_rect, "scale", Vector2.ONE, 0.3)
@@ -474,18 +501,19 @@ func _spawn_blessing_choice() -> void:
 	
 	var choices: Array[ItemData] = loot_table.roll_multiple_unique(3, GameState.rng)
 	var x_offsets: Array[float] = [-140.0, 0.0, 140.0]
+	var center: Vector2 = _get_safe_reward_center()
 	
 	for i in range(choices.size()):
 		var ped: ItemPedestal = ITEM_PEDESTAL_SCENE.instantiate() as ItemPedestal
 		get_parent().add_child(ped)
-		ped.global_position = global_position + Vector2(x_offsets[i], 40.0)
+		ped.global_position = center + Vector2(x_offsets[i], 40.0)
 		ped.setup(choices[i], 0, true)
 
 func _spawn_portal_exit() -> void:
 	var portal_scene = load("res://levels/Portal.tscn")
 	var portal = portal_scene.instantiate()
 	get_parent().add_child(portal)
-	portal.global_position = global_position + Vector2(0, -90.0)
+	portal.global_position = _get_safe_reward_center() + Vector2(0, -90.0)
 	if portal.has_method("set_portal_title"):
 		portal.set_portal_title("ПОРТАЛ ВЫХОДА")
 	if portal.get_node_or_null("%PromptLabel") != null:

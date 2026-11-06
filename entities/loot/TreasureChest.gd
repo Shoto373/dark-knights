@@ -8,7 +8,11 @@ const PICKUP_SCENE = preload("res://entities/pickups/PickupBase.tscn")
 const CHEST_CLOSED_TEX: Texture2D = preload("res://assets/sprites/chest_closed.svg")
 const CHEST_OPEN_TEX: Texture2D = preload("res://assets/sprites/chest_open.svg")
 
-@export var requires_key: bool = false
+@export var requires_key: bool = false:
+	set(val):
+		requires_key = val
+		if is_inside_tree():
+			_update_display()
 @export var is_opened: bool = false
 
 @onready var chest_lid: ColorRect = get_node_or_null("%ChestLid") as ColorRect
