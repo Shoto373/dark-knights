@@ -176,23 +176,58 @@ static func spawn_slash_arc(parent: Node, global_pos: Vector2, angle: float, arc
 	if parent == null:
 		return
 	var arc_root: Node2D = Node2D.new()
+	arc_root.name = "SlashArc"
 	arc_root.global_position = global_pos
 	arc_root.rotation = angle
+	arc_root.z_index = 2
 	parent.add_child(arc_root)
 	
+	# Непрерывный светящийся серповидный дуговой след лезвия (Hades / Dead Cells Slash Arc)
+	var line: Line2D = Line2D.new()
+	line.name = "SlashArcLine"
+	line.width = 10.0
+	line.antialiased = true
+	line.joint_mode = Line2D.LINE_JOINT_ROUND
+	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
+	line.end_cap_mode = Line2D.LINE_CAP_ROUND
+	
+	var curve: Curve = Curve.new()
+	curve.add_point(Vector2(0.0, 0.15))
+	curve.add_point(Vector2(0.5, 1.0))
+	curve.add_point(Vector2(1.0, 0.0))
+	line.width_curve = curve
+	
+	var arc_steps: int = 14
+	var min_deg: float = -55.0
+	var max_deg: float = 55.0
+	for i in range(arc_steps + 1):
+		var t_ratio: float = float(i) / float(arc_steps)
+		var rad: float = deg_to_rad(lerpf(min_deg, max_deg, t_ratio))
+		line.add_point(Vector2(cos(rad), sin(rad)) * arc_radius)
+	
+	line.default_color = Color(color.r * 1.5, color.g * 1.5, color.b * 1.5, 0.95)
+	arc_root.add_child(line)
+	
+	# Радиальные искры по фронту рассечения
 	var tex: Texture2D = get_spark_texture()
 	for i in range(6):
 		var spark: Sprite2D = Sprite2D.new()
 		spark.texture = tex
-		var sz: float = randf_range(0.4, 0.75)
+		var sz: float = randf_range(0.35, 0.65)
 		spark.scale = Vector2(sz, sz)
-		spark.modulate = color
+		spark.modulate = color.lightened(0.2)
 		var step_angle: float = deg_to_rad(-45.0 + i * 18.0)
-		spark.position = Vector2(cos(step_angle), sin(step_angle)) * arc_radius
+		spark.position = Vector2(cos(step_angle), sin(step_angle)) * (arc_radius + randf_range(2.0, 6.0))
 		arc_root.add_child(spark)
 	
+	# Мягкая вспышка динамического света при взмахе
+	if SettingsManager.dynamic_lighting_enabled:
+		var slash_light: PointLight2D = LightTextureGenerator.create_point_light(color.lightened(0.2), 0.75, 1.4)
+		slash_light.name = "SlashLight"
+		arc_root.add_child(slash_light)
+	
 	var tween: Tween = arc_root.create_tween()
-	tween.tween_property(arc_root, "scale", Vector2(1.3, 1.3), 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(arc_root, "scale", Vector2(1.35, 1.35), 0.12).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	tween.parallel().tween_property(arc_root, "modulate:a", 0.0, 0.12)
 	tween.tween_callback(arc_root.queue_free)
 

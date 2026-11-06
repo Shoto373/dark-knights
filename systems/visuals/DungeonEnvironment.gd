@@ -53,3 +53,24 @@ func _apply_environment_settings() -> void:
 func _on_settings_changed() -> void:
 	_apply_environment_settings()
 
+## Возвращает атмосферный оттенок фонового освещения (CanvasModulate) для каждого биома
+static func get_biome_ambient_color(biome_id: String) -> Color:
+	match biome_id:
+		"goblin_dungeon":
+			return Color(0.58, 0.62, 0.68, 1.0)
+		"troll_gorge":
+			return Color(0.64, 0.60, 0.52, 1.0)
+		"skeleton_castle":
+			return Color(0.48, 0.50, 0.64, 1.0)
+		"frost_world", "frost_caves":
+			return Color(0.48, 0.60, 0.78, 1.0)
+		"fire_world", "fire_mines":
+			return Color(0.68, 0.46, 0.40, 1.0)
+		"purgatory":
+			return Color(0.44, 0.36, 0.62, 1.0)
+		"hub":
+			return Color(0.86, 0.88, 0.92, 1.0)
+		_:
+			return Color(0.62, 0.64, 0.68, 1.0)
+
+

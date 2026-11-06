@@ -25,6 +25,7 @@ var player_ref: Player = null
 var pedestal_sprite: Sprite2D = null
 var item_sprite: Sprite2D = null
 var rarity_aura_sprite: Sprite2D = null
+var pedestal_light: PointLight2D = null
 
 func _ready() -> void:
 	collision_layer = 0
@@ -139,6 +140,18 @@ func _update_display() -> void:
 	if rarity_aura_sprite != null:
 		rarity_aura_sprite.modulate = Color(r_col.r, r_col.g, r_col.b, 0.48)
 	
+	# Мягкое божественное свечение артефакта
+	if SettingsManager.dynamic_lighting_enabled:
+		if pedestal_light == null:
+			pedestal_light = LightTextureGenerator.create_point_light(r_col.lightened(0.2), 0.75, 1.8)
+			pedestal_light.name = "PedestalLight"
+			var base_y: float = -22.0 if floating_only else -36.0
+			pedestal_light.position = Vector2(0, base_y)
+			add_child(pedestal_light)
+		else:
+			pedestal_light.color = r_col.lightened(0.2)
+			pedestal_light.visible = not is_collected
+	
 	# Получаем детальный спрайт артефакта
 	var tex: Texture2D = SpriteGenerator.get_item_texture(item_data)
 	if tex != null and item_sprite != null:
@@ -167,6 +180,9 @@ func _process(_delta: float) -> void:
 			var pulse: float = 1.0 + sin(time * 1.5) * 0.12
 			rarity_aura_sprite.scale = Vector2(3.5, 3.5) * pulse
 			rarity_aura_sprite.position.y = base_y + bob
+		if pedestal_light != null and pedestal_light.visible:
+			pedestal_light.position.y = base_y + bob
+			pedestal_light.energy = 0.75 + sin(time * 2.0) * 0.08
 	
 	if is_player_inside and not is_collected and Input.is_action_just_pressed("interact"):
 		_try_collect()

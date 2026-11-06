@@ -22,6 +22,7 @@ var player: Player
 var camera: Camera2D
 var current_grid_pos: Vector2i = Vector2i.ZERO
 var is_room_transitioning: bool = false
+var ambient_modulate: CanvasModulate = null
 
 func _ready() -> void:
 	AudioManager.play_music_named("dungeon", 1.0)
@@ -76,6 +77,15 @@ func _build_floor() -> void:
 	var dungeon_env: DungeonEnvironment = DungeonEnvironment.new()
 	dungeon_env.name = "DungeonEnvironment"
 	add_child(dungeon_env)
+	
+	# Атмосферное освещение подземелья (Forward+ Vulkan 2D Lighting)
+	ambient_modulate = CanvasModulate.new()
+	ambient_modulate.name = "FloorAmbientModulate"
+	add_child(ambient_modulate)
+	_update_ambient_lighting()
+	
+	if SettingsManager.has_signal("graphics_settings_changed"):
+		SettingsManager.graphics_settings_changed.connect(_on_settings_changed)
 	
 	# Vulkan Forward+ Screen Post-Processing Layer (Vignette, Biome Color Grading, FX)
 	var pp_scene: PackedScene = load("res://ui/PostProcessLayer.tscn")
@@ -149,6 +159,20 @@ func _on_room_door_entered(direction: Vector2i) -> void:
 		var tween: Tween = create_tween()
 		tween.tween_property(camera, "global_position", new_room_center, 0.25).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	
+	# Плавная модуляция атмосферного света под тип комнаты (босс более мрачный, сокровищница сияет)
+	if ambient_modulate != null and SettingsManager.dynamic_lighting_enabled:
+		var current_biome: BiomeData = GameState.get_current_biome()
+		var b_id: String = current_biome.id if current_biome != null else "goblin_dungeon"
+		var base_col: Color = DungeonEnvironment.get_biome_ambient_color(b_id)
+		var target_col: Color = base_col
+		if target_room.room_data != null:
+			if target_room.room_data.room_type == RoomData.RoomType.BOSS:
+				target_col = base_col.darkened(0.12)
+			elif target_room.room_data.room_type == RoomData.RoomType.TREASURE:
+				target_col = base_col.lightened(0.08)
+		var l_tween: Tween = create_tween()
+		l_tween.tween_property(ambient_modulate, "color", target_col, 0.25)
+	
 	var trans_timer: SceneTreeTimer = get_tree().create_timer(0.25)
 	trans_timer.timeout.connect(func():
 		if is_instance_valid(player):
@@ -157,3 +181,17 @@ func _on_room_door_entered(direction: Vector2i) -> void:
 		is_room_transitioning = false
 		target_room.on_player_entered()
 	)
+
+func _update_ambient_lighting() -> void:
+	if ambient_modulate == null:
+		return
+	if SettingsManager.dynamic_lighting_enabled:
+		var current_biome: BiomeData = GameState.get_current_biome()
+		var b_id: String = current_biome.id if current_biome != null else "goblin_dungeon"
+		ambient_modulate.color = DungeonEnvironment.get_biome_ambient_color(b_id)
+	else:
+		ambient_modulate.color = Color.WHITE
+
+func _on_settings_changed() -> void:
+	_update_ambient_lighting()
+

@@ -80,6 +80,14 @@ func _try_open() -> void:
 	AudioManager.play_sfx_named("coin")
 	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, Color(1.0, 0.85, 0.2), 10)
 	
+	if SettingsManager.dynamic_lighting_enabled and get_parent() != null:
+		var chest_light: PointLight2D = LightTextureGenerator.create_point_light(Color(1.0, 0.88, 0.3), 1.1, 2.5)
+		chest_light.global_position = global_position + Vector2(0, -10)
+		get_parent().add_child(chest_light)
+		var cl_tween: Tween = chest_light.create_tween()
+		cl_tween.tween_property(chest_light, "energy", 0.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		cl_tween.tween_callback(chest_light.queue_free)
+	
 	var tween: Tween = create_tween()
 	tween.tween_property(chest_sprite, "scale", Vector2(1.2, 0.85), 0.08)
 	tween.tween_property(chest_sprite, "scale", Vector2(1.0, 1.0), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)

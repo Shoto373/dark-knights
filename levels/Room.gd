@@ -145,6 +145,16 @@ func _apply_biome_theme() -> void:
 				var t_light: PointLight2D = LightTextureGenerator.create_point_light(flame_tint.lightened(0.3), 0.75, 1.8)
 				t_light.name = "TorchLight"
 				t.add_child(t_light)
+				
+				# Анимированное мерцание живого факельного пламени
+				var tw: Tween = t_light.create_tween().set_loops()
+				var base_e: float = 0.75
+				var min_e: float = base_e * randf_range(0.82, 0.90)
+				var max_e: float = base_e * randf_range(1.10, 1.25)
+				var dur1: float = randf_range(0.12, 0.22)
+				var dur2: float = randf_range(0.12, 0.22)
+				tw.tween_property(t_light, "energy", max_e, dur1).set_trans(Tween.TRANS_SINE)
+				tw.tween_property(t_light, "energy", min_e, dur2).set_trans(Tween.TRANS_SINE)
 
 	# 8. Атмосферные частицы биома
 	var atmosphere: BiomeAtmosphere = get_node_or_null("BiomeAtmosphere") as BiomeAtmosphere

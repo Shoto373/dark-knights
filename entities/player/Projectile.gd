@@ -14,6 +14,7 @@ var distance_traveled: float = 0.0
 var proj_type: String = "magic"
 var pierce_count: int = 0
 var _trail_timer: float = 0.0
+var projectile_light: PointLight2D = null
 
 func _ready() -> void:
 	# Снаряд врезается в стены (слой 1: world)
@@ -69,6 +70,38 @@ func setup(
 		projectile_sprite.texture = tex
 	
 	modulate = color
+	
+	# Forward+ 2D динамический источник света летящего снаряда
+	if SettingsManager.dynamic_lighting_enabled:
+		var light_col: Color = color
+		var light_energy: float = 0.85
+		var light_scale: float = 1.6
+		if proj_type == "fireball":
+			light_col = Color(1.0, 0.55, 0.2)
+			light_energy = 0.95
+			light_scale = 1.8
+		elif proj_type == "frost":
+			light_col = Color(0.35, 0.85, 1.1)
+			light_energy = 0.85
+			light_scale = 1.6
+		elif proj_type == "arrow":
+			light_col = Color(1.0, 0.9, 0.6)
+			light_energy = 0.65
+			light_scale = 1.2
+		else:
+			light_col = Color(0.9, 0.45, 1.2)
+			light_energy = 0.85
+			light_scale = 1.6
+		
+		if projectile_light == null:
+			projectile_light = LightTextureGenerator.create_point_light(light_col, light_energy, light_scale)
+			projectile_light.name = "ProjectileLight"
+			add_child(projectile_light)
+		else:
+			projectile_light.color = light_col
+			projectile_light.energy = light_energy
+			projectile_light.texture_scale = light_scale
+			projectile_light.visible = true
 
 func _physics_process(delta: float) -> void:
 	var step: Vector2 = direction * speed * delta
@@ -119,4 +152,13 @@ func _destroy() -> void:
 	elif proj_type == "frost":
 		spark_color = Color(0.3, 0.8, 1.0)
 	EffectsHelper.spawn_hit_sparks(get_parent(), global_position, spark_color, 5)
+	
+	if SettingsManager.dynamic_lighting_enabled and get_parent() != null:
+		var flash: PointLight2D = LightTextureGenerator.create_point_light(spark_color.lightened(0.2), 0.9, 1.4)
+		flash.global_position = global_position
+		get_parent().add_child(flash)
+		var f_tween: Tween = flash.create_tween()
+		f_tween.tween_property(flash, "energy", 0.0, 0.12)
+		f_tween.tween_callback(flash.queue_free)
+	
 	queue_free()

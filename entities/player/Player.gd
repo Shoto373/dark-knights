@@ -43,6 +43,9 @@ var _left_boot: Sprite2D = null
 var _right_boot: Sprite2D = null
 var _eye_light: PointLight2D = null
 var _base_eye_energy: float = 0.65
+var _lantern_light: PointLight2D = null
+var _base_lantern_energy: float = 0.85
+var _lantern_flare: float = 0.0
 var _step_dust_timer: float = 0.0
 
 func _ready() -> void:
@@ -97,9 +100,13 @@ func _ready() -> void:
 	_setup_character_shadow()
 	
 	# Мягкий динамический фонарь героя (Forward+ Vulkan 2D Lighting)
-	var lantern_light: PointLight2D = LightTextureGenerator.create_point_light(Color(1.0, 0.92, 0.8), 0.82, 2.8)
-	lantern_light.name = "LanternLight"
-	add_child(lantern_light)
+	if _lantern_light == null:
+		_lantern_light = LightTextureGenerator.create_point_light(Color(1.0, 0.92, 0.8), _base_lantern_energy, 2.9)
+		_lantern_light.name = "LanternLight"
+		add_child(_lantern_light)
+	if SettingsManager.has_signal("graphics_settings_changed"):
+		SettingsManager.graphics_settings_changed.connect(_on_settings_changed)
+	_update_lighting_visibility()
 	
 	# Визуальный щит и руническая эгида (Warrior block / charge)
 	var shield_scene: PackedScene = load("res://entities/player/ShieldBarrier.tscn")
@@ -185,6 +192,26 @@ func apply_hero_data(data: HeroData) -> void:
 	elif _eye_light != null:
 		_eye_light.color = eye_color
 		_eye_light.energy = _base_eye_energy
+
+	# Установка оттенка и радиуса динамического фонаря под архетип героя
+	if _lantern_light != null:
+		match hero_id:
+			"warrior":
+				_lantern_light.color = Color(1.0, 0.86, 0.65)
+				_base_lantern_energy = 0.85
+				_lantern_light.texture_scale = 3.0
+			"mage":
+				_lantern_light.color = Color(0.70, 0.85, 1.15)
+				_base_lantern_energy = 0.95
+				_lantern_light.texture_scale = 3.2
+			"ranger":
+				_lantern_light.color = Color(0.75, 1.0, 0.80)
+				_base_lantern_energy = 0.85
+				_lantern_light.texture_scale = 2.9
+			_:
+				_lantern_light.color = Color(1.0, 0.92, 0.8)
+				_base_lantern_energy = 0.85
+		_update_lighting_visibility()
 
 	# Установка детализированного оружия героя
 	var weapon_tex: Texture2D = SpriteGenerator.get_weapon_texture(hero_id)
@@ -363,6 +390,12 @@ func _update_procedural_animations(delta: float) -> void:
 		if _eye_light != null:
 			_eye_light.energy = _base_eye_energy + sin(_walk_anim_phase * 1.5) * 0.15
 		
+		# Живое дыхание фонаря героя
+		if _lantern_light != null and _lantern_light.visible:
+			_lantern_flare = move_toward(_lantern_flare, 0.0, delta * 3.5)
+			var breath_halo: float = sin(_walk_anim_phase * 2.0) * 0.06
+			_lantern_light.energy = _base_lantern_energy + breath_halo + _lantern_flare
+		
 		# Живое дыхание в покое (Idle breathing)
 		var breath: float = sin(_walk_anim_phase) * 0.035
 		visuals.scale = Vector2((1.0 - breath * 0.5) * cur_facing, 1.0 + breath)
@@ -460,6 +493,7 @@ func _start_dash() -> void:
 	EffectsHelper.spawn_dust_puff(get_parent(), global_position)
 	EffectsHelper.spawn_shockwave(get_parent(), global_position, 110.0, 0.28, 0.035)
 	AudioManager.play_sfx_named("dash")
+	_lantern_flare = 0.35
 	
 	# Кинематографическая отдача камеры в сторону, противоположную рывку
 	var cam: Camera2D = get_viewport().get_camera_2d()
@@ -484,6 +518,7 @@ func _on_dash_finished() -> void:
 func _perform_attack() -> void:
 	can_attack = false
 	attack_timer.start()
+	_lantern_flare = 0.30
 	
 	if hero_data != null and hero_data.attack_type == "ranged":
 		_shoot_basic_projectile()
@@ -890,3 +925,14 @@ func get_ability_cooldown_time_left(slot: int) -> float:
 	if t == null or t.is_stopped():
 		return 0.0
 	return t.time_left
+
+func _update_lighting_visibility() -> void:
+	var light_on: bool = SettingsManager.dynamic_lighting_enabled
+	if _lantern_light != null:
+		_lantern_light.visible = light_on
+	if _eye_light != null:
+		_eye_light.visible = light_on
+
+func _on_settings_changed() -> void:
+	_update_lighting_visibility()
+

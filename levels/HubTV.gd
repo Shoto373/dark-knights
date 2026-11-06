@@ -10,6 +10,7 @@ extends Area2D
 @onready var broadcast_label: Label = %BroadcastLabel
 @onready var broadcast_panel: Control = %BroadcastPanel
 
+var tv_light: PointLight2D = null
 var is_player_inside: bool = false
 var current_channel: int = 0
 var _flicker_phase: float = 0.0
@@ -51,6 +52,13 @@ func _ready() -> void:
 	
 	prompt_label.visible = false
 	broadcast_panel.visible = false
+	
+	if tv_light == null and SettingsManager.dynamic_lighting_enabled:
+		tv_light = LightTextureGenerator.create_point_light(Color(0.2, 0.8, 1.0), 0.85, 2.2)
+		tv_light.name = "TVPointLight"
+		tv_light.position = Vector2(0, 16.0)
+		add_child(tv_light)
+	
 	_apply_channel(current_channel, false)
 
 func _process(delta: float) -> void:
@@ -58,6 +66,9 @@ func _process(delta: float) -> void:
 	if screen_glow != null:
 		var flicker: float = 0.82 + sin(_flicker_phase) * 0.12 + randf() * 0.06
 		screen_glow.modulate.a = clampf(flicker * 0.45, 0.2, 0.6)
+	if tv_light != null and tv_light.visible:
+		var flicker_light: float = 0.80 + sin(_flicker_phase * 1.5) * 0.12 + randf() * 0.08
+		tv_light.energy = flicker_light * 0.85
 
 	if is_player_inside and Input.is_action_just_pressed("interact"):
 		_next_channel()
@@ -85,6 +96,8 @@ func _apply_channel(idx: int, play_fx: bool) -> void:
 	
 	if screen_glow != null:
 		screen_glow.modulate = Color(ch_col.r, ch_col.g, ch_col.b, 0.45)
+	if tv_light != null:
+		tv_light.color = ch_col.lightened(0.2)
 	
 	_update_broadcast_text()
 	

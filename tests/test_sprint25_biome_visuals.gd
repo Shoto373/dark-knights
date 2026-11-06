@@ -91,3 +91,4 @@ func test_room_setup_applies_unique_biome_textures_and_decor() -> void:
 	var fire_floor: TextureRect = fire_room.get_node("%FloorTiles") as TextureRect
 	assert_eq(fire_floor.texture, SpriteGenerator.get_biome_tile_texture("fire_world"), "В Мире Огня установлены базальтовые плиты с лавой")
 	assert_ne(fire_floor.texture, frost_floor.texture, "Плитка Мира Огня кардинально отличается от Мира Холода")
+
